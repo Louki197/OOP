@@ -1,0 +1,11 @@
+=======================================================
+      BÁO CÁO THỐNG KÊ DOANH THU RẠP CHIẾU PHIM PTIT   
+             Thời gian xuất: 2026-10-23T17:37:15.868078400
+=======================================================
+HĐ: INV596930  | Phim: Đào, Phở và Piano      | Khách: Nguyễn Văn A    | Tiền:      191,250 VNĐ
+HĐ: INV829019  | Phim: Đào, Phở và Piano      | Khách: Nguyễn Văn A    | Tiền:      382,500 VNĐ
+HĐ: INV83099   | Phim: Đào, Phở và Piano      | Khách: Nguyễn Văn A    | Tiền:      395,000 VNĐ
+HĐ: INV169439  | Phim: Đào, Phở và Piano      | Khách: Nguyễn Văn A    | Tiền:      106,250 VNĐ
+-------------------------------------------------------
+TỔNG CỘNG DOANH THU: 1,075,000 VNĐ
+=======================================================

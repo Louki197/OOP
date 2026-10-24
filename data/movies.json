@@ -1,0 +1,57 @@
+{
+  "MOV02": {
+    "id": "MOV02",
+    "title": "Dune: Part Two",
+    "genre": "Khoa Học Viễn Tưởng",
+    "durationMinutes": 166,
+    "releaseDate": "2024-03-01",
+    "posterPath": "posters/dune2.jpg",
+    "description": "Hành trình vĩ đại của Paul Atreides trong việc giải phóng Arrakis.",
+    "director": "Denis Villeneuve",
+    "ageRating": "C16"
+  },
+  "MOV03": {
+    "id": "MOV03",
+    "title": "Exhuma: Quật Mộ Trùng Ma",
+    "genre": "Kinh Dị / Bí Ẩn",
+    "durationMinutes": 134,
+    "releaseDate": "2024-03-15",
+    "posterPath": "posters/exhuma.jpg",
+    "description": "Câu chuyện rùng rợn về nghi thức khai quật ngôi mộ cổ bí ẩn tại Hàn Quốc.",
+    "director": "Jang Jae-hyun",
+    "ageRating": "C18"
+  },
+  "MOV01": {
+    "id": "MOV01",
+    "title": "Đào, Phở và Piano",
+    "genre": "Lịch Sử / Chiến Tranh",
+    "durationMinutes": 100,
+    "releaseDate": "2024-02-10",
+    "posterPath": "posters/dao_pho_piano.jpg",
+    "description": "Bộ phim lịch sử tái hiện không khí hào hùng của Hà Nội mùa đông năm 1946.",
+    "director": "Phi Tiến Sơn",
+    "ageRating": "C13"
+  },
+  "MOV04": {
+    "id": "MOV04",
+    "title": "Hùng baby",
+    "genre": "Hành Động",
+    "durationMinutes": 120,
+    "releaseDate": "2026-10-23",
+    "posterPath": "",
+    "description": "Phim mới",
+    "director": "Giang Khương Duy",
+    "ageRating": "C18"
+  },
+  "MOV05": {
+    "id": "MOV05",
+    "title": "An",
+    "genre": "Hành Động",
+    "durationMinutes": 120,
+    "releaseDate": "2026-10-25",
+    "posterPath": "",
+    "description": "Phim mới",
+    "director": "Christopher Nolan",
+    "ageRating": "C18"
+  }
+}

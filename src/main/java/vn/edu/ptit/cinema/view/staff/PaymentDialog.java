@@ -1,0 +1,450 @@
+package vn.edu.ptit.cinema.view.staff;
+
+import com.formdev.flatlaf.FlatClientProperties;
+import vn.edu.ptit.cinema.model.booking.Invoice;
+import vn.edu.ptit.cinema.model.booking.OrderItem;
+import vn.edu.ptit.cinema.model.booking.Ticket;
+import vn.edu.ptit.cinema.model.booking.Voucher;
+import vn.edu.ptit.cinema.model.cinema.ShowTime;
+import vn.edu.ptit.cinema.model.movie.Movie;
+import vn.edu.ptit.cinema.model.seat.Seat;
+import vn.edu.ptit.cinema.model.seat.SeatStatus;
+import vn.edu.ptit.cinema.pattern.strategy.PricingStrategies;
+import vn.edu.ptit.cinema.pattern.strategy.PricingStrategy;
+import vn.edu.ptit.cinema.service.DataStore;
+import vn.edu.ptit.cinema.service.SessionManager;
+import vn.edu.ptit.cinema.util.ReceiptPrinter;
+import vn.edu.ptit.cinema.view.component.QrCodePanel;
+
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import java.awt.*;
+import java.io.File;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
+/**
+ * [STEP 3: PAYMENT DIALOG - XÁC NHẬN THANH TOÁN VÀ IN HÓA ĐƠN]
+ * Hỗ trợ chuyển đổi linh hoạt: Tiền mặt tại quầy hoặc Quét mã VietQR ngân hàng.
+ */
+public class PaymentDialog extends JDialog {
+
+    private final ShowTime showTime;
+    private final Set<String> seatCodes;
+    private final List<OrderItem> orderFoods;
+    private final String tempInvoiceId;
+
+    private JTextField txtCustomerName;
+    private JTextField txtCustomerPhone;
+    private JTextField txtVoucher;
+    private JButton btnApplyVoucher;
+    private JButton btnRemoveVoucher;
+    private JLabel lblVoucherStatus;
+    private JCheckBox chkStudentDiscount;
+
+    private JRadioButton rbCash;
+    private JRadioButton rbVietQR;
+    private JPanel qrCardContainer;
+
+    private JLabel lblTicketSummary;
+    private JLabel lblFoodSummary;
+    private JLabel lblVoucherDiscount;
+    private JLabel lblFinalAmount;
+
+    private Voucher appliedVoucher = null;
+    private boolean paymentSuccessful = false;
+    private double currentFinalTotal = 0;
+
+    public PaymentDialog(Frame parent, ShowTime showTime, Set<String> seatCodes, List<OrderItem> orderFoods) {
+        super(parent, "XÁC NHẬN THANH TOÁN VÉ & DỊCH VỤ", true);
+        this.showTime = showTime;
+        this.seatCodes = seatCodes;
+        this.orderFoods = orderFoods != null ? orderFoods : new ArrayList<>();
+        this.tempInvoiceId = "INV" + (System.currentTimeMillis() % 1000000);
+        initUI();
+    }
+
+    private void initUI() {
+        setSize(780, 720);
+        setLocationRelativeTo(getParent());
+        setResizable(false);
+        setLayout(new BorderLayout(15, 15));
+
+        // 1. Header
+        JPanel headerPanel = new JPanel(new BorderLayout());
+        headerPanel.setBorder(new EmptyBorder(15, 25, 12, 25));
+        headerPanel.setBackground(new Color(248, 250, 252));
+
+        JLabel lblTitle = new JLabel("THANH TOÁN HÓA ĐƠN & XUẤT VÉ");
+        lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 18));
+        lblTitle.setForeground(new Color(22, 163, 74));
+
+        Movie movie = DataStore.getInstance().getMovieMap().get(showTime.getMovieId());
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm - dd/MM/yyyy");
+        String subText = String.format("Phim: %s | Suất: %s | Ghế: %s",
+                movie != null ? movie.getTitle() : "Phim",
+                showTime.getStartTime().format(dtf),
+                String.join(", ", seatCodes));
+        JLabel lblSub = new JLabel(subText);
+        lblSub.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        lblSub.setForeground(Color.DARK_GRAY);
+
+        headerPanel.add(lblTitle, BorderLayout.NORTH);
+        headerPanel.add(lblSub, BorderLayout.SOUTH);
+        add(headerPanel, BorderLayout.NORTH);
+
+        // 2. Body chia làm 2 cột: Cột trái (Thông tin & Khuyến mãi), Cột phải (Phương thức & QR Code)
+        JPanel contentGrid = new JPanel(new GridLayout(1, 2, 20, 0));
+        contentGrid.setBorder(new EmptyBorder(5, 25, 5, 25));
+
+        // --- CỘT TRÁI: KHÁCH HÀNG & CHI PHÍ ---
+        JPanel leftPanel = new JPanel();
+        leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
+
+        // Block 1: Thông tin khách
+        JPanel custBox = new JPanel(new GridLayout(2, 2, 8, 8));
+        custBox.setBorder(BorderFactory.createTitledBorder("1. Thông tin khách hàng"));
+        custBox.add(new JLabel("Họ tên:"));
+        txtCustomerName = new JTextField("Nguyễn Văn A");
+        custBox.add(txtCustomerName);
+        custBox.add(new JLabel("Số ĐT:"));
+        txtCustomerPhone = new JTextField("0912345678");
+        custBox.add(txtCustomerPhone);
+        leftPanel.add(custBox);
+        leftPanel.add(Box.createVerticalStrut(10));
+
+        // Block 2: Voucher & Ưu đãi
+        JPanel voucherBox = new JPanel();
+        voucherBox.setLayout(new BoxLayout(voucherBox, BoxLayout.Y_AXIS));
+        voucherBox.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createTitledBorder("2. Khuyến mãi & Giảm giá"),
+                new EmptyBorder(6, 10, 8, 10)
+        ));
+
+        JPanel vInput = new JPanel(new BorderLayout(6, 0));
+        vInput.setMaximumSize(new Dimension(Integer.MAX_VALUE, 32));
+        txtVoucher = new JTextField("PTIT10");
+        txtVoucher.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Nhập PTIT10 hoặc SINHVIEN20");
+
+        btnApplyVoucher = new JButton("Áp dụng");
+        btnApplyVoucher.addActionListener(e -> applyVoucher());
+
+        btnRemoveVoucher = new JButton("Hủy");
+        btnRemoveVoucher.setVisible(false);
+        btnRemoveVoucher.addActionListener(e -> removeVoucher());
+
+        JPanel vBtnPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 4, 0));
+        vBtnPanel.setOpaque(false);
+        vBtnPanel.add(btnApplyVoucher);
+        vBtnPanel.add(btnRemoveVoucher);
+
+        vInput.add(txtVoucher, BorderLayout.CENTER);
+        vInput.add(vBtnPanel, BorderLayout.EAST);
+
+        lblVoucherStatus = new JLabel(" ");
+        lblVoucherStatus.setFont(new Font("Segoe UI", Font.PLAIN, 11));
+        lblVoucherStatus.setForeground(new Color(22, 163, 74));
+
+        chkStudentDiscount = new JCheckBox("Áp dụng ưu đãi Sinh viên PTIT (-20%)");
+        chkStudentDiscount.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        chkStudentDiscount.addActionListener(e -> recalculateTotal());
+
+        voucherBox.add(vInput);
+        voucherBox.add(Box.createVerticalStrut(4));
+        voucherBox.add(lblVoucherStatus);
+        voucherBox.add(Box.createVerticalStrut(4));
+        voucherBox.add(chkStudentDiscount);
+        leftPanel.add(voucherBox);
+        leftPanel.add(Box.createVerticalStrut(10));
+
+        // Block 3: Tóm tắt chi phí
+        JPanel summaryBox = new JPanel(new GridLayout(4, 1, 5, 5));
+        summaryBox.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createTitledBorder("3. Tóm tắt chi phí"),
+                new EmptyBorder(6, 10, 6, 10)
+        ));
+
+        lblTicketSummary = new JLabel("• Tiền vé: 0 VNĐ");
+        lblFoodSummary = new JLabel("• Tiền bắp nước (F&B): 0 VNĐ");
+        lblVoucherDiscount = new JLabel("• Giảm giá Voucher: -0 VNĐ");
+        lblVoucherDiscount.setForeground(new Color(22, 163, 74));
+        lblFinalAmount = new JLabel("TỔNG TIỀN: 0 VNĐ");
+        lblFinalAmount.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        lblFinalAmount.setForeground(new Color(220, 38, 38));
+
+        summaryBox.add(lblTicketSummary);
+        summaryBox.add(lblFoodSummary);
+        summaryBox.add(lblVoucherDiscount);
+        summaryBox.add(lblFinalAmount);
+        leftPanel.add(summaryBox);
+
+        contentGrid.add(leftPanel);
+
+        // --- CỘT PHẢI: PHƯƠNG THỨC THANH TOÁN (TIỀN MẶT / VIETQR) ---
+        JPanel rightPanel = new JPanel(new BorderLayout(0, 10));
+        rightPanel.setBorder(BorderFactory.createTitledBorder("4. Phương thức thanh toán"));
+
+        // Bộ chọn radio button
+        JPanel methodSelect = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 5));
+        rbCash = new JRadioButton("Tiền mặt tại quầy", true);
+        rbVietQR = new JRadioButton("Quét mã VietQR", false);
+        ButtonGroup bgMethod = new ButtonGroup();
+        bgMethod.add(rbCash);
+        bgMethod.add(rbVietQR);
+        methodSelect.add(rbCash);
+        methodSelect.add(rbVietQR);
+        rightPanel.add(methodSelect, BorderLayout.NORTH);
+
+        // Khu vực hiển thị mã QR hoặc hướng dẫn tiền mặt
+        qrCardContainer = new JPanel(new GridBagLayout());
+        qrCardContainer.setBackground(new Color(248, 250, 252));
+        rightPanel.add(qrCardContainer, BorderLayout.CENTER);
+
+        rbCash.addActionListener(e -> updatePaymentMethodUI());
+        rbVietQR.addActionListener(e -> updatePaymentMethodUI());
+
+        contentGrid.add(rightPanel);
+        add(contentGrid, BorderLayout.CENTER);
+
+        // 3. Footer Buttons
+        JPanel footerPanel = new JPanel(new GridLayout(1, 2, 20, 0));
+        footerPanel.setBorder(new EmptyBorder(12, 25, 20, 25));
+
+        JButton btnCancel = new JButton("Quay lại chọn thêm");
+        btnCancel.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        btnCancel.putClientProperty(FlatClientProperties.STYLE, "arc: 10; margin: 8,16,8,16;");
+        btnCancel.addActionListener(e -> dispose());
+
+        JButton btnPayAndPrint = new JButton("Xác nhận & In hóa đơn (.txt)");
+        btnPayAndPrint.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        btnPayAndPrint.setBackground(new Color(22, 163, 74));
+        btnPayAndPrint.setForeground(Color.WHITE);
+        btnPayAndPrint.putClientProperty(FlatClientProperties.STYLE, "arc: 10; margin: 8,16,8,16;");
+        btnPayAndPrint.addActionListener(e -> processPayment());
+
+        footerPanel.add(btnCancel);
+        footerPanel.add(btnPayAndPrint);
+        add(footerPanel, BorderLayout.SOUTH);
+
+        recalculateTotal();
+        updatePaymentMethodUI();
+    }
+
+    private void updatePaymentMethodUI() {
+        qrCardContainer.removeAll();
+        if (rbVietQR.isSelected()) {
+            QrCodePanel qrPanel = new QrCodePanel(tempInvoiceId, currentFinalTotal);
+            qrCardContainer.add(qrPanel);
+        } else {
+            JPanel cashGuide = new JPanel();
+            cashGuide.setLayout(new BoxLayout(cashGuide, BoxLayout.Y_AXIS));
+            cashGuide.setOpaque(false);
+
+            JLabel lblCashIcon = new JLabel("[TIEN MAT]", JLabel.CENTER);
+            lblCashIcon.setFont(new Font("Segoe UI", Font.PLAIN, 48));
+            lblCashIcon.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+            JLabel lblCashText = new JLabel("Thanh toán tiền mặt trực tiếp tại quầy", JLabel.CENTER);
+            lblCashText.setFont(new Font("Segoe UI", Font.BOLD, 13));
+            lblCashText.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+            JLabel lblCashSub = new JLabel("Vui lòng nhận tiền từ khách trước khi xuất vé.", JLabel.CENTER);
+            lblCashSub.setFont(new Font("Segoe UI", Font.PLAIN, 11));
+            lblCashSub.setForeground(Color.GRAY);
+            lblCashSub.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+            cashGuide.add(Box.createVerticalStrut(40));
+            cashGuide.add(lblCashIcon);
+            cashGuide.add(Box.createVerticalStrut(10));
+            cashGuide.add(lblCashText);
+            cashGuide.add(Box.createVerticalStrut(5));
+            cashGuide.add(lblCashSub);
+            qrCardContainer.add(cashGuide);
+        }
+        qrCardContainer.revalidate();
+        qrCardContainer.repaint();
+    }
+
+    private void applyVoucher() {
+        String code = txtVoucher.getText().trim().toUpperCase();
+        if (!code.matches("^[A-Za-z0-9]{3,20}$")) {
+            JOptionPane.showMessageDialog(this, "Mã Voucher không đúng định dạng (3-20 ký tự chữ và số)!", "Lỗi nhập liệu", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        Voucher v = DataStore.getInstance().getVoucherMap().get(code);
+        if (v != null && v.isActive()) {
+            appliedVoucher = v;
+            txtVoucher.setEditable(false);
+            btnApplyVoucher.setText("Đã áp dụng");
+            btnApplyVoucher.setEnabled(false);
+            btnRemoveVoucher.setVisible(true);
+            lblVoucherStatus.setText("Đã áp dụng mã " + code + ": Giảm " + v.getDiscountPercent() + "% (tối đa " + String.format("%,.0f", v.getMaxDiscountAmount()) + " VNĐ)");
+            lblVoucherStatus.setForeground(new Color(22, 163, 74));
+
+            recalculateTotal();
+            JOptionPane.showMessageDialog(this,
+                    "Áp dụng Voucher [" + code + "] thành công!\n"
+                            + "Giảm giá: " + v.getDiscountPercent() + "%\n"
+                            + "Giảm tối đa: " + String.format("%,.0f VNĐ", v.getMaxDiscountAmount()),
+                    "Thành công", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            appliedVoucher = null;
+            lblVoucherStatus.setText("Mã Voucher không hợp lệ hoặc đã hết hạn!");
+            lblVoucherStatus.setForeground(new Color(220, 38, 38));
+            JOptionPane.showMessageDialog(this, "Mã Voucher không hợp lệ hoặc đã hết hạn!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            recalculateTotal();
+        }
+    }
+
+    private void removeVoucher() {
+        appliedVoucher = null;
+        txtVoucher.setEditable(true);
+        txtVoucher.setText("");
+        btnApplyVoucher.setText("Áp dụng");
+        btnApplyVoucher.setEnabled(true);
+        btnRemoveVoucher.setVisible(false);
+        lblVoucherStatus.setText(" ");
+        recalculateTotal();
+    }
+
+    private void recalculateTotal() {
+        PricingStrategy strategy = PricingStrategies.determineStrategy(
+                showTime.getStartTime(),
+                chkStudentDiscount.isSelected()
+        );
+
+        double ticketTotal = 0;
+        for (String code : seatCodes) {
+            Seat seat = showTime.getSeats().get(code);
+            ticketTotal += strategy.calculatePrice(showTime.getBasePrice(), seat, showTime.getStartTime());
+        }
+
+        double foodTotal = 0;
+        for (OrderItem item : orderFoods) {
+            foodTotal += item.getTotalPrice();
+        }
+
+        double originalTotal = ticketTotal + foodTotal;
+        double discount = 0;
+
+        if (appliedVoucher != null && originalTotal >= appliedVoucher.getMinOrderAmount()) {
+            discount = (originalTotal * appliedVoucher.getDiscountPercent()) / 100.0;
+            if (discount > appliedVoucher.getMaxDiscountAmount()) {
+                discount = appliedVoucher.getMaxDiscountAmount();
+            }
+        }
+
+        currentFinalTotal = Math.max(0, originalTotal - discount);
+
+        lblTicketSummary.setText(String.format("• Tiền vé (%d ghế - %s): %,.0f VNĐ",
+                seatCodes.size(), strategy.getStrategyName(), ticketTotal));
+        lblFoodSummary.setText(String.format("• Tiền bắp nước (%d món): %,.0f VNĐ",
+                orderFoods.size(), foodTotal));
+        lblVoucherDiscount.setText(String.format("• Giảm giá Voucher: -%,.0f VNĐ", discount));
+        lblFinalAmount.setText(String.format("TỔNG TIỀN: %,.0f VNĐ", currentFinalTotal));
+
+        if (rbVietQR.isSelected()) {
+            updatePaymentMethodUI();
+        }
+    }
+
+    private void processPayment() {
+        String name = txtCustomerName.getText().trim();
+        String phone = txtCustomerPhone.getText().trim();
+
+        if (name.length() > 50) {
+            JOptionPane.showMessageDialog(this, "Tên khách hàng không được vượt quá 50 ký tự!", "Lỗi nhập liệu", JOptionPane.ERROR_MESSAGE);
+            txtCustomerName.requestFocus();
+            return;
+        }
+
+        if (!phone.isEmpty() && !phone.matches("^0[0-9]{9,10}$")) {
+            JOptionPane.showMessageDialog(this,
+                    "Số điện thoại không hợp lệ!\nVui lòng nhập số điện thoại Việt Nam bắt đầu bằng số 0 (10-11 chữ số).",
+                    "Lỗi nhập liệu", JOptionPane.ERROR_MESSAGE);
+            txtCustomerPhone.requestFocus();
+            return;
+        }
+
+        if (name.isEmpty()) name = "Khách Lẻ";
+
+        PricingStrategy strategy = PricingStrategies.determineStrategy(
+                showTime.getStartTime(),
+                chkStudentDiscount.isSelected()
+        );
+
+        // Chuyển trạng thái ghế sang BOOKED (Đỏ)
+        List<Ticket> tickets = new ArrayList<>();
+        for (String code : seatCodes) {
+            Seat seat = showTime.getSeats().get(code);
+            seat.setStatus(SeatStatus.BOOKED);
+            seat.setHoldTimestamp(0);
+            seat.setHeldByUserId(null);
+
+            double price = strategy.calculatePrice(showTime.getBasePrice(), seat, showTime.getStartTime());
+            tickets.add(new Ticket("TK" + System.currentTimeMillis() % 100000, showTime.getId(), code, price));
+        }
+
+        DataStore store = DataStore.getInstance();
+        Movie movie = store.getMovieMap().get(showTime.getMovieId());
+
+        double ticketTotal = tickets.stream().mapToDouble(Ticket::getPrice).sum();
+        double foodTotal = orderFoods.stream().mapToDouble(OrderItem::getTotalPrice).sum();
+        double originalTotal = ticketTotal + foodTotal;
+
+        double discount = 0;
+        if (appliedVoucher != null && originalTotal >= appliedVoucher.getMinOrderAmount()) {
+            discount = (originalTotal * appliedVoucher.getDiscountPercent()) / 100.0;
+            if (discount > appliedVoucher.getMaxDiscountAmount()) {
+                discount = appliedVoucher.getMaxDiscountAmount();
+            }
+        }
+        double finalAmount = Math.max(0, originalTotal - discount);
+
+        Invoice invoice = new Invoice(
+                tempInvoiceId,
+                SessionManager.getInstance().getCurrentUser() != null ? SessionManager.getInstance().getCurrentUser().getUsername() : "staff",
+                name,
+                phone,
+                showTime.getId(),
+                movie != null ? movie.getTitle() : "Phim",
+                "Phòng Chiếu 01",
+                showTime.getStartTime(),
+                tickets,
+                new ArrayList<>(orderFoods),
+                appliedVoucher != null ? appliedVoucher.getCode() : null,
+                originalTotal,
+                discount,
+                finalAmount,
+                LocalDateTime.now()
+        );
+
+        // Lưu vào RAM và flush xuống file JSON ngay lập tức
+        store.getInvoiceMap().put(invoice.getInvoiceId(), invoice);
+        store.saveAllData();
+
+        // In vé ra file text mô phỏng máy in nhiệt POS
+        File receipt = ReceiptPrinter.printReceipt(invoice);
+
+        String paymentMethodStr = rbVietQR.isSelected() ? "Chuyển khoản VietQR" : "Tiền mặt tại quầy";
+
+        JOptionPane.showMessageDialog(this,
+                "GIAO DỊCH THANH TOÁN THÀNH CÔNG!\n"
+                        + "• Mã Hóa Đơn : " + tempInvoiceId + "\n"
+                        + "• Phương Thức: " + paymentMethodStr + "\n"
+                        + "• Tổng Tiền  : " + String.format("%,.0f VNĐ", finalAmount) + "\n"
+                        + (receipt != null ? "• Đã in hóa đơn POS nhiệt ra: " + receipt.getName() : ""),
+                "Thành công", JOptionPane.INFORMATION_MESSAGE);
+
+        paymentSuccessful = true;
+        dispose();
+    }
+
+    public boolean isPaymentSuccessful() {
+        return paymentSuccessful;
+    }
+}

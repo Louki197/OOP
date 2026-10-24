@@ -1,0 +1,37 @@
+[
+  {
+    "id": "F01",
+    "name": "Bắp Rang Bơ (Ngọt/Mặn) - Size M",
+    "price": 45000.0,
+    "description": "Bắp rang bơ truyền thống thơm lừng",
+    "category": "POPCORN"
+  },
+  {
+    "id": "F02",
+    "name": "Bắp Phô Mai - Size L",
+    "price": 65000.0,
+    "description": "Bắp lắc phô mai béo ngậy đặc biệt",
+    "category": "POPCORN"
+  },
+  {
+    "id": "F03",
+    "name": "Coca Cola Tươi - Size L",
+    "price": 35000.0,
+    "description": "Nước ngọt có ga mát lạnh sảng khoái",
+    "category": "DRINK"
+  },
+  {
+    "id": "F04",
+    "name": "Combo Đơn (1 Bắp L + 1 Nước L)",
+    "price": 85000.0,
+    "description": "Combo tiết kiệm cho 1 người",
+    "category": "COMBO"
+  },
+  {
+    "id": "F05",
+    "name": "Combo Đôi Couple (1 Bắp L + 2 Nước L)",
+    "price": 115000.0,
+    "description": "Combo hoàn hảo cho cặp đôi hẹn hò",
+    "category": "COMBO"
+  }
+]

@@ -1,0 +1,3252 @@
+{
+  "ST4": {
+    "id": "ST4",
+    "movieId": "MOV02",
+    "roomId": "ROOM01",
+    "startTime": "2026-10-25 18:00:00",
+    "endTime": "2026-10-25 21:01:00",
+    "basePrice": 50000.0,
+    "seats": {
+      "A01": {
+        "code": "A01",
+        "rowIndex": 0,
+        "colIndex": 0,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "A02": {
+        "code": "A02",
+        "rowIndex": 0,
+        "colIndex": 1,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "C02": {
+        "code": "C02",
+        "rowIndex": 2,
+        "colIndex": 1,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "A03": {
+        "code": "A03",
+        "rowIndex": 0,
+        "colIndex": 2,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "A04": {
+        "code": "A04",
+        "rowIndex": 0,
+        "colIndex": 3,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "C01": {
+        "code": "C01",
+        "rowIndex": 2,
+        "colIndex": 0,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "C04": {
+        "code": "C04",
+        "rowIndex": 2,
+        "colIndex": 3,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "A05": {
+        "code": "A05",
+        "rowIndex": 0,
+        "colIndex": 4,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "E02": {
+        "code": "E02",
+        "rowIndex": 4,
+        "colIndex": 1,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "C03": {
+        "code": "C03",
+        "rowIndex": 2,
+        "colIndex": 2,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "A06": {
+        "code": "A06",
+        "rowIndex": 0,
+        "colIndex": 5,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "E01": {
+        "code": "E01",
+        "rowIndex": 4,
+        "colIndex": 0,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "C06": {
+        "code": "C06",
+        "rowIndex": 2,
+        "colIndex": 5,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "A07": {
+        "code": "A07",
+        "rowIndex": 0,
+        "colIndex": 6,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "E04": {
+        "code": "E04",
+        "rowIndex": 4,
+        "colIndex": 3,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "G02": {
+        "code": "G02",
+        "rowIndex": 6,
+        "colIndex": 1,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "C05": {
+        "code": "C05",
+        "rowIndex": 2,
+        "colIndex": 4,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "A08": {
+        "code": "A08",
+        "rowIndex": 0,
+        "colIndex": 7,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "E03": {
+        "code": "E03",
+        "rowIndex": 4,
+        "colIndex": 2,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "G01": {
+        "code": "G01",
+        "rowIndex": 6,
+        "colIndex": 0,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "C08": {
+        "code": "C08",
+        "rowIndex": 2,
+        "colIndex": 7,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "A09": {
+        "code": "A09",
+        "rowIndex": 0,
+        "colIndex": 8,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "E06": {
+        "code": "E06",
+        "rowIndex": 4,
+        "colIndex": 5,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "G04": {
+        "code": "G04",
+        "rowIndex": 6,
+        "colIndex": 3,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "C07": {
+        "code": "C07",
+        "rowIndex": 2,
+        "colIndex": 6,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "E05": {
+        "code": "E05",
+        "rowIndex": 4,
+        "colIndex": 4,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "G03": {
+        "code": "G03",
+        "rowIndex": 6,
+        "colIndex": 2,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "E08": {
+        "code": "E08",
+        "rowIndex": 4,
+        "colIndex": 7,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "G06": {
+        "code": "G06",
+        "rowIndex": 6,
+        "colIndex": 5,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "C09": {
+        "code": "C09",
+        "rowIndex": 2,
+        "colIndex": 8,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "E07": {
+        "code": "E07",
+        "rowIndex": 4,
+        "colIndex": 6,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "G05": {
+        "code": "G05",
+        "rowIndex": 6,
+        "colIndex": 4,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "G08": {
+        "code": "G08",
+        "rowIndex": 6,
+        "colIndex": 7,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "E09": {
+        "code": "E09",
+        "rowIndex": 4,
+        "colIndex": 8,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "G07": {
+        "code": "G07",
+        "rowIndex": 6,
+        "colIndex": 6,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "G09": {
+        "code": "G09",
+        "rowIndex": 6,
+        "colIndex": 8,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "A10": {
+        "code": "A10",
+        "rowIndex": 0,
+        "colIndex": 9,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "C10": {
+        "code": "C10",
+        "rowIndex": 2,
+        "colIndex": 9,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "E10": {
+        "code": "E10",
+        "rowIndex": 4,
+        "colIndex": 9,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "G10": {
+        "code": "G10",
+        "rowIndex": 6,
+        "colIndex": 9,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "B01": {
+        "code": "B01",
+        "rowIndex": 1,
+        "colIndex": 0,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "B02": {
+        "code": "B02",
+        "rowIndex": 1,
+        "colIndex": 1,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "D01": {
+        "code": "D01",
+        "rowIndex": 3,
+        "colIndex": 0,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "B03": {
+        "code": "B03",
+        "rowIndex": 1,
+        "colIndex": 2,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "D03": {
+        "code": "D03",
+        "rowIndex": 3,
+        "colIndex": 2,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "B04": {
+        "code": "B04",
+        "rowIndex": 1,
+        "colIndex": 3,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "F01": {
+        "code": "F01",
+        "rowIndex": 5,
+        "colIndex": 0,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "D02": {
+        "code": "D02",
+        "rowIndex": 3,
+        "colIndex": 1,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "B05": {
+        "code": "B05",
+        "rowIndex": 1,
+        "colIndex": 4,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "D05": {
+        "code": "D05",
+        "rowIndex": 3,
+        "colIndex": 4,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "B06": {
+        "code": "B06",
+        "rowIndex": 1,
+        "colIndex": 5,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "F03": {
+        "code": "F03",
+        "rowIndex": 5,
+        "colIndex": 2,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "H01": {
+        "code": "H01",
+        "rowIndex": 7,
+        "colIndex": 0,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "D04": {
+        "code": "D04",
+        "rowIndex": 3,
+        "colIndex": 3,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "B07": {
+        "code": "B07",
+        "rowIndex": 1,
+        "colIndex": 6,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "F02": {
+        "code": "F02",
+        "rowIndex": 5,
+        "colIndex": 1,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "D07": {
+        "code": "D07",
+        "rowIndex": 3,
+        "colIndex": 6,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "B08": {
+        "code": "B08",
+        "rowIndex": 1,
+        "colIndex": 7,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "F05": {
+        "code": "F05",
+        "rowIndex": 5,
+        "colIndex": 4,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "H03": {
+        "code": "H03",
+        "rowIndex": 7,
+        "colIndex": 2,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "D06": {
+        "code": "D06",
+        "rowIndex": 3,
+        "colIndex": 5,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "B09": {
+        "code": "B09",
+        "rowIndex": 1,
+        "colIndex": 8,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "F04": {
+        "code": "F04",
+        "rowIndex": 5,
+        "colIndex": 3,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "H02": {
+        "code": "H02",
+        "rowIndex": 7,
+        "colIndex": 1,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "D09": {
+        "code": "D09",
+        "rowIndex": 3,
+        "colIndex": 8,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "F07": {
+        "code": "F07",
+        "rowIndex": 5,
+        "colIndex": 6,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "H05": {
+        "code": "H05",
+        "rowIndex": 7,
+        "colIndex": 4,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "D08": {
+        "code": "D08",
+        "rowIndex": 3,
+        "colIndex": 7,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "F06": {
+        "code": "F06",
+        "rowIndex": 5,
+        "colIndex": 5,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "H04": {
+        "code": "H04",
+        "rowIndex": 7,
+        "colIndex": 3,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "F09": {
+        "code": "F09",
+        "rowIndex": 5,
+        "colIndex": 8,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "H07": {
+        "code": "H07",
+        "rowIndex": 7,
+        "colIndex": 6,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "F08": {
+        "code": "F08",
+        "rowIndex": 5,
+        "colIndex": 7,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "H06": {
+        "code": "H06",
+        "rowIndex": 7,
+        "colIndex": 5,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "H09": {
+        "code": "H09",
+        "rowIndex": 7,
+        "colIndex": 8,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "H08": {
+        "code": "H08",
+        "rowIndex": 7,
+        "colIndex": 7,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "B10": {
+        "code": "B10",
+        "rowIndex": 1,
+        "colIndex": 9,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "D10": {
+        "code": "D10",
+        "rowIndex": 3,
+        "colIndex": 9,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "F10": {
+        "code": "F10",
+        "rowIndex": 5,
+        "colIndex": 9,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "H10": {
+        "code": "H10",
+        "rowIndex": 7,
+        "colIndex": 9,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      }
+    }
+  },
+  "ST3": {
+    "id": "ST3",
+    "movieId": "MOV05",
+    "roomId": "ROOM01",
+    "startTime": "2026-10-25 03:00:00",
+    "endTime": "2026-10-25 05:15:00",
+    "basePrice": 85000.0,
+    "seats": {
+      "A01": {
+        "code": "A01",
+        "rowIndex": 0,
+        "colIndex": 0,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "A02": {
+        "code": "A02",
+        "rowIndex": 0,
+        "colIndex": 1,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "C02": {
+        "code": "C02",
+        "rowIndex": 2,
+        "colIndex": 1,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "A03": {
+        "code": "A03",
+        "rowIndex": 0,
+        "colIndex": 2,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "A04": {
+        "code": "A04",
+        "rowIndex": 0,
+        "colIndex": 3,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "C01": {
+        "code": "C01",
+        "rowIndex": 2,
+        "colIndex": 0,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "C04": {
+        "code": "C04",
+        "rowIndex": 2,
+        "colIndex": 3,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "A05": {
+        "code": "A05",
+        "rowIndex": 0,
+        "colIndex": 4,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "E02": {
+        "code": "E02",
+        "rowIndex": 4,
+        "colIndex": 1,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "C03": {
+        "code": "C03",
+        "rowIndex": 2,
+        "colIndex": 2,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "A06": {
+        "code": "A06",
+        "rowIndex": 0,
+        "colIndex": 5,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "E01": {
+        "code": "E01",
+        "rowIndex": 4,
+        "colIndex": 0,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "C06": {
+        "code": "C06",
+        "rowIndex": 2,
+        "colIndex": 5,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "A07": {
+        "code": "A07",
+        "rowIndex": 0,
+        "colIndex": 6,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "E04": {
+        "code": "E04",
+        "rowIndex": 4,
+        "colIndex": 3,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "G02": {
+        "code": "G02",
+        "rowIndex": 6,
+        "colIndex": 1,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "C05": {
+        "code": "C05",
+        "rowIndex": 2,
+        "colIndex": 4,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "A08": {
+        "code": "A08",
+        "rowIndex": 0,
+        "colIndex": 7,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "E03": {
+        "code": "E03",
+        "rowIndex": 4,
+        "colIndex": 2,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "G01": {
+        "code": "G01",
+        "rowIndex": 6,
+        "colIndex": 0,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "C08": {
+        "code": "C08",
+        "rowIndex": 2,
+        "colIndex": 7,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "A09": {
+        "code": "A09",
+        "rowIndex": 0,
+        "colIndex": 8,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "E06": {
+        "code": "E06",
+        "rowIndex": 4,
+        "colIndex": 5,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "G04": {
+        "code": "G04",
+        "rowIndex": 6,
+        "colIndex": 3,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "C07": {
+        "code": "C07",
+        "rowIndex": 2,
+        "colIndex": 6,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "E05": {
+        "code": "E05",
+        "rowIndex": 4,
+        "colIndex": 4,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "G03": {
+        "code": "G03",
+        "rowIndex": 6,
+        "colIndex": 2,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "E08": {
+        "code": "E08",
+        "rowIndex": 4,
+        "colIndex": 7,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "G06": {
+        "code": "G06",
+        "rowIndex": 6,
+        "colIndex": 5,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "C09": {
+        "code": "C09",
+        "rowIndex": 2,
+        "colIndex": 8,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "E07": {
+        "code": "E07",
+        "rowIndex": 4,
+        "colIndex": 6,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "G05": {
+        "code": "G05",
+        "rowIndex": 6,
+        "colIndex": 4,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "G08": {
+        "code": "G08",
+        "rowIndex": 6,
+        "colIndex": 7,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "E09": {
+        "code": "E09",
+        "rowIndex": 4,
+        "colIndex": 8,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "G07": {
+        "code": "G07",
+        "rowIndex": 6,
+        "colIndex": 6,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "G09": {
+        "code": "G09",
+        "rowIndex": 6,
+        "colIndex": 8,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "A10": {
+        "code": "A10",
+        "rowIndex": 0,
+        "colIndex": 9,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "C10": {
+        "code": "C10",
+        "rowIndex": 2,
+        "colIndex": 9,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "E10": {
+        "code": "E10",
+        "rowIndex": 4,
+        "colIndex": 9,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "G10": {
+        "code": "G10",
+        "rowIndex": 6,
+        "colIndex": 9,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "B01": {
+        "code": "B01",
+        "rowIndex": 1,
+        "colIndex": 0,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "B02": {
+        "code": "B02",
+        "rowIndex": 1,
+        "colIndex": 1,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "D01": {
+        "code": "D01",
+        "rowIndex": 3,
+        "colIndex": 0,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "B03": {
+        "code": "B03",
+        "rowIndex": 1,
+        "colIndex": 2,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "D03": {
+        "code": "D03",
+        "rowIndex": 3,
+        "colIndex": 2,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "B04": {
+        "code": "B04",
+        "rowIndex": 1,
+        "colIndex": 3,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "F01": {
+        "code": "F01",
+        "rowIndex": 5,
+        "colIndex": 0,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "D02": {
+        "code": "D02",
+        "rowIndex": 3,
+        "colIndex": 1,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "B05": {
+        "code": "B05",
+        "rowIndex": 1,
+        "colIndex": 4,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "D05": {
+        "code": "D05",
+        "rowIndex": 3,
+        "colIndex": 4,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "B06": {
+        "code": "B06",
+        "rowIndex": 1,
+        "colIndex": 5,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "F03": {
+        "code": "F03",
+        "rowIndex": 5,
+        "colIndex": 2,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "H01": {
+        "code": "H01",
+        "rowIndex": 7,
+        "colIndex": 0,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "D04": {
+        "code": "D04",
+        "rowIndex": 3,
+        "colIndex": 3,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "B07": {
+        "code": "B07",
+        "rowIndex": 1,
+        "colIndex": 6,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "F02": {
+        "code": "F02",
+        "rowIndex": 5,
+        "colIndex": 1,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "D07": {
+        "code": "D07",
+        "rowIndex": 3,
+        "colIndex": 6,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "B08": {
+        "code": "B08",
+        "rowIndex": 1,
+        "colIndex": 7,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "F05": {
+        "code": "F05",
+        "rowIndex": 5,
+        "colIndex": 4,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "H03": {
+        "code": "H03",
+        "rowIndex": 7,
+        "colIndex": 2,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "D06": {
+        "code": "D06",
+        "rowIndex": 3,
+        "colIndex": 5,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "B09": {
+        "code": "B09",
+        "rowIndex": 1,
+        "colIndex": 8,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "F04": {
+        "code": "F04",
+        "rowIndex": 5,
+        "colIndex": 3,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "H02": {
+        "code": "H02",
+        "rowIndex": 7,
+        "colIndex": 1,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "D09": {
+        "code": "D09",
+        "rowIndex": 3,
+        "colIndex": 8,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "F07": {
+        "code": "F07",
+        "rowIndex": 5,
+        "colIndex": 6,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "H05": {
+        "code": "H05",
+        "rowIndex": 7,
+        "colIndex": 4,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "D08": {
+        "code": "D08",
+        "rowIndex": 3,
+        "colIndex": 7,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "F06": {
+        "code": "F06",
+        "rowIndex": 5,
+        "colIndex": 5,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "H04": {
+        "code": "H04",
+        "rowIndex": 7,
+        "colIndex": 3,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "F09": {
+        "code": "F09",
+        "rowIndex": 5,
+        "colIndex": 8,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "H07": {
+        "code": "H07",
+        "rowIndex": 7,
+        "colIndex": 6,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "F08": {
+        "code": "F08",
+        "rowIndex": 5,
+        "colIndex": 7,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "H06": {
+        "code": "H06",
+        "rowIndex": 7,
+        "colIndex": 5,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "H09": {
+        "code": "H09",
+        "rowIndex": 7,
+        "colIndex": 8,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "H08": {
+        "code": "H08",
+        "rowIndex": 7,
+        "colIndex": 7,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "B10": {
+        "code": "B10",
+        "rowIndex": 1,
+        "colIndex": 9,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "D10": {
+        "code": "D10",
+        "rowIndex": 3,
+        "colIndex": 9,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "F10": {
+        "code": "F10",
+        "rowIndex": 5,
+        "colIndex": 9,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "H10": {
+        "code": "H10",
+        "rowIndex": 7,
+        "colIndex": 9,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      }
+    }
+  },
+  "ST01": {
+    "id": "ST01",
+    "movieId": "MOV01",
+    "roomId": "ROOM01",
+    "startTime": "2026-10-23 18:00:00",
+    "endTime": "2026-10-23 20:00:00",
+    "basePrice": 85000.0,
+    "seats": {
+      "A01": {
+        "code": "A01",
+        "rowIndex": 0,
+        "colIndex": 0,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "A02": {
+        "code": "A02",
+        "rowIndex": 0,
+        "colIndex": 1,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "C02": {
+        "code": "C02",
+        "rowIndex": 2,
+        "colIndex": 1,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "A03": {
+        "code": "A03",
+        "rowIndex": 0,
+        "colIndex": 2,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "A04": {
+        "code": "A04",
+        "rowIndex": 0,
+        "colIndex": 3,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "C01": {
+        "code": "C01",
+        "rowIndex": 2,
+        "colIndex": 0,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "C04": {
+        "code": "C04",
+        "rowIndex": 2,
+        "colIndex": 3,
+        "type": "VIP",
+        "status": "BOOKED",
+        "holdTimestamp": 0
+      },
+      "A05": {
+        "code": "A05",
+        "rowIndex": 0,
+        "colIndex": 4,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "E02": {
+        "code": "E02",
+        "rowIndex": 4,
+        "colIndex": 1,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "C03": {
+        "code": "C03",
+        "rowIndex": 2,
+        "colIndex": 2,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "A06": {
+        "code": "A06",
+        "rowIndex": 0,
+        "colIndex": 5,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "E01": {
+        "code": "E01",
+        "rowIndex": 4,
+        "colIndex": 0,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "C06": {
+        "code": "C06",
+        "rowIndex": 2,
+        "colIndex": 5,
+        "type": "VIP",
+        "status": "BOOKED",
+        "holdTimestamp": 0
+      },
+      "A07": {
+        "code": "A07",
+        "rowIndex": 0,
+        "colIndex": 6,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "E04": {
+        "code": "E04",
+        "rowIndex": 4,
+        "colIndex": 3,
+        "type": "VIP",
+        "status": "BOOKED",
+        "holdTimestamp": 0
+      },
+      "G02": {
+        "code": "G02",
+        "rowIndex": 6,
+        "colIndex": 1,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "C05": {
+        "code": "C05",
+        "rowIndex": 2,
+        "colIndex": 4,
+        "type": "VIP",
+        "status": "BOOKED",
+        "holdTimestamp": 0
+      },
+      "A08": {
+        "code": "A08",
+        "rowIndex": 0,
+        "colIndex": 7,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "E03": {
+        "code": "E03",
+        "rowIndex": 4,
+        "colIndex": 2,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "G01": {
+        "code": "G01",
+        "rowIndex": 6,
+        "colIndex": 0,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "C08": {
+        "code": "C08",
+        "rowIndex": 2,
+        "colIndex": 7,
+        "type": "VIP",
+        "status": "BOOKED",
+        "holdTimestamp": 0
+      },
+      "A09": {
+        "code": "A09",
+        "rowIndex": 0,
+        "colIndex": 8,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "E06": {
+        "code": "E06",
+        "rowIndex": 4,
+        "colIndex": 5,
+        "type": "VIP",
+        "status": "BOOKED",
+        "holdTimestamp": 0
+      },
+      "G04": {
+        "code": "G04",
+        "rowIndex": 6,
+        "colIndex": 3,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "C07": {
+        "code": "C07",
+        "rowIndex": 2,
+        "colIndex": 6,
+        "type": "VIP",
+        "status": "BOOKED",
+        "holdTimestamp": 0
+      },
+      "E05": {
+        "code": "E05",
+        "rowIndex": 4,
+        "colIndex": 4,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "G03": {
+        "code": "G03",
+        "rowIndex": 6,
+        "colIndex": 2,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "E08": {
+        "code": "E08",
+        "rowIndex": 4,
+        "colIndex": 7,
+        "type": "VIP",
+        "status": "BOOKED",
+        "holdTimestamp": 0
+      },
+      "G06": {
+        "code": "G06",
+        "rowIndex": 6,
+        "colIndex": 5,
+        "type": "SWEETBOX",
+        "status": "BOOKED",
+        "holdTimestamp": 0
+      },
+      "C09": {
+        "code": "C09",
+        "rowIndex": 2,
+        "colIndex": 8,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "E07": {
+        "code": "E07",
+        "rowIndex": 4,
+        "colIndex": 6,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "G05": {
+        "code": "G05",
+        "rowIndex": 6,
+        "colIndex": 4,
+        "type": "SWEETBOX",
+        "status": "BOOKED",
+        "holdTimestamp": 0
+      },
+      "G08": {
+        "code": "G08",
+        "rowIndex": 6,
+        "colIndex": 7,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "E09": {
+        "code": "E09",
+        "rowIndex": 4,
+        "colIndex": 8,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "G07": {
+        "code": "G07",
+        "rowIndex": 6,
+        "colIndex": 6,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "G09": {
+        "code": "G09",
+        "rowIndex": 6,
+        "colIndex": 8,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "A10": {
+        "code": "A10",
+        "rowIndex": 0,
+        "colIndex": 9,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "C10": {
+        "code": "C10",
+        "rowIndex": 2,
+        "colIndex": 9,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "E10": {
+        "code": "E10",
+        "rowIndex": 4,
+        "colIndex": 9,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "G10": {
+        "code": "G10",
+        "rowIndex": 6,
+        "colIndex": 9,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "B01": {
+        "code": "B01",
+        "rowIndex": 1,
+        "colIndex": 0,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "B02": {
+        "code": "B02",
+        "rowIndex": 1,
+        "colIndex": 1,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "D01": {
+        "code": "D01",
+        "rowIndex": 3,
+        "colIndex": 0,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "B03": {
+        "code": "B03",
+        "rowIndex": 1,
+        "colIndex": 2,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "D03": {
+        "code": "D03",
+        "rowIndex": 3,
+        "colIndex": 2,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "B04": {
+        "code": "B04",
+        "rowIndex": 1,
+        "colIndex": 3,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "F01": {
+        "code": "F01",
+        "rowIndex": 5,
+        "colIndex": 0,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "D02": {
+        "code": "D02",
+        "rowIndex": 3,
+        "colIndex": 1,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "B05": {
+        "code": "B05",
+        "rowIndex": 1,
+        "colIndex": 4,
+        "type": "STANDARD",
+        "status": "BOOKED",
+        "holdTimestamp": 0
+      },
+      "D05": {
+        "code": "D05",
+        "rowIndex": 3,
+        "colIndex": 4,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "B06": {
+        "code": "B06",
+        "rowIndex": 1,
+        "colIndex": 5,
+        "type": "STANDARD",
+        "status": "BOOKED",
+        "holdTimestamp": 0
+      },
+      "F03": {
+        "code": "F03",
+        "rowIndex": 5,
+        "colIndex": 2,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "H01": {
+        "code": "H01",
+        "rowIndex": 7,
+        "colIndex": 0,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "D04": {
+        "code": "D04",
+        "rowIndex": 3,
+        "colIndex": 3,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "B07": {
+        "code": "B07",
+        "rowIndex": 1,
+        "colIndex": 6,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "F02": {
+        "code": "F02",
+        "rowIndex": 5,
+        "colIndex": 1,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "D07": {
+        "code": "D07",
+        "rowIndex": 3,
+        "colIndex": 6,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "B08": {
+        "code": "B08",
+        "rowIndex": 1,
+        "colIndex": 7,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "F05": {
+        "code": "F05",
+        "rowIndex": 5,
+        "colIndex": 4,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "H03": {
+        "code": "H03",
+        "rowIndex": 7,
+        "colIndex": 2,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "D06": {
+        "code": "D06",
+        "rowIndex": 3,
+        "colIndex": 5,
+        "type": "VIP",
+        "status": "BOOKED",
+        "holdTimestamp": 0
+      },
+      "B09": {
+        "code": "B09",
+        "rowIndex": 1,
+        "colIndex": 8,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "F04": {
+        "code": "F04",
+        "rowIndex": 5,
+        "colIndex": 3,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "H02": {
+        "code": "H02",
+        "rowIndex": 7,
+        "colIndex": 1,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "D09": {
+        "code": "D09",
+        "rowIndex": 3,
+        "colIndex": 8,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "F07": {
+        "code": "F07",
+        "rowIndex": 5,
+        "colIndex": 6,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "H05": {
+        "code": "H05",
+        "rowIndex": 7,
+        "colIndex": 4,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "D08": {
+        "code": "D08",
+        "rowIndex": 3,
+        "colIndex": 7,
+        "type": "VIP",
+        "status": "BOOKED",
+        "holdTimestamp": 0
+      },
+      "F06": {
+        "code": "F06",
+        "rowIndex": 5,
+        "colIndex": 5,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "H04": {
+        "code": "H04",
+        "rowIndex": 7,
+        "colIndex": 3,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "F09": {
+        "code": "F09",
+        "rowIndex": 5,
+        "colIndex": 8,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "H07": {
+        "code": "H07",
+        "rowIndex": 7,
+        "colIndex": 6,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "F08": {
+        "code": "F08",
+        "rowIndex": 5,
+        "colIndex": 7,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "H06": {
+        "code": "H06",
+        "rowIndex": 7,
+        "colIndex": 5,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "H09": {
+        "code": "H09",
+        "rowIndex": 7,
+        "colIndex": 8,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "H08": {
+        "code": "H08",
+        "rowIndex": 7,
+        "colIndex": 7,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "B10": {
+        "code": "B10",
+        "rowIndex": 1,
+        "colIndex": 9,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "D10": {
+        "code": "D10",
+        "rowIndex": 3,
+        "colIndex": 9,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "F10": {
+        "code": "F10",
+        "rowIndex": 5,
+        "colIndex": 9,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "H10": {
+        "code": "H10",
+        "rowIndex": 7,
+        "colIndex": 9,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      }
+    }
+  },
+  "ST02": {
+    "id": "ST02",
+    "movieId": "MOV02",
+    "roomId": "ROOM01",
+    "startTime": "2026-10-23 21:00:00",
+    "endTime": "2026-10-24 00:00:00",
+    "basePrice": 90000.0,
+    "seats": {
+      "A01": {
+        "code": "A01",
+        "rowIndex": 0,
+        "colIndex": 0,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "A02": {
+        "code": "A02",
+        "rowIndex": 0,
+        "colIndex": 1,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "C02": {
+        "code": "C02",
+        "rowIndex": 2,
+        "colIndex": 1,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "A03": {
+        "code": "A03",
+        "rowIndex": 0,
+        "colIndex": 2,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "A04": {
+        "code": "A04",
+        "rowIndex": 0,
+        "colIndex": 3,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "C01": {
+        "code": "C01",
+        "rowIndex": 2,
+        "colIndex": 0,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "C04": {
+        "code": "C04",
+        "rowIndex": 2,
+        "colIndex": 3,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "A05": {
+        "code": "A05",
+        "rowIndex": 0,
+        "colIndex": 4,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "E02": {
+        "code": "E02",
+        "rowIndex": 4,
+        "colIndex": 1,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "C03": {
+        "code": "C03",
+        "rowIndex": 2,
+        "colIndex": 2,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "A06": {
+        "code": "A06",
+        "rowIndex": 0,
+        "colIndex": 5,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "E01": {
+        "code": "E01",
+        "rowIndex": 4,
+        "colIndex": 0,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "C06": {
+        "code": "C06",
+        "rowIndex": 2,
+        "colIndex": 5,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "A07": {
+        "code": "A07",
+        "rowIndex": 0,
+        "colIndex": 6,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "E04": {
+        "code": "E04",
+        "rowIndex": 4,
+        "colIndex": 3,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "G02": {
+        "code": "G02",
+        "rowIndex": 6,
+        "colIndex": 1,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "C05": {
+        "code": "C05",
+        "rowIndex": 2,
+        "colIndex": 4,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "A08": {
+        "code": "A08",
+        "rowIndex": 0,
+        "colIndex": 7,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "E03": {
+        "code": "E03",
+        "rowIndex": 4,
+        "colIndex": 2,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "G01": {
+        "code": "G01",
+        "rowIndex": 6,
+        "colIndex": 0,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "C08": {
+        "code": "C08",
+        "rowIndex": 2,
+        "colIndex": 7,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "A09": {
+        "code": "A09",
+        "rowIndex": 0,
+        "colIndex": 8,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "E06": {
+        "code": "E06",
+        "rowIndex": 4,
+        "colIndex": 5,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "G04": {
+        "code": "G04",
+        "rowIndex": 6,
+        "colIndex": 3,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "C07": {
+        "code": "C07",
+        "rowIndex": 2,
+        "colIndex": 6,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "E05": {
+        "code": "E05",
+        "rowIndex": 4,
+        "colIndex": 4,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "G03": {
+        "code": "G03",
+        "rowIndex": 6,
+        "colIndex": 2,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "E08": {
+        "code": "E08",
+        "rowIndex": 4,
+        "colIndex": 7,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "G06": {
+        "code": "G06",
+        "rowIndex": 6,
+        "colIndex": 5,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "C09": {
+        "code": "C09",
+        "rowIndex": 2,
+        "colIndex": 8,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "E07": {
+        "code": "E07",
+        "rowIndex": 4,
+        "colIndex": 6,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "G05": {
+        "code": "G05",
+        "rowIndex": 6,
+        "colIndex": 4,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "G08": {
+        "code": "G08",
+        "rowIndex": 6,
+        "colIndex": 7,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "E09": {
+        "code": "E09",
+        "rowIndex": 4,
+        "colIndex": 8,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "G07": {
+        "code": "G07",
+        "rowIndex": 6,
+        "colIndex": 6,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "G09": {
+        "code": "G09",
+        "rowIndex": 6,
+        "colIndex": 8,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "A10": {
+        "code": "A10",
+        "rowIndex": 0,
+        "colIndex": 9,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "C10": {
+        "code": "C10",
+        "rowIndex": 2,
+        "colIndex": 9,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "E10": {
+        "code": "E10",
+        "rowIndex": 4,
+        "colIndex": 9,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "G10": {
+        "code": "G10",
+        "rowIndex": 6,
+        "colIndex": 9,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "B01": {
+        "code": "B01",
+        "rowIndex": 1,
+        "colIndex": 0,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "B02": {
+        "code": "B02",
+        "rowIndex": 1,
+        "colIndex": 1,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "D01": {
+        "code": "D01",
+        "rowIndex": 3,
+        "colIndex": 0,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "B03": {
+        "code": "B03",
+        "rowIndex": 1,
+        "colIndex": 2,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "D03": {
+        "code": "D03",
+        "rowIndex": 3,
+        "colIndex": 2,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "B04": {
+        "code": "B04",
+        "rowIndex": 1,
+        "colIndex": 3,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "F01": {
+        "code": "F01",
+        "rowIndex": 5,
+        "colIndex": 0,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "D02": {
+        "code": "D02",
+        "rowIndex": 3,
+        "colIndex": 1,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "B05": {
+        "code": "B05",
+        "rowIndex": 1,
+        "colIndex": 4,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "D05": {
+        "code": "D05",
+        "rowIndex": 3,
+        "colIndex": 4,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "B06": {
+        "code": "B06",
+        "rowIndex": 1,
+        "colIndex": 5,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "F03": {
+        "code": "F03",
+        "rowIndex": 5,
+        "colIndex": 2,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "H01": {
+        "code": "H01",
+        "rowIndex": 7,
+        "colIndex": 0,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "D04": {
+        "code": "D04",
+        "rowIndex": 3,
+        "colIndex": 3,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "B07": {
+        "code": "B07",
+        "rowIndex": 1,
+        "colIndex": 6,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "F02": {
+        "code": "F02",
+        "rowIndex": 5,
+        "colIndex": 1,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "D07": {
+        "code": "D07",
+        "rowIndex": 3,
+        "colIndex": 6,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "B08": {
+        "code": "B08",
+        "rowIndex": 1,
+        "colIndex": 7,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "F05": {
+        "code": "F05",
+        "rowIndex": 5,
+        "colIndex": 4,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "H03": {
+        "code": "H03",
+        "rowIndex": 7,
+        "colIndex": 2,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "D06": {
+        "code": "D06",
+        "rowIndex": 3,
+        "colIndex": 5,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "B09": {
+        "code": "B09",
+        "rowIndex": 1,
+        "colIndex": 8,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "F04": {
+        "code": "F04",
+        "rowIndex": 5,
+        "colIndex": 3,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "H02": {
+        "code": "H02",
+        "rowIndex": 7,
+        "colIndex": 1,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "D09": {
+        "code": "D09",
+        "rowIndex": 3,
+        "colIndex": 8,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "F07": {
+        "code": "F07",
+        "rowIndex": 5,
+        "colIndex": 6,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "H05": {
+        "code": "H05",
+        "rowIndex": 7,
+        "colIndex": 4,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "D08": {
+        "code": "D08",
+        "rowIndex": 3,
+        "colIndex": 7,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "F06": {
+        "code": "F06",
+        "rowIndex": 5,
+        "colIndex": 5,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "H04": {
+        "code": "H04",
+        "rowIndex": 7,
+        "colIndex": 3,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "F09": {
+        "code": "F09",
+        "rowIndex": 5,
+        "colIndex": 8,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "H07": {
+        "code": "H07",
+        "rowIndex": 7,
+        "colIndex": 6,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "F08": {
+        "code": "F08",
+        "rowIndex": 5,
+        "colIndex": 7,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "H06": {
+        "code": "H06",
+        "rowIndex": 7,
+        "colIndex": 5,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "H09": {
+        "code": "H09",
+        "rowIndex": 7,
+        "colIndex": 8,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "H08": {
+        "code": "H08",
+        "rowIndex": 7,
+        "colIndex": 7,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "B10": {
+        "code": "B10",
+        "rowIndex": 1,
+        "colIndex": 9,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "D10": {
+        "code": "D10",
+        "rowIndex": 3,
+        "colIndex": 9,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "F10": {
+        "code": "F10",
+        "rowIndex": 5,
+        "colIndex": 9,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "H10": {
+        "code": "H10",
+        "rowIndex": 7,
+        "colIndex": 9,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      }
+    }
+  },
+  "ST5": {
+    "id": "ST5",
+    "movieId": "MOV03",
+    "roomId": "ROOM01",
+    "startTime": "2026-10-28 19:00:00",
+    "endTime": "2026-10-28 21:29:00",
+    "basePrice": 50000.0,
+    "seats": {
+      "A01": {
+        "code": "A01",
+        "rowIndex": 0,
+        "colIndex": 0,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "A02": {
+        "code": "A02",
+        "rowIndex": 0,
+        "colIndex": 1,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "C02": {
+        "code": "C02",
+        "rowIndex": 2,
+        "colIndex": 1,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "A03": {
+        "code": "A03",
+        "rowIndex": 0,
+        "colIndex": 2,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "A04": {
+        "code": "A04",
+        "rowIndex": 0,
+        "colIndex": 3,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "C01": {
+        "code": "C01",
+        "rowIndex": 2,
+        "colIndex": 0,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "C04": {
+        "code": "C04",
+        "rowIndex": 2,
+        "colIndex": 3,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "A05": {
+        "code": "A05",
+        "rowIndex": 0,
+        "colIndex": 4,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "E02": {
+        "code": "E02",
+        "rowIndex": 4,
+        "colIndex": 1,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "C03": {
+        "code": "C03",
+        "rowIndex": 2,
+        "colIndex": 2,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "A06": {
+        "code": "A06",
+        "rowIndex": 0,
+        "colIndex": 5,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "E01": {
+        "code": "E01",
+        "rowIndex": 4,
+        "colIndex": 0,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "C06": {
+        "code": "C06",
+        "rowIndex": 2,
+        "colIndex": 5,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "A07": {
+        "code": "A07",
+        "rowIndex": 0,
+        "colIndex": 6,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "E04": {
+        "code": "E04",
+        "rowIndex": 4,
+        "colIndex": 3,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "G02": {
+        "code": "G02",
+        "rowIndex": 6,
+        "colIndex": 1,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "C05": {
+        "code": "C05",
+        "rowIndex": 2,
+        "colIndex": 4,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "A08": {
+        "code": "A08",
+        "rowIndex": 0,
+        "colIndex": 7,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "E03": {
+        "code": "E03",
+        "rowIndex": 4,
+        "colIndex": 2,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "G01": {
+        "code": "G01",
+        "rowIndex": 6,
+        "colIndex": 0,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "C08": {
+        "code": "C08",
+        "rowIndex": 2,
+        "colIndex": 7,
+        "type": "VIP",
+        "status": "BOOKED",
+        "holdTimestamp": 0
+      },
+      "A09": {
+        "code": "A09",
+        "rowIndex": 0,
+        "colIndex": 8,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "E06": {
+        "code": "E06",
+        "rowIndex": 4,
+        "colIndex": 5,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "G04": {
+        "code": "G04",
+        "rowIndex": 6,
+        "colIndex": 3,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "C07": {
+        "code": "C07",
+        "rowIndex": 2,
+        "colIndex": 6,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "E05": {
+        "code": "E05",
+        "rowIndex": 4,
+        "colIndex": 4,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "G03": {
+        "code": "G03",
+        "rowIndex": 6,
+        "colIndex": 2,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "E08": {
+        "code": "E08",
+        "rowIndex": 4,
+        "colIndex": 7,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "G06": {
+        "code": "G06",
+        "rowIndex": 6,
+        "colIndex": 5,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "C09": {
+        "code": "C09",
+        "rowIndex": 2,
+        "colIndex": 8,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "E07": {
+        "code": "E07",
+        "rowIndex": 4,
+        "colIndex": 6,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "G05": {
+        "code": "G05",
+        "rowIndex": 6,
+        "colIndex": 4,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "G08": {
+        "code": "G08",
+        "rowIndex": 6,
+        "colIndex": 7,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "E09": {
+        "code": "E09",
+        "rowIndex": 4,
+        "colIndex": 8,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "G07": {
+        "code": "G07",
+        "rowIndex": 6,
+        "colIndex": 6,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "G09": {
+        "code": "G09",
+        "rowIndex": 6,
+        "colIndex": 8,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "A10": {
+        "code": "A10",
+        "rowIndex": 0,
+        "colIndex": 9,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "C10": {
+        "code": "C10",
+        "rowIndex": 2,
+        "colIndex": 9,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "E10": {
+        "code": "E10",
+        "rowIndex": 4,
+        "colIndex": 9,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "G10": {
+        "code": "G10",
+        "rowIndex": 6,
+        "colIndex": 9,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "B01": {
+        "code": "B01",
+        "rowIndex": 1,
+        "colIndex": 0,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "B02": {
+        "code": "B02",
+        "rowIndex": 1,
+        "colIndex": 1,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "D01": {
+        "code": "D01",
+        "rowIndex": 3,
+        "colIndex": 0,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "B03": {
+        "code": "B03",
+        "rowIndex": 1,
+        "colIndex": 2,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "D03": {
+        "code": "D03",
+        "rowIndex": 3,
+        "colIndex": 2,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "B04": {
+        "code": "B04",
+        "rowIndex": 1,
+        "colIndex": 3,
+        "type": "STANDARD",
+        "status": "BOOKED",
+        "holdTimestamp": 0
+      },
+      "F01": {
+        "code": "F01",
+        "rowIndex": 5,
+        "colIndex": 0,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "D02": {
+        "code": "D02",
+        "rowIndex": 3,
+        "colIndex": 1,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "B05": {
+        "code": "B05",
+        "rowIndex": 1,
+        "colIndex": 4,
+        "type": "STANDARD",
+        "status": "BOOKED",
+        "holdTimestamp": 0
+      },
+      "D05": {
+        "code": "D05",
+        "rowIndex": 3,
+        "colIndex": 4,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "B06": {
+        "code": "B06",
+        "rowIndex": 1,
+        "colIndex": 5,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "F03": {
+        "code": "F03",
+        "rowIndex": 5,
+        "colIndex": 2,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "H01": {
+        "code": "H01",
+        "rowIndex": 7,
+        "colIndex": 0,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "D04": {
+        "code": "D04",
+        "rowIndex": 3,
+        "colIndex": 3,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "B07": {
+        "code": "B07",
+        "rowIndex": 1,
+        "colIndex": 6,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "F02": {
+        "code": "F02",
+        "rowIndex": 5,
+        "colIndex": 1,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "D07": {
+        "code": "D07",
+        "rowIndex": 3,
+        "colIndex": 6,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "B08": {
+        "code": "B08",
+        "rowIndex": 1,
+        "colIndex": 7,
+        "type": "STANDARD",
+        "status": "BOOKED",
+        "holdTimestamp": 0
+      },
+      "F05": {
+        "code": "F05",
+        "rowIndex": 5,
+        "colIndex": 4,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "H03": {
+        "code": "H03",
+        "rowIndex": 7,
+        "colIndex": 2,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "D06": {
+        "code": "D06",
+        "rowIndex": 3,
+        "colIndex": 5,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "B09": {
+        "code": "B09",
+        "rowIndex": 1,
+        "colIndex": 8,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "F04": {
+        "code": "F04",
+        "rowIndex": 5,
+        "colIndex": 3,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "H02": {
+        "code": "H02",
+        "rowIndex": 7,
+        "colIndex": 1,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "D09": {
+        "code": "D09",
+        "rowIndex": 3,
+        "colIndex": 8,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "F07": {
+        "code": "F07",
+        "rowIndex": 5,
+        "colIndex": 6,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "H05": {
+        "code": "H05",
+        "rowIndex": 7,
+        "colIndex": 4,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "D08": {
+        "code": "D08",
+        "rowIndex": 3,
+        "colIndex": 7,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "F06": {
+        "code": "F06",
+        "rowIndex": 5,
+        "colIndex": 5,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "H04": {
+        "code": "H04",
+        "rowIndex": 7,
+        "colIndex": 3,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "F09": {
+        "code": "F09",
+        "rowIndex": 5,
+        "colIndex": 8,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "H07": {
+        "code": "H07",
+        "rowIndex": 7,
+        "colIndex": 6,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "F08": {
+        "code": "F08",
+        "rowIndex": 5,
+        "colIndex": 7,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "H06": {
+        "code": "H06",
+        "rowIndex": 7,
+        "colIndex": 5,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "H09": {
+        "code": "H09",
+        "rowIndex": 7,
+        "colIndex": 8,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "H08": {
+        "code": "H08",
+        "rowIndex": 7,
+        "colIndex": 7,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "B10": {
+        "code": "B10",
+        "rowIndex": 1,
+        "colIndex": 9,
+        "type": "STANDARD",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "D10": {
+        "code": "D10",
+        "rowIndex": 3,
+        "colIndex": 9,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "F10": {
+        "code": "F10",
+        "rowIndex": 5,
+        "colIndex": 9,
+        "type": "VIP",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      },
+      "H10": {
+        "code": "H10",
+        "rowIndex": 7,
+        "colIndex": 9,
+        "type": "SWEETBOX",
+        "status": "AVAILABLE",
+        "holdTimestamp": 0
+      }
+    }
+  }
+}

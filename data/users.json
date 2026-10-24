@@ -1,0 +1,29 @@
+{
+  "staff01": {
+    "id": "U002",
+    "username": "staff01",
+    "password": "123456",
+    "fullName": "Nguyễn Văn Bán Vé",
+    "phone": "0977777777",
+    "role": "STAFF",
+    "active": true
+  },
+  "staff02": {
+    "id": "U003",
+    "username": "staff02",
+    "password": "123456",
+    "fullName": "Trần Thị Thu Ngân",
+    "phone": "0966666666",
+    "role": "STAFF",
+    "active": true
+  },
+  "admin": {
+    "id": "U001",
+    "username": "admin",
+    "password": "admin123",
+    "fullName": "Quản Lý Rạp PTIT",
+    "phone": "0988888888",
+    "role": "ADMIN",
+    "active": true
+  }
+}
