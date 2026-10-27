@@ -2,6 +2,7 @@ package vn.edu.ptit.cinema.service;
 
 import com.google.gson.reflect.TypeToken;
 import vn.edu.ptit.cinema.dao.BaseDAO;
+import vn.edu.ptit.cinema.model.account.Customer;
 import vn.edu.ptit.cinema.model.account.Role;
 import vn.edu.ptit.cinema.model.account.User;
 import vn.edu.ptit.cinema.model.booking.Invoice;
@@ -48,6 +49,7 @@ public class DataStore {
     private final Map<String, ShowTime> showTimeMap = new ConcurrentHashMap<>();
     private final Map<String, Invoice> invoiceMap = new ConcurrentHashMap<>();
     private final Map<String, Voucher> voucherMap = new ConcurrentHashMap<>();
+    private final Map<String, Customer> customerMap = new ConcurrentHashMap<>();
     private final List<FoodItem> foodList = new CopyOnWriteArrayList<>();
 
     // DAO đa năng phục vụ lưu trữ file JSON
@@ -170,11 +172,21 @@ public class DataStore {
             foodList.addAll(loadedFoods);
         }
 
+        // 8. Tải Khách hàng thành viên
+        Type customerMapType = new TypeToken<Map<String, Customer>>() {}.getType();
+        Map<String, Customer> loadedCustomers = storageDAO.readMapFromFile("customers.json", customerMapType);
+        if (loadedCustomers.isEmpty()) {
+            seedInitialCustomers();
+        } else {
+            customerMap.putAll(loadedCustomers);
+        }
+
         System.out.println("[DataStore] Nạp dữ liệu hoàn tất! Users: " + userMap.size()
                 + " | Movies: " + movieMap.size()
                 + " | Rooms: " + roomMap.size()
                 + " | ShowTimes: " + showTimeMap.size()
-                + " | Foods: " + foodList.size());
+                + " | Foods: " + foodList.size()
+                + " | Customers: " + customerMap.size());
     }
 
     /**
@@ -189,6 +201,7 @@ public class DataStore {
         storageDAO.writeToFile("invoices.json", invoiceMap);
         storageDAO.writeToFile("vouchers.json", voucherMap);
         storageDAO.writeToFile("foods.json", foodList);
+        storageDAO.writeToFile("customers.json", customerMap);
         System.out.println("[DataStore Background] Lưu dữ liệu thành công lúc " + LocalDateTime.now());
     }
 
@@ -243,11 +256,6 @@ public class DataStore {
                     }
                 }
             }
-        }
-
-        // Nếu có thay đổi, trigger thông báo lưu lại
-        if (hasChanged) {
-            // Có thể kích hoạt Observer Pattern tại đây để Swing UI vẽ lại màu ngay lập tức
         }
     }
 
@@ -378,6 +386,18 @@ public class DataStore {
         storageDAO.writeToFile("foods.json", foodList);
     }
 
+    private void seedInitialCustomers() {
+        Customer c1 = new Customer("0912345678", "Nguyễn Văn Tuấn", 50000.0, "VIP", 1500000.0);
+        Customer c2 = new Customer("0988888888", "Trần Thị Mai", 120000.0, "DIAMOND", 3200000.0);
+        Customer c3 = new Customer("0977112233", "Lê Hoàng Nam", 15000.0, "STANDARD", 450000.0);
+
+        customerMap.put(c1.getPhone(), c1);
+        customerMap.put(c2.getPhone(), c2);
+        customerMap.put(c3.getPhone(), c3);
+
+        storageDAO.writeToFile("customers.json", customerMap);
+    }
+
     // =========================================================================
     // GETTERS CHO CÁC COLLECTION (Truy xuất từ Controller & Service)
     // =========================================================================
@@ -404,6 +424,10 @@ public class DataStore {
 
     public Map<String, Voucher> getVoucherMap() {
         return voucherMap;
+    }
+
+    public Map<String, Customer> getCustomerMap() {
+        return customerMap;
     }
 
     public List<FoodItem> getFoodList() {

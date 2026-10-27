@@ -5,7 +5,7 @@
     "genre": "Khoa Học Viễn Tưởng",
     "durationMinutes": 166,
     "releaseDate": "2024-03-01",
-    "posterPath": "posters/dune2.jpg",
+    "posterPath": "posters/poster_1793095274382.jpg",
     "description": "Hành trình vĩ đại của Paul Atreides trong việc giải phóng Arrakis.",
     "director": "Denis Villeneuve",
     "ageRating": "C16"
@@ -32,6 +32,28 @@
     "director": "Phi Tiến Sơn",
     "ageRating": "C13"
   },
+  "MOV06": {
+    "id": "MOV06",
+    "title": "Hùng béo",
+    "genre": "Hành Động",
+    "durationMinutes": 120,
+    "releaseDate": "2026-10-27",
+    "posterPath": "",
+    "description": "Phim mới",
+    "director": "Duy",
+    "ageRating": "C16"
+  },
+  "MOV07": {
+    "id": "MOV07",
+    "title": "GIang",
+    "genre": "Hành Động",
+    "durationMinutes": 120,
+    "releaseDate": "2026-10-27",
+    "posterPath": "",
+    "description": "Phim mới",
+    "director": "Duy",
+    "ageRating": "C16"
+  },
   "MOV04": {
     "id": "MOV04",
     "title": "Hùng baby",
@@ -53,5 +75,27 @@
     "description": "Phim mới",
     "director": "Christopher Nolan",
     "ageRating": "C18"
+  },
+  "MOV010": {
+    "id": "MOV010",
+    "title": "conan",
+    "genre": "Hành Động",
+    "durationMinutes": 150,
+    "releaseDate": "2026-10-27",
+    "posterPath": "",
+    "description": "Phim mới",
+    "director": "wakasa",
+    "ageRating": "P"
+  },
+  "MOV09": {
+    "id": "MOV09",
+    "title": "Long",
+    "genre": "Hành Động",
+    "durationMinutes": 120,
+    "releaseDate": "2026-10-27",
+    "posterPath": "",
+    "description": "Phim mới",
+    "director": "Duy",
+    "ageRating": "C16"
   }
 }

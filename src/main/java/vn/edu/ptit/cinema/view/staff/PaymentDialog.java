@@ -1,6 +1,7 @@
 package vn.edu.ptit.cinema.view.staff;
 
 import com.formdev.flatlaf.FlatClientProperties;
+import vn.edu.ptit.cinema.model.account.Customer;
 import vn.edu.ptit.cinema.model.booking.Invoice;
 import vn.edu.ptit.cinema.model.booking.OrderItem;
 import vn.edu.ptit.cinema.model.booking.Ticket;
@@ -19,6 +20,8 @@ import vn.edu.ptit.cinema.view.component.QrCodePanel;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.io.File;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -29,6 +32,7 @@ import java.util.Set;
 /**
  * [STEP 3: PAYMENT DIALOG - XÁC NHẬN THANH TOÁN VÀ IN HÓA ĐƠN]
  * Hỗ trợ chuyển đổi linh hoạt: Tiền mặt tại quầy hoặc Quét mã VietQR ngân hàng.
+ * Tích hợp hệ thống Khách hàng thành viên (Member Loyalty) tích điểm và trừ tiền vé.
  */
 public class PaymentDialog extends JDialog {
 
@@ -39,6 +43,13 @@ public class PaymentDialog extends JDialog {
 
     private JTextField txtCustomerName;
     private JTextField txtCustomerPhone;
+    private JLabel lblCustomerTierBadge;
+    private JCheckBox chkUseLoyaltyPoints;
+    private JButton btnRegisterMember;
+    private JButton btnLookupMember;
+    private Customer currentCustomer = null;
+    private double pointsDiscountAmount = 0;
+
     private JTextField txtVoucher;
     private JButton btnApplyVoucher;
     private JButton btnRemoveVoucher;
@@ -52,6 +63,7 @@ public class PaymentDialog extends JDialog {
     private JLabel lblTicketSummary;
     private JLabel lblFoodSummary;
     private JLabel lblVoucherDiscount;
+    private JLabel lblPointsDiscountSummary;
     private JLabel lblFinalAmount;
 
     private Voucher appliedVoucher = null;
@@ -68,7 +80,7 @@ public class PaymentDialog extends JDialog {
     }
 
     private void initUI() {
-        setSize(780, 720);
+        setSize(820, 750);
         setLocationRelativeTo(getParent());
         setResizable(false);
         setLayout(new BorderLayout(15, 15));
@@ -104,15 +116,77 @@ public class PaymentDialog extends JDialog {
         JPanel leftPanel = new JPanel();
         leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
 
-        // Block 1: Thông tin khách
-        JPanel custBox = new JPanel(new GridLayout(2, 2, 8, 8));
-        custBox.setBorder(BorderFactory.createTitledBorder("1. Thông tin khách hàng"));
-        custBox.add(new JLabel("Họ tên:"));
-        txtCustomerName = new JTextField("Nguyễn Văn A");
-        custBox.add(txtCustomerName);
-        custBox.add(new JLabel("Số ĐT:"));
+        // Block 1: Thông tin khách & Thẻ thành viên
+        JPanel custBox = new JPanel();
+        custBox.setLayout(new BoxLayout(custBox, BoxLayout.Y_AXIS));
+        custBox.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createTitledBorder("1. Khách hàng & Thành viên (Member)"),
+                new EmptyBorder(6, 10, 8, 10)
+        ));
+
+        // Dòng SĐT + Nút Tra cứu
+        JPanel phoneRow = new JPanel(new BorderLayout(6, 0));
+        phoneRow.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
+        JLabel lblPhoneTitle = new JLabel("Số ĐT: ");
+        lblPhoneTitle.setPreferredSize(new Dimension(55, 28));
         txtCustomerPhone = new JTextField("0912345678");
-        custBox.add(txtCustomerPhone);
+        btnLookupMember = new JButton("Tra cứu");
+        btnLookupMember.setFont(new Font("Segoe UI", Font.PLAIN, 11));
+        btnLookupMember.addActionListener(e -> lookupCustomerByPhone());
+
+        phoneRow.add(lblPhoneTitle, BorderLayout.WEST);
+        phoneRow.add(txtCustomerPhone, BorderLayout.CENTER);
+        phoneRow.add(btnLookupMember, BorderLayout.EAST);
+
+        // Dòng Tên khách
+        JPanel nameRow = new JPanel(new BorderLayout(6, 0));
+        nameRow.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
+        JLabel lblNameTitle = new JLabel("Họ tên: ");
+        lblNameTitle.setPreferredSize(new Dimension(55, 28));
+        txtCustomerName = new JTextField("Nguyễn Văn Tuấn");
+        nameRow.add(lblNameTitle, BorderLayout.WEST);
+        nameRow.add(txtCustomerName, BorderLayout.CENTER);
+
+        // Dòng Badge thành viên & Nút Đăng ký nhanh
+        JPanel memberBadgeRow = new JPanel(new BorderLayout(6, 0));
+        memberBadgeRow.setMaximumSize(new Dimension(Integer.MAX_VALUE, 26));
+        lblCustomerTierBadge = new JLabel("⭐ Thành viên VIP (Tích lũy: 50.000 VNĐ)");
+        lblCustomerTierBadge.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        lblCustomerTierBadge.setForeground(new Color(22, 163, 74));
+
+        btnRegisterMember = new JButton("+ Cấp thẻ mới");
+        btnRegisterMember.setFont(new Font("Segoe UI", Font.BOLD, 11));
+        btnRegisterMember.setBackground(new Color(241, 245, 249));
+        btnRegisterMember.setForeground(new Color(22, 163, 74));
+        btnRegisterMember.putClientProperty(FlatClientProperties.STYLE, "arc: 6;");
+        btnRegisterMember.setVisible(true);
+        btnRegisterMember.addActionListener(e -> handleQuickRegisterCustomer());
+
+        memberBadgeRow.add(lblCustomerTierBadge, BorderLayout.CENTER);
+        memberBadgeRow.add(btnRegisterMember, BorderLayout.EAST);
+
+        // Checkbox dùng điểm tích lũy
+        chkUseLoyaltyPoints = new JCheckBox("Dùng điểm tích lũy trừ tiền vé");
+        chkUseLoyaltyPoints.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        chkUseLoyaltyPoints.setForeground(new Color(37, 99, 235));
+        chkUseLoyaltyPoints.addActionListener(e -> recalculateTotal());
+
+        custBox.add(phoneRow);
+        custBox.add(Box.createVerticalStrut(6));
+        custBox.add(nameRow);
+        custBox.add(Box.createVerticalStrut(6));
+        custBox.add(memberBadgeRow);
+        custBox.add(Box.createVerticalStrut(4));
+        custBox.add(chkUseLoyaltyPoints);
+
+        // Tự động tra cứu khi rời ô SĐT
+        txtCustomerPhone.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusLost(FocusEvent e) {
+                lookupCustomerByPhone();
+            }
+        });
+
         leftPanel.add(custBox);
         leftPanel.add(Box.createVerticalStrut(10));
 
@@ -161,7 +235,7 @@ public class PaymentDialog extends JDialog {
         leftPanel.add(Box.createVerticalStrut(10));
 
         // Block 3: Tóm tắt chi phí
-        JPanel summaryBox = new JPanel(new GridLayout(4, 1, 5, 5));
+        JPanel summaryBox = new JPanel(new GridLayout(5, 1, 4, 4));
         summaryBox.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createTitledBorder("3. Tóm tắt chi phí"),
                 new EmptyBorder(6, 10, 6, 10)
@@ -171,6 +245,8 @@ public class PaymentDialog extends JDialog {
         lblFoodSummary = new JLabel("• Tiền bắp nước (F&B): 0 VNĐ");
         lblVoucherDiscount = new JLabel("• Giảm giá Voucher: -0 VNĐ");
         lblVoucherDiscount.setForeground(new Color(22, 163, 74));
+        lblPointsDiscountSummary = new JLabel("• Trừ điểm thành viên: -0 VNĐ");
+        lblPointsDiscountSummary.setForeground(new Color(37, 99, 235));
         lblFinalAmount = new JLabel("TỔNG TIỀN: 0 VNĐ");
         lblFinalAmount.setFont(new Font("Segoe UI", Font.BOLD, 16));
         lblFinalAmount.setForeground(new Color(220, 38, 38));
@@ -178,6 +254,7 @@ public class PaymentDialog extends JDialog {
         summaryBox.add(lblTicketSummary);
         summaryBox.add(lblFoodSummary);
         summaryBox.add(lblVoucherDiscount);
+        summaryBox.add(lblPointsDiscountSummary);
         summaryBox.add(lblFinalAmount);
         leftPanel.add(summaryBox);
 
@@ -229,8 +306,37 @@ public class PaymentDialog extends JDialog {
         footerPanel.add(btnPayAndPrint);
         add(footerPanel, BorderLayout.SOUTH);
 
+        lookupCustomerByPhone();
         recalculateTotal();
         updatePaymentMethodUI();
+    }
+
+    private void lookupCustomerByPhone() {
+        String phone = txtCustomerPhone.getText().trim();
+        Customer c = DataStore.getInstance().getCustomerMap().get(phone);
+        if (c != null) {
+            currentCustomer = c;
+            txtCustomerName.setText(c.getFullName());
+            lblCustomerTierBadge.setText(String.format("⭐ %s Member (Tích lũy: %,.0f VNĐ)", c.getMembershipTier(), c.getLoyaltyPoints()));
+            lblCustomerTierBadge.setForeground(new Color(22, 163, 74));
+            btnRegisterMember.setVisible(true);
+            chkUseLoyaltyPoints.setVisible(c.getLoyaltyPoints() > 0);
+            chkUseLoyaltyPoints.setText(String.format("Dùng %,.0f điểm tích lũy trừ tiền vé", c.getLoyaltyPoints()));
+        } else {
+            currentCustomer = null;
+            lblCustomerTierBadge.setText("• Khách vãng lai (Chưa đăng ký thẻ)");
+            lblCustomerTierBadge.setForeground(Color.GRAY);
+            btnRegisterMember.setVisible(true);
+            chkUseLoyaltyPoints.setVisible(false);
+            chkUseLoyaltyPoints.setSelected(false);
+        }
+        recalculateTotal();
+    }
+
+    private void handleQuickRegisterCustomer() {
+        CustomerManagementDialog dlg = new CustomerManagementDialog((Frame) SwingUtilities.getWindowAncestor(this));
+        dlg.showRegisterCustomerDialog();
+        lookupCustomerByPhone();
     }
 
     private void updatePaymentMethodUI() {
@@ -243,8 +349,9 @@ public class PaymentDialog extends JDialog {
             cashGuide.setLayout(new BoxLayout(cashGuide, BoxLayout.Y_AXIS));
             cashGuide.setOpaque(false);
 
-            JLabel lblCashIcon = new JLabel("[TIEN MAT]", JLabel.CENTER);
-            lblCashIcon.setFont(new Font("Segoe UI", Font.PLAIN, 48));
+            JLabel lblCashIcon = new JLabel("[TIỀN MẶT]", JLabel.CENTER);
+            lblCashIcon.setFont(new Font("Segoe UI", Font.PLAIN, 42));
+            lblCashIcon.setForeground(new Color(22, 163, 74));
             lblCashIcon.setAlignmentX(Component.CENTER_ALIGNMENT);
 
             JLabel lblCashText = new JLabel("Thanh toán tiền mặt trực tiếp tại quầy", JLabel.CENTER);
@@ -329,25 +436,32 @@ public class PaymentDialog extends JDialog {
         }
 
         double originalTotal = ticketTotal + foodTotal;
-        double discount = 0;
+        double voucherDiscount = 0;
 
         if (appliedVoucher != null && originalTotal >= appliedVoucher.getMinOrderAmount()) {
-            discount = (originalTotal * appliedVoucher.getDiscountPercent()) / 100.0;
-            if (discount > appliedVoucher.getMaxDiscountAmount()) {
-                discount = appliedVoucher.getMaxDiscountAmount();
+            voucherDiscount = (originalTotal * appliedVoucher.getDiscountPercent()) / 100.0;
+            if (voucherDiscount > appliedVoucher.getMaxDiscountAmount()) {
+                voucherDiscount = appliedVoucher.getMaxDiscountAmount();
             }
         }
 
-        currentFinalTotal = Math.max(0, originalTotal - discount);
+        double afterVoucher = Math.max(0, originalTotal - voucherDiscount);
+        pointsDiscountAmount = 0;
+        if (chkUseLoyaltyPoints != null && chkUseLoyaltyPoints.isSelected() && currentCustomer != null) {
+            pointsDiscountAmount = Math.min(currentCustomer.getLoyaltyPoints(), afterVoucher);
+        }
+
+        currentFinalTotal = Math.max(0, afterVoucher - pointsDiscountAmount);
 
         lblTicketSummary.setText(String.format("• Tiền vé (%d ghế - %s): %,.0f VNĐ",
                 seatCodes.size(), strategy.getStrategyName(), ticketTotal));
         lblFoodSummary.setText(String.format("• Tiền bắp nước (%d món): %,.0f VNĐ",
                 orderFoods.size(), foodTotal));
-        lblVoucherDiscount.setText(String.format("• Giảm giá Voucher: -%,.0f VNĐ", discount));
+        lblVoucherDiscount.setText(String.format("• Giảm giá Voucher: -%,.0f VNĐ", voucherDiscount));
+        lblPointsDiscountSummary.setText(String.format("• Trừ điểm thành viên: -%,.0f VNĐ", pointsDiscountAmount));
         lblFinalAmount.setText(String.format("TỔNG TIỀN: %,.0f VNĐ", currentFinalTotal));
 
-        if (rbVietQR.isSelected()) {
+        if (rbVietQR != null && rbVietQR.isSelected()) {
             updatePaymentMethodUI();
         }
     }
@@ -396,14 +510,15 @@ public class PaymentDialog extends JDialog {
         double foodTotal = orderFoods.stream().mapToDouble(OrderItem::getTotalPrice).sum();
         double originalTotal = ticketTotal + foodTotal;
 
-        double discount = 0;
+        double voucherDiscount = 0;
         if (appliedVoucher != null && originalTotal >= appliedVoucher.getMinOrderAmount()) {
-            discount = (originalTotal * appliedVoucher.getDiscountPercent()) / 100.0;
-            if (discount > appliedVoucher.getMaxDiscountAmount()) {
-                discount = appliedVoucher.getMaxDiscountAmount();
+            voucherDiscount = (originalTotal * appliedVoucher.getDiscountPercent()) / 100.0;
+            if (voucherDiscount > appliedVoucher.getMaxDiscountAmount()) {
+                voucherDiscount = appliedVoucher.getMaxDiscountAmount();
             }
         }
-        double finalAmount = Math.max(0, originalTotal - discount);
+        double totalDiscount = voucherDiscount + pointsDiscountAmount;
+        double finalAmount = Math.max(0, originalTotal - totalDiscount);
 
         Invoice invoice = new Invoice(
                 tempInvoiceId,
@@ -418,10 +533,21 @@ public class PaymentDialog extends JDialog {
                 new ArrayList<>(orderFoods),
                 appliedVoucher != null ? appliedVoucher.getCode() : null,
                 originalTotal,
-                discount,
+                totalDiscount,
                 finalAmount,
                 LocalDateTime.now()
         );
+
+        // Cập nhật điểm thành viên nếu có
+        double pointsEarned = 0;
+        if (currentCustomer != null) {
+            if (pointsDiscountAmount > 0) {
+                currentCustomer.setLoyaltyPoints(Math.max(0, currentCustomer.getLoyaltyPoints() - pointsDiscountAmount));
+            }
+            pointsEarned = Math.round(finalAmount * currentCustomer.getPointRate());
+            currentCustomer.setLoyaltyPoints(currentCustomer.getLoyaltyPoints() + pointsEarned);
+            currentCustomer.setTotalSpent(currentCustomer.getTotalSpent() + finalAmount);
+        }
 
         // Lưu vào RAM và flush xuống file JSON ngay lập tức
         store.getInvoiceMap().put(invoice.getInvoiceId(), invoice);
@@ -431,12 +557,14 @@ public class PaymentDialog extends JDialog {
         File receipt = ReceiptPrinter.printReceipt(invoice);
 
         String paymentMethodStr = rbVietQR.isSelected() ? "Chuyển khoản VietQR" : "Tiền mặt tại quầy";
+        String memberMsg = currentCustomer != null ? String.format("\n• Thành viên : %s (+%,.0f điểm thưởng mới)", currentCustomer.getFullName(), pointsEarned) : "";
 
         JOptionPane.showMessageDialog(this,
                 "GIAO DỊCH THANH TOÁN THÀNH CÔNG!\n"
                         + "• Mã Hóa Đơn : " + tempInvoiceId + "\n"
                         + "• Phương Thức: " + paymentMethodStr + "\n"
-                        + "• Tổng Tiền  : " + String.format("%,.0f VNĐ", finalAmount) + "\n"
+                        + "• Tổng Tiền  : " + String.format("%,.0f VNĐ", finalAmount)
+                        + memberMsg + "\n"
                         + (receipt != null ? "• Đã in hóa đơn POS nhiệt ra: " + receipt.getName() : ""),
                 "Thành công", JOptionPane.INFORMATION_MESSAGE);
 
