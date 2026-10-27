@@ -18,10 +18,12 @@ import vn.edu.ptit.cinema.service.SessionManager;
 import vn.edu.ptit.cinema.util.PosterManager;
 import vn.edu.ptit.cinema.view.auth.LoginFrame;
 import vn.edu.ptit.cinema.view.component.CurvedScreenPanel;
+import vn.edu.ptit.cinema.view.component.WrapLayout;
 import vn.edu.ptit.cinema.view.staff.FnBDialog;
 import vn.edu.ptit.cinema.view.staff.PaymentDialog;
 import vn.edu.ptit.cinema.view.staff.BetaShowtimeDialog;
 import vn.edu.ptit.cinema.view.staff.CustomerManagementDialog;
+import vn.edu.ptit.cinema.view.staff.ShowtimeManagementDialog;
 
 import javax.swing.*;
 import javax.imageio.ImageIO;
@@ -160,22 +162,22 @@ public class MainFrame extends JFrame implements ActionListener {
         tabbedPane.setFont(new Font("Segoe UI", Font.BOLD, 13));
 
         tabbedPane.addTab("BÁN VÉ & SƠ ĐỒ RẠP", createBookingCardContainer());
-        tabbedPane.addTab("QUẢN LÝ PHIM & LỊCH CHIẾU", createMovieManagementTab());
 
-        if (!SessionManager.getInstance().isAdmin()) {
-            tabbedPane.setEnabledAt(1, false);
-            tabbedPane.setToolTipTextAt(1, "Chức năng chỉ dành riêng cho Quản trị viên (Admin)!");
+        if (SessionManager.getInstance().isAdmin()) {
+            tabbedPane.addTab("QUẢN LÝ PHIM & LỊCH CHIẾU", createMovieManagementTab());
+            tabbedPane.addTab("THỐNG KÊ & DOANH THU", createReportTab());
         }
 
-        tabbedPane.addTab("THỐNG KÊ & DOANH THU", createReportTab());
-
-        // LẮNG NGHE CHUYỂN TAB ĐỒNG BỘ DỮ LIỆU
+        // LẮNG NGHE CHUYỂN TAB ĐỒNG BỘ DỮ LIỆU BẰNG TIÊU ĐỀ TAB (KHÔNG DÙNG INDEX CỨNG)
         tabbedPane.addChangeListener(e -> {
             int selectedIndex = tabbedPane.getSelectedIndex();
-            if (selectedIndex == 0) {
-                refreshBookingTabState();
-            } else if (selectedIndex == 2) {
-                reloadReportDashboard();
+            if (selectedIndex >= 0) {
+                String tabTitle = tabbedPane.getTitleAt(selectedIndex);
+                if (tabTitle.contains("BÁN VÉ")) {
+                    refreshBookingTabState();
+                } else if (tabTitle.contains("THỐNG KÊ")) {
+                    reloadReportDashboard();
+                }
             }
         });
 
@@ -209,12 +211,12 @@ public class MainFrame extends JFrame implements ActionListener {
         topBar.add(leftPanel, BorderLayout.WEST);
 
         // Ở giữa: Đồng hồ điện tử chạy từng giây
-        JLabel lblClock = new JLabel("🕒 --/--/---- --:--:--");
+        JLabel lblClock = new JLabel("--/--/---- --:--:--");
         lblClock.setFont(new Font("Segoe UI", Font.BOLD, 13));
         lblClock.setForeground(new Color(30, 41, 59));
         javax.swing.Timer clockTimer = new javax.swing.Timer(1000, e -> {
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("EEEE, dd/MM/yyyy - HH:mm:ss", new Locale("vi", "VN"));
-            lblClock.setText("🕒 " + LocalDateTime.now().format(dtf));
+            lblClock.setText(LocalDateTime.now().format(dtf));
         });
         clockTimer.start();
         JPanel centerClock = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
@@ -227,7 +229,7 @@ public class MainFrame extends JFrame implements ActionListener {
         rightPanel.setOpaque(false);
         String nameStr = currentUser != null ? currentUser.getFullName() : "N/A";
         String roleStr = currentUser != null ? currentUser.getRole().getDisplayName() : "Khách";
-        JLabel lblUser = new JLabel("👤 " + nameStr + " (" + roleStr + ")");
+        JLabel lblUser = new JLabel("Tài khoản: " + nameStr + " (" + roleStr + ")");
         lblUser.setFont(new Font("Segoe UI", Font.BOLD, 12));
         lblUser.setForeground(new Color(71, 85, 105));
 
@@ -241,7 +243,7 @@ public class MainFrame extends JFrame implements ActionListener {
             new LoginFrame().setVisible(true);
         });
 
-        JButton btnManageCustomers = new JButton("⭐ Thẻ Hội Viên");
+        JButton btnManageCustomers = new JButton("Thẻ Hội Viên");
         btnManageCustomers.setFont(new Font("Segoe UI", Font.BOLD, 11));
         btnManageCustomers.setBackground(new Color(241, 245, 249));
         btnManageCustomers.setForeground(new Color(37, 99, 235));
@@ -262,10 +264,24 @@ public class MainFrame extends JFrame implements ActionListener {
         JMenu menuSystem = new JMenu("Hệ thống");
         menuSystem.setMnemonic('H');
 
-        JMenuItem miCustomers = new JMenuItem("⭐ Quản lý Thẻ Tích Điểm & Hội Viên (Ctrl+M)");
+        JMenuItem miCustomers = new JMenuItem("Quản lý Thẻ Tích Điểm & Hội Viên (Ctrl+M)");
         miCustomers.setAccelerator(KeyStroke.getKeyStroke("control M"));
         miCustomers.addActionListener(e -> new CustomerManagementDialog(this).setVisible(true));
         menuSystem.add(miCustomers);
+
+        JMenuItem miShowtimes = new JMenuItem("Quản lý & Chỉnh Sửa Lịch Chiếu (Ctrl+L)");
+        miShowtimes.setAccelerator(KeyStroke.getKeyStroke("control L"));
+        miShowtimes.addActionListener(e -> {
+            if (SessionManager.getInstance().isAdmin()) {
+                new ShowtimeManagementDialog(this, () -> {
+                    reloadScheduleDropdowns();
+                    reloadMovieLobbyGrid();
+                }).setVisible(true);
+            } else {
+                JOptionPane.showMessageDialog(this, "Chức năng chỉ dành riêng cho Quản trị viên (Admin)!", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
+            }
+        });
+        menuSystem.add(miShowtimes);
 
         JMenuItem miSave = new JMenuItem("Lưu dữ liệu ngay (Ctrl+S)");
         miSave.setAccelerator(KeyStroke.getKeyStroke("control S"));
@@ -337,17 +353,13 @@ public class MainFrame extends JFrame implements ActionListener {
         JPanel header = new JPanel(new BorderLayout(0, 12));
         header.setOpaque(false);
 
-        JPanel titleBox = new JPanel(new BorderLayout(0, 4));
-        titleBox.setOpaque(false);
+        JPanel titleBox = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        titleBox.setOpaque(true);
+        titleBox.setBackground(new Color(248, 250, 252));
         JLabel lblTitle = new JLabel("DANH SÁCH PHIM ĐANG CHIẾU TẠI RẠP PTIT");
         lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 18));
         lblTitle.setForeground(new Color(30, 41, 59));
-
-        JLabel lblSub = new JLabel("Vui lòng chọn một bộ phim để xem lịch chiếu và chọn ghế ngồi");
-        lblSub.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-        lblSub.setForeground(Color.GRAY);
-        titleBox.add(lblTitle, BorderLayout.NORTH);
-        titleBox.add(lblSub, BorderLayout.SOUTH);
+        titleBox.add(lblTitle);
 
         // Thanh công cụ tìm kiếm và lọc phim trực tiếp (Live Search)
         JPanel searchBar = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
@@ -355,7 +367,7 @@ public class MainFrame extends JFrame implements ActionListener {
 
         txtSearchLobby = new JTextField(20);
         txtSearchLobby.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-        txtSearchLobby.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "🔍 Tìm tên phim, đạo diễn...");
+        txtSearchLobby.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Tìm tên phim, đạo diễn...");
         txtSearchLobby.putClientProperty(FlatClientProperties.STYLE, "arc: 8;");
         txtSearchLobby.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
             public void insertUpdate(javax.swing.event.DocumentEvent e) { reloadMovieLobbyGrid(); }
@@ -393,7 +405,8 @@ public class MainFrame extends JFrame implements ActionListener {
 
         // Lưới danh sách phim bố trí 4 cột chuẩn tỷ lệ
         movieGridPanel = new JPanel(new GridLayout(0, 4, 18, 20));
-        movieGridPanel.setOpaque(false);
+        movieGridPanel.setOpaque(true);
+        movieGridPanel.setBackground(new Color(248, 250, 252));
 
         JScrollPane scrollPane = new JScrollPane(movieGridPanel);
         scrollPane.setBorder(null);
@@ -440,24 +453,26 @@ public class MainFrame extends JFrame implements ActionListener {
             matchedCount++;
             // DỰNG THẺ PHIM VERTICAL CHUẨN CGV / BETA CINEMAS
             JPanel card = new JPanel(new BorderLayout(0, 8));
+            card.setOpaque(true);
             card.setBackground(Color.WHITE);
             card.setBorder(BorderFactory.createCompoundBorder(
                     BorderFactory.createLineBorder(new Color(226, 232, 240), 1),
                     new EmptyBorder(10, 10, 12, 10)
             ));
-            card.putClientProperty(FlatClientProperties.STYLE, "arc: 16;");
 
             // 1. POSTER DỌC BO GÓC 2:3 VỚI BADGE ĐỘ TUỔI GHIM TRÊN ĐẦU (CĂN GIỮA CHUẨN CGV)
             JPanel posterContainer = createPosterPanel(m, 205, 290);
             JPanel posterWrap = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
-            posterWrap.setOpaque(false);
+            posterWrap.setOpaque(true);
+            posterWrap.setBackground(Color.WHITE);
             posterWrap.add(posterContainer);
             card.add(posterWrap, BorderLayout.NORTH);
 
             // 2. KHỐI THÔNG TIN DƯỚI POSTER
             JPanel infoPanel = new JPanel();
             infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
-            infoPanel.setOpaque(false);
+            infoPanel.setOpaque(true);
+            infoPanel.setBackground(Color.WHITE);
             infoPanel.setBorder(new EmptyBorder(6, 4, 8, 4));
 
             JLabel lblName = new JLabel(m.getTitle());
@@ -557,13 +572,16 @@ public class MainFrame extends JFrame implements ActionListener {
         JPanel posterPanel = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
                 Graphics2D g2 = (Graphics2D) g.create();
+                g2.setColor(Color.WHITE);
+                g2.fillRect(0, 0, getWidth(), getHeight());
                 PosterManager.drawPosterOrPlaceholder(g2, m, getWidth(), getHeight());
                 g2.dispose();
             }
         };
 
+        posterPanel.setOpaque(true);
+        posterPanel.setBackground(Color.WHITE);
         posterPanel.setPreferredSize(new Dimension(width, height));
         posterPanel.setMinimumSize(new Dimension(width, height));
         posterPanel.setMaximumSize(new Dimension(width, height));
@@ -641,7 +659,7 @@ public class MainFrame extends JFrame implements ActionListener {
         Room room = dataStore.getRoomMap().get(st.getRoomId());
         String rName = room != null ? room.getName() : st.getRoomId();
         if (lblCurrentShowtimeInfo != null) {
-            lblCurrentShowtimeInfo.setText(String.format("📅 Suất: %s (%s)", st.getStartTime().format(dtf), rName));
+            lblCurrentShowtimeInfo.setText(String.format("Suất chiếu: %s (%s)", st.getStartTime().format(dtf), rName));
         }
 
         restoreUserHeldSeatsIfAny();
@@ -660,17 +678,21 @@ public class MainFrame extends JFrame implements ActionListener {
         JPanel panel = new JPanel(new BorderLayout(15, 15));
         panel.setBorder(new EmptyBorder(12, 15, 12, 15));
 
-        // --- 1.1 Thanh Điều Hướng Trên: Nút Quay Lại + Tên Phim + Ngày/Giờ + Legend ---
-        JPanel topContainer = new JPanel(new BorderLayout(15, 0));
+        // --- 1.1 Thanh Điều Hướng Trên 2 Tầng: Tầng 1 Tên Phim & Chú Thích Ghế; Tầng 2 Suất Chiếu & Đổi Suất ---
+        JPanel topContainer = new JPanel();
+        topContainer.setLayout(new BoxLayout(topContainer, BoxLayout.Y_AXIS));
         topContainer.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(new Color(226, 232, 240), 1),
                 new EmptyBorder(8, 15, 8, 15)
         ));
         topContainer.setBackground(Color.WHITE);
 
-        // Bên trái: Nút Quay lại Sảnh + Tên Phim
-        JPanel leftNav = new JPanel(new FlowLayout(FlowLayout.LEFT, 12, 4));
-        leftNav.setOpaque(false);
+        // TẦNG 1: [Quay Lại] [Tên Phim] [Độ Tuổi] <--- KHÔNG GIAN THOÁNG ---> [CHÚ THÍCH HẠNG GHẾ & TRẠNG THÁI Ở TRÊN ĐỈNH]
+        JPanel row1 = new JPanel(new BorderLayout(15, 0));
+        row1.setOpaque(false);
+
+        JPanel row1Left = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
+        row1Left.setOpaque(false);
 
         JButton btnBackToLobby = new JButton("< Đổi Phim Khác");
         btnBackToLobby.setFont(new Font("Segoe UI", Font.BOLD, 12));
@@ -690,61 +712,33 @@ public class MainFrame extends JFrame implements ActionListener {
             reloadMovieLobbyGrid();
             bookingCardLayout.show(bookingCardContainer, CARD_LOBBY);
         });
-        leftNav.add(btnBackToLobby);
+        row1Left.add(btnBackToLobby);
 
         lblCurrentMovieTitle = new JLabel("Tên Phim Đang Chọn");
         lblCurrentMovieTitle.setFont(new Font("Segoe UI", Font.BOLD, 15));
         lblCurrentMovieTitle.setForeground(new Color(15, 23, 42));
-        leftNav.add(lblCurrentMovieTitle);
+        row1Left.add(lblCurrentMovieTitle);
 
         lblCurrentMovieBadge = new JLabel("P", JLabel.CENTER);
         lblCurrentMovieBadge.setFont(new Font("Segoe UI", Font.BOLD, 11));
         lblCurrentMovieBadge.setOpaque(true);
         lblCurrentMovieBadge.setPreferredSize(new Dimension(36, 22));
-        leftNav.add(lblCurrentMovieBadge);
+        row1Left.add(lblCurrentMovieBadge);
 
-        cbDate = new JComboBox<>();
-        cbTime = new JComboBox<>();
+        row1.add(row1Left, BorderLayout.WEST);
 
-        lblCurrentShowtimeInfo = new JLabel("📅 Suất: --:-- (Phòng --)");
-        lblCurrentShowtimeInfo.setFont(new Font("Segoe UI", Font.BOLD, 12));
-        lblCurrentShowtimeInfo.setForeground(new Color(2, 132, 199));
-        lblCurrentShowtimeInfo.setBackground(new Color(240, 249, 255));
-        lblCurrentShowtimeInfo.setOpaque(true);
-        lblCurrentShowtimeInfo.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(new Color(186, 230, 253), 1),
-                new EmptyBorder(5, 10, 5, 10)
-        ));
-        lblCurrentShowtimeInfo.putClientProperty(FlatClientProperties.STYLE, "arc: 8;");
-
-        btnChangeShowtime = new JButton("Đổi Suất Chiếu");
-        btnChangeShowtime.setFont(new Font("Segoe UI", Font.PLAIN, 11));
-        btnChangeShowtime.putClientProperty(FlatClientProperties.STYLE, "arc: 6;");
-        btnChangeShowtime.addActionListener(e -> {
-            if (selectedMovieForBooking != null) {
-                openBetaShowtimeDialog(selectedMovieForBooking);
-            }
-        });
-
-        leftNav.add(Box.createHorizontalStrut(12));
-        leftNav.add(lblCurrentShowtimeInfo);
-        leftNav.add(Box.createHorizontalStrut(6));
-        leftNav.add(btnChangeShowtime);
-
-        topContainer.add(leftNav, BorderLayout.WEST);
-
-        // Bên phải: Chú thích 2 tầng
-        JPanel legendBox = new JPanel(new GridLayout(2, 1, 0, 4));
+        // Chú thích 2 tầng nằm cố định trên đỉnh, không bao giờ bị đè lấn
+        JPanel legendBox = new JPanel(new GridLayout(2, 1, 0, 3));
         legendBox.setOpaque(false);
 
-        JPanel rowTier = new JPanel(new FlowLayout(FlowLayout.RIGHT, 12, 0));
+        JPanel rowTier = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
         rowTier.setOpaque(false);
         rowTier.add(new JLabel("Hạng ghế:"));
         rowTier.add(createLegendBadge("Ghế Thường", new Color(34, 197, 94), null));
         rowTier.add(createLegendBadge("Ghế VIP (Viền vàng)", new Color(34, 197, 94), new Color(245, 158, 11)));
         rowTier.add(createLegendBadge("Sweetbox Đôi", new Color(236, 72, 153), new Color(219, 39, 119)));
 
-        JPanel rowStatus = new JPanel(new FlowLayout(FlowLayout.RIGHT, 12, 0));
+        JPanel rowStatus = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
         rowStatus.setOpaque(false);
         rowStatus.add(new JLabel("Trạng thái:"));
         rowStatus.add(createLegendBadge("Trống", new Color(34, 197, 94), null));
@@ -754,8 +748,60 @@ public class MainFrame extends JFrame implements ActionListener {
 
         legendBox.add(rowTier);
         legendBox.add(rowStatus);
-        topContainer.add(legendBox, BorderLayout.EAST);
+        row1.add(legendBox, BorderLayout.EAST);
 
+        topContainer.add(row1);
+        topContainer.add(Box.createVerticalStrut(6));
+
+        // Đường phân cách mỏng trang nhã
+        JSeparator headerSep = new JSeparator();
+        headerSep.setForeground(new Color(241, 245, 249));
+        headerSep.setMaximumSize(new Dimension(Integer.MAX_VALUE, 1));
+        topContainer.add(headerSep);
+        topContainer.add(Box.createVerticalStrut(6));
+
+        // TẦNG 2: [Suất Chiếu Banner] [Đổi Suất Chiếu] (Độc lập, rộng rãi, không đè lên bất kỳ chú thích nào)
+        JPanel row2 = new JPanel(new BorderLayout(10, 0));
+        row2.setOpaque(false);
+
+        JPanel row2Left = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 0));
+        row2Left.setOpaque(false);
+
+        cbDate = new JComboBox<>();
+        cbTime = new JComboBox<>();
+
+        lblCurrentShowtimeInfo = new JLabel("Suất chiếu: --:-- (Phòng --)");
+        lblCurrentShowtimeInfo.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        lblCurrentShowtimeInfo.setForeground(new Color(2, 132, 199));
+        lblCurrentShowtimeInfo.setBackground(new Color(240, 249, 255));
+        lblCurrentShowtimeInfo.setOpaque(true);
+        lblCurrentShowtimeInfo.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(186, 230, 253), 1),
+                new EmptyBorder(4, 10, 4, 10)
+        ));
+        lblCurrentShowtimeInfo.putClientProperty(FlatClientProperties.STYLE, "arc: 8;");
+
+        btnChangeShowtime = new JButton("Đổi Suất Chiếu");
+        btnChangeShowtime.setFont(new Font("Segoe UI", Font.BOLD, 11));
+        btnChangeShowtime.setBackground(new Color(241, 245, 249));
+        btnChangeShowtime.setForeground(new Color(2, 132, 199));
+        btnChangeShowtime.putClientProperty(FlatClientProperties.STYLE, "arc: 6;");
+        btnChangeShowtime.addActionListener(e -> {
+            if (selectedMovieForBooking != null) {
+                openBetaShowtimeDialog(selectedMovieForBooking);
+            }
+        });
+
+        row2Left.add(lblCurrentShowtimeInfo);
+        row2Left.add(btnChangeShowtime);
+        row2.add(row2Left, BorderLayout.WEST);
+
+        JLabel lblPricingHint = new JLabel("Chính sách giá: Ghế VIP +20% | Sweetbox x2.0");
+        lblPricingHint.setFont(new Font("Segoe UI", Font.ITALIC, 11));
+        lblPricingHint.setForeground(new Color(100, 116, 139));
+        row2.add(lblPricingHint, BorderLayout.EAST);
+
+        topContainer.add(row2);
         panel.add(topContainer, BorderLayout.NORTH);
 
         // --- 1.2 Không gian rạp: Màn hình cong 3D + Trục tọa độ + Lối đi ---
@@ -811,7 +857,8 @@ public class MainFrame extends JFrame implements ActionListener {
         rightSidebar.add(lblHeading);
         rightSidebar.add(Box.createVerticalStrut(8));
 
-        chipsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 6, 6));
+        // Sử dụng WrapLayout để các ghế được chọn tự động rớt xuống dòng khi hết chỗ ngang
+        chipsPanel = new JPanel(new WrapLayout(FlowLayout.LEFT, 6, 6));
         chipsPanel.setBackground(Color.WHITE);
 
         JScrollPane scrollChips = new JScrollPane(chipsPanel);
@@ -823,6 +870,8 @@ public class MainFrame extends JFrame implements ActionListener {
         ));
         scrollChips.getViewport().setBackground(Color.WHITE);
         scrollChips.getVerticalScrollBar().setUnitIncrement(8);
+        scrollChips.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollChips.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         rightSidebar.add(scrollChips);
         rightSidebar.add(Box.createVerticalStrut(15));
 
@@ -1091,9 +1140,9 @@ public class MainFrame extends JFrame implements ActionListener {
             }
             gbc.gridx = gridX++;
             JLabel lblCol = new JLabel(String.valueOf(c), JLabel.CENTER);
-            lblCol.setFont(new Font("Segoe UI", Font.BOLD, 11));
+            lblCol.setFont(new Font("Segoe UI", Font.BOLD, 12));
             lblCol.setForeground(new Color(100, 116, 139));
-            lblCol.setPreferredSize(new Dimension(40, 18));
+            lblCol.setPreferredSize(new Dimension(48, 18));
             seatMatrixContainer.add(lblCol, gbc);
         }
         gbc.gridx = gridX;
@@ -1110,9 +1159,9 @@ public class MainFrame extends JFrame implements ActionListener {
             // Nhãn chữ cái bên trái (A-H)
             gbc.gridx = 0;
             JLabel lblRowLeft = new JLabel(String.valueOf(rowChar), JLabel.CENTER);
-            lblRowLeft.setFont(new Font("Segoe UI", Font.BOLD, 12));
+            lblRowLeft.setFont(new Font("Segoe UI", Font.BOLD, 13));
             lblRowLeft.setForeground(new Color(71, 85, 105));
-            lblRowLeft.setPreferredSize(new Dimension(24, 34));
+            lblRowLeft.setPreferredSize(new Dimension(26, 38));
             seatMatrixContainer.add(lblRowLeft, gbc);
 
             gridX = 1;
@@ -1136,8 +1185,8 @@ public class MainFrame extends JFrame implements ActionListener {
                     Seat s2 = currentShowTime.getSeats().get(code2);
 
                     JButton btnSweetbox = new JButton(String.format("ĐÔI %d-%d", c1, c2));
-                    btnSweetbox.setFont(new Font("Segoe UI", Font.BOLD, 11));
-                    btnSweetbox.setPreferredSize(new Dimension(86, 34));
+                    btnSweetbox.setFont(new Font("Segoe UI", Font.BOLD, 12));
+                    btnSweetbox.setPreferredSize(new Dimension(100, 38));
                     btnSweetbox.putClientProperty(FlatClientProperties.STYLE, "arc: 10;");
 
                     updateSweetboxAppearance(btnSweetbox, s1, s2);
@@ -1168,8 +1217,8 @@ public class MainFrame extends JFrame implements ActionListener {
                     Seat seat = currentShowTime.getSeats().get(code);
 
                     JButton btnSeat = new JButton(String.valueOf(c));
-                    btnSeat.setFont(new Font("Segoe UI", Font.BOLD, 11));
-                    btnSeat.setPreferredSize(new Dimension(40, 34));
+                    btnSeat.setFont(new Font("Segoe UI", Font.BOLD, 12));
+                    btnSeat.setPreferredSize(new Dimension(48, 38));
                     btnSeat.putClientProperty(FlatClientProperties.STYLE, "arc: 8;");
 
                     updateSeatButtonAppearance(btnSeat, seat, isVipRow);
@@ -1189,9 +1238,9 @@ public class MainFrame extends JFrame implements ActionListener {
             // Nhãn chữ cái bên phải (A-H)
             gbc.gridx = gridX;
             JLabel lblRowRight = new JLabel(String.valueOf(rowChar), JLabel.CENTER);
-            lblRowRight.setFont(new Font("Segoe UI", Font.BOLD, 12));
+            lblRowRight.setFont(new Font("Segoe UI", Font.BOLD, 13));
             lblRowRight.setForeground(new Color(71, 85, 105));
-            lblRowRight.setPreferredSize(new Dimension(24, 34));
+            lblRowRight.setPreferredSize(new Dimension(26, 38));
             seatMatrixContainer.add(lblRowRight, gbc);
         }
 
@@ -1514,6 +1563,34 @@ public class MainFrame extends JFrame implements ActionListener {
             filterMoviesTable();
         });
         leftSearch.add(btnResetFilter);
+
+        JButton btnAddNewMovieToolbar = new JButton("+ THÊM PHIM MỚI");
+        btnAddNewMovieToolbar.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        btnAddNewMovieToolbar.setBackground(new Color(22, 163, 74));
+        btnAddNewMovieToolbar.setForeground(Color.WHITE);
+        btnAddNewMovieToolbar.putClientProperty(FlatClientProperties.STYLE, "arc: 8; margin: 4,12,4,12;");
+        btnAddNewMovieToolbar.addActionListener(e -> {
+            tableMovies.clearSelection();
+            resetMovieForm();
+            txtMovieTitle.requestFocusInWindow();
+        });
+        leftSearch.add(Box.createHorizontalStrut(10));
+        leftSearch.add(btnAddNewMovieToolbar);
+
+        JButton btnManageShowtimesToolbar = new JButton("QUẢN LÝ LỊCH CHIẾU");
+        btnManageShowtimesToolbar.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        btnManageShowtimesToolbar.setBackground(new Color(37, 99, 235));
+        btnManageShowtimesToolbar.setForeground(Color.WHITE);
+        btnManageShowtimesToolbar.putClientProperty(FlatClientProperties.STYLE, "arc: 8; margin: 4,12,4,12;");
+        btnManageShowtimesToolbar.addActionListener(e -> {
+            new ShowtimeManagementDialog(this, () -> {
+                reloadScheduleDropdowns();
+                reloadMovieLobbyGrid();
+            }).setVisible(true);
+        });
+        leftSearch.add(Box.createHorizontalStrut(8));
+        leftSearch.add(btnManageShowtimesToolbar);
+
         searchBar.add(leftSearch, BorderLayout.WEST);
 
         lblMovieCount = new JLabel("Tổng số: " + dataStore.getMovieMap().size() + " phim");
@@ -1587,6 +1664,7 @@ public class MainFrame extends JFrame implements ActionListener {
                         updatePosterPreview(selectedPosterPath);
                         btnAddMovie.setEnabled(false);
                         btnUpdateMovie.setEnabled(true);
+                        btnDeleteMovie.setEnabled(true);
                     }
                 }
             }
@@ -1621,7 +1699,7 @@ public class MainFrame extends JFrame implements ActionListener {
         ));
         lblPosterPreview.putClientProperty(FlatClientProperties.STYLE, "arc: 8;");
 
-        btnBrowsePoster = new JButton("📁 Chọn Ảnh...");
+        btnBrowsePoster = new JButton("Chọn Ảnh...");
         btnBrowsePoster.setFont(new Font("Segoe UI", Font.PLAIN, 11));
         btnBrowsePoster.putClientProperty(FlatClientProperties.STYLE, "arc: 6;");
         btnBrowsePoster.addActionListener(e -> handleBrowsePoster());
@@ -1677,32 +1755,39 @@ public class MainFrame extends JFrame implements ActionListener {
 
         pnlAddMovie.add(fieldsPanel, BorderLayout.CENTER);
 
-        // Dưới cùng: Cụm 4 nút bấm (Nhập lại, Xóa, Cập Nhật, Lưu Mới)
+        // Dưới cùng: Cụm nút bấm logic chuẩn CRUD
         btnAddMovie = new JButton("+ Lưu Phim Mới");
         btnAddMovie.setFont(new Font("Segoe UI", Font.BOLD, 12));
-        btnAddMovie.setBackground(new Color(220, 38, 38));
+        btnAddMovie.setBackground(new Color(22, 163, 74));
         btnAddMovie.setForeground(Color.WHITE);
         btnAddMovie.putClientProperty(FlatClientProperties.STYLE, "arc: 8;");
         btnAddMovie.addActionListener(e -> handleAddMovie());
 
-        btnUpdateMovie = new JButton("✏️ Cập Nhật Phim");
+        btnUpdateMovie = new JButton("Lưu Cập Nhật");
         btnUpdateMovie.setFont(new Font("Segoe UI", Font.BOLD, 12));
         btnUpdateMovie.setBackground(new Color(37, 99, 235));
         btnUpdateMovie.setForeground(Color.WHITE);
         btnUpdateMovie.putClientProperty(FlatClientProperties.STYLE, "arc: 8;");
-        btnUpdateMovie.setEnabled(false); // Khởi đầu mờ
+        btnUpdateMovie.setEnabled(false);
         btnUpdateMovie.addActionListener(e -> handleUpdateMovie());
 
         btnDeleteMovie = new JButton("Xóa Phim");
         btnDeleteMovie.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        btnDeleteMovie.setForeground(new Color(100, 116, 139));
+        btnDeleteMovie.setForeground(new Color(220, 38, 38));
         btnDeleteMovie.putClientProperty(FlatClientProperties.STYLE, "arc: 8; borderWidth: 1;");
+        btnDeleteMovie.setEnabled(false);
         btnDeleteMovie.addActionListener(e -> handleDeleteMovie());
 
-        JButton btnClearForm = new JButton("🔄 Nhập lại");
-        btnClearForm.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        JButton btnClearForm = new JButton("Nhập Mới");
+        btnClearForm.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        btnClearForm.setBackground(new Color(241, 245, 249));
+        btnClearForm.setForeground(new Color(30, 41, 59));
         btnClearForm.putClientProperty(FlatClientProperties.STYLE, "arc: 8;");
-        btnClearForm.addActionListener(e -> resetMovieForm());
+        btnClearForm.addActionListener(e -> {
+            tableMovies.clearSelection();
+            resetMovieForm();
+            txtMovieTitle.requestFocusInWindow();
+        });
 
         JPanel btnBoxMovie = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 0));
         btnBoxMovie.setOpaque(false);
@@ -1781,8 +1866,20 @@ public class MainFrame extends JFrame implements ActionListener {
         btnCreateShowTime.putClientProperty(FlatClientProperties.STYLE, "arc: 8;");
         btnCreateShowTime.addActionListener(e -> handleCreateShowTime());
 
-        JPanel btnBoxSchedule = new JPanel(new FlowLayout(FlowLayout.RIGHT, 0, 0));
+        JPanel btnBoxSchedule = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 0));
         btnBoxSchedule.setOpaque(false);
+
+        JButton btnOpenShowtimeDlg = new JButton("Danh Sách & Sửa Lịch Chiếu");
+        btnOpenShowtimeDlg.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        btnOpenShowtimeDlg.putClientProperty(FlatClientProperties.STYLE, "arc: 8;");
+        btnOpenShowtimeDlg.addActionListener(e -> {
+            new ShowtimeManagementDialog(this, () -> {
+                reloadScheduleDropdowns();
+                reloadMovieLobbyGrid();
+            }).setVisible(true);
+        });
+
+        btnBoxSchedule.add(btnOpenShowtimeDlg);
         btnBoxSchedule.add(btnCreateShowTime);
 
         gbc2.gridx = 0; gbc2.gridy = 5; gbc2.gridwidth = 2;
@@ -1963,7 +2060,18 @@ public class MainFrame extends JFrame implements ActionListener {
     }
 
     private void resetMovieForm() {
-        txtMovieId.setText("MOV0" + (dataStore.getMovieMap().size() + 1));
+        int maxId = 0;
+        for (String key : dataStore.getMovieMap().keySet()) {
+            if (key.startsWith("MOV")) {
+                try {
+                    int num = Integer.parseInt(key.substring(3));
+                    if (num > maxId) maxId = num;
+                } catch (Exception ignored) {}
+            }
+        }
+        String nextId = String.format("MOV%02d", maxId + 1);
+
+        txtMovieId.setText(nextId);
         txtMovieId.setEditable(true);
         txtMovieId.setBackground(Color.WHITE);
         txtMovieTitle.setText("");
@@ -1975,6 +2083,7 @@ public class MainFrame extends JFrame implements ActionListener {
         updatePosterPreview(null);
         btnAddMovie.setEnabled(true);
         btnUpdateMovie.setEnabled(false);
+        btnDeleteMovie.setEnabled(false);
     }
 
     private void handleCreateShowTime() {
@@ -2025,7 +2134,16 @@ public class MainFrame extends JFrame implements ActionListener {
             }
         }
 
-        String stId = "ST" + (dataStore.getShowTimeMap().size() + 1);
+        int maxSt = 0;
+        for (String k : dataStore.getShowTimeMap().keySet()) {
+            if (k.startsWith("ST")) {
+                try {
+                    int num = Integer.parseInt(k.substring(2));
+                    if (num > maxSt) maxSt = num;
+                } catch (Exception ignored) {}
+            }
+        }
+        String stId = String.format("ST%02d", maxSt + 1);
 
         // Tạo ma trận ghế tương ứng theo phòng
         Room room = dataStore.getRoomMap().get(roomId);

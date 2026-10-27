@@ -150,7 +150,7 @@ public class PaymentDialog extends JDialog {
         // Dòng Badge thành viên & Nút Đăng ký nhanh
         JPanel memberBadgeRow = new JPanel(new BorderLayout(6, 0));
         memberBadgeRow.setMaximumSize(new Dimension(Integer.MAX_VALUE, 26));
-        lblCustomerTierBadge = new JLabel("⭐ Thành viên VIP (Tích lũy: 50.000 VNĐ)");
+        lblCustomerTierBadge = new JLabel("Thành viên VIP (Tích lũy: 50.000 VNĐ)");
         lblCustomerTierBadge.setFont(new Font("Segoe UI", Font.BOLD, 12));
         lblCustomerTierBadge.setForeground(new Color(22, 163, 74));
 
@@ -317,7 +317,7 @@ public class PaymentDialog extends JDialog {
         if (c != null) {
             currentCustomer = c;
             txtCustomerName.setText(c.getFullName());
-            lblCustomerTierBadge.setText(String.format("⭐ %s Member (Tích lũy: %,.0f VNĐ)", c.getMembershipTier(), c.getLoyaltyPoints()));
+            lblCustomerTierBadge.setText(String.format("Thành viên: %s (Tích lũy: %,.0f VNĐ)", c.getMembershipTier(), c.getLoyaltyPoints()));
             lblCustomerTierBadge.setForeground(new Color(22, 163, 74));
             btnRegisterMember.setVisible(true);
             chkUseLoyaltyPoints.setVisible(c.getLoyaltyPoints() > 0);
@@ -538,15 +538,19 @@ public class PaymentDialog extends JDialog {
                 LocalDateTime.now()
         );
 
-        // Cập nhật điểm thành viên nếu có
+        // Cập nhật điểm thành viên và kiểm tra tự động nâng hạng hội viên theo tổng chi tiêu
         double pointsEarned = 0;
+        boolean upgradedTier = false;
+        String oldTier = "";
         if (currentCustomer != null) {
+            oldTier = currentCustomer.getMembershipTier();
             if (pointsDiscountAmount > 0) {
                 currentCustomer.setLoyaltyPoints(Math.max(0, currentCustomer.getLoyaltyPoints() - pointsDiscountAmount));
             }
             pointsEarned = Math.round(finalAmount * currentCustomer.getPointRate());
             currentCustomer.setLoyaltyPoints(currentCustomer.getLoyaltyPoints() + pointsEarned);
             currentCustomer.setTotalSpent(currentCustomer.getTotalSpent() + finalAmount);
+            upgradedTier = currentCustomer.checkAndUpdateTier();
         }
 
         // Lưu vào RAM và flush xuống file JSON ngay lập tức
@@ -557,7 +561,14 @@ public class PaymentDialog extends JDialog {
         File receipt = ReceiptPrinter.printReceipt(invoice);
 
         String paymentMethodStr = rbVietQR.isSelected() ? "Chuyển khoản VietQR" : "Tiền mặt tại quầy";
-        String memberMsg = currentCustomer != null ? String.format("\n• Thành viên : %s (+%,.0f điểm thưởng mới)", currentCustomer.getFullName(), pointsEarned) : "";
+        String memberMsg = "";
+        if (currentCustomer != null) {
+            memberMsg = String.format("\n• Thành viên : %s (+%,.0f điểm thưởng - Hạng: %s)",
+                    currentCustomer.getFullName(), pointsEarned, currentCustomer.getMembershipTier());
+            if (upgradedTier) {
+                memberMsg += String.format("\n• CHÚC MỪNG: Quý khách đã được NÂNG HẠNG từ %s lên %s!", oldTier, currentCustomer.getMembershipTier());
+            }
+        }
 
         JOptionPane.showMessageDialog(this,
                 "GIAO DỊCH THANH TOÁN THÀNH CÔNG!\n"

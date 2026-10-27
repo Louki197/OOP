@@ -2,9 +2,9 @@
   "0912345678": {
     "phone": "0912345678",
     "fullName": "Nguyễn Văn Tuấn",
-    "loyaltyPoints": 50000.0,
-    "membershipTier": "VIP",
-    "totalSpent": 1500000.0
+    "loyaltyPoints": 40983.0,
+    "membershipTier": "DIAMOND",
+    "totalSpent": 3386650.0
   },
   "0988888888": {
     "phone": "0988888888",
@@ -12,6 +12,13 @@
     "loyaltyPoints": 120000.0,
     "membershipTier": "DIAMOND",
     "totalSpent": 3200000.0
+  },
+  "0987654321": {
+    "phone": "0987654321",
+    "fullName": "Hoàng Đức Mạnh",
+    "loyaltyPoints": 78061.0,
+    "membershipTier": "DIAMOND",
+    "totalSpent": 3813166.0
   },
   "0977112233": {
     "phone": "0977112233",

@@ -172,13 +172,22 @@ public class DataStore {
             foodList.addAll(loadedFoods);
         }
 
-        // 8. Tải Khách hàng thành viên
+        // 8. Tải Khách hàng thành viên & Chuẩn hóa tự động nâng hạng theo tổng chi tiêu
         Type customerMapType = new TypeToken<Map<String, Customer>>() {}.getType();
         Map<String, Customer> loadedCustomers = storageDAO.readMapFromFile("customers.json", customerMapType);
         if (loadedCustomers.isEmpty()) {
             seedInitialCustomers();
         } else {
             customerMap.putAll(loadedCustomers);
+            boolean hasTierChange = false;
+            for (Customer c : customerMap.values()) {
+                if (c.checkAndUpdateTier()) {
+                    hasTierChange = true;
+                }
+            }
+            if (hasTierChange) {
+                storageDAO.writeToFile("customers.json", customerMap);
+            }
         }
 
         System.out.println("[DataStore] Nạp dữ liệu hoàn tất! Users: " + userMap.size()
