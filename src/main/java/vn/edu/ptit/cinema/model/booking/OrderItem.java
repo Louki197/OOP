@@ -6,6 +6,7 @@ import java.io.Serializable;
  * Item mặt hàng F&B trong hóa đơn
  */
 public class OrderItem implements Serializable {
+    private static final long serialVersionUID = 1L;
     private String foodId;
     private String foodName;
     private int quantity;

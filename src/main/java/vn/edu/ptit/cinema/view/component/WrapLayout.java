@@ -9,7 +9,9 @@ import javax.swing.SwingUtilities;
  * Tự động rớt dòng (line-wrap) các component con khi chiều ngang bị đầy,
  * tương thích 100% với JScrollPane (không bị tràn ngang hay sinh scrollbar ngang).
  */
+@SuppressWarnings("serial")
 public class WrapLayout extends FlowLayout {
+    private static final long serialVersionUID = 1L;
 
     public WrapLayout() {
         super();

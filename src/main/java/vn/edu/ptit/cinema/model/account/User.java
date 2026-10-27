@@ -6,6 +6,7 @@ import java.io.Serializable;
  * Model biểu diễn thông tin tài khoản người dùng
  */
 public class User implements Serializable {
+    private static final long serialVersionUID = 1L;
     private String id;
     private String username;
     private String password;

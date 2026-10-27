@@ -29,7 +29,9 @@ import java.util.List;
  * 4. Xóa suất chiếu an toàn (cảnh báo nếu đã có vé được bán ra).
  * 5. Tự động đồng bộ và lưu vĩnh viễn vào showtimes.json.
  */
+@SuppressWarnings("serial")
 public class ShowtimeManagementDialog extends JDialog {
+    private static final long serialVersionUID = 1L;
 
     private final DataStore dataStore = DataStore.getInstance();
     private final Runnable onDataChangedCallback;

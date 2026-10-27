@@ -8,7 +8,9 @@ import java.util.List;
 /**
  * Model biểu diễn Hóa đơn bán vé & F&B
  */
+@SuppressWarnings("serial")
 public class Invoice implements Serializable {
+    private static final long serialVersionUID = 1L;
     private String invoiceId;
     private String staffUsername;
     private String customerName;

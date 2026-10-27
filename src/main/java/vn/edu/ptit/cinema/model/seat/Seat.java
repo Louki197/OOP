@@ -6,6 +6,7 @@ import java.io.Serializable;
  * Model biểu diễn thông tin một chiếc ghế cụ thể trong phòng chiếu
  */
 public class Seat implements Serializable {
+    private static final long serialVersionUID = 1L;
     private String code;          // Ví dụ: A01, B05, H10
     private int rowIndex;         // Chỉ số hàng (0, 1, 2...)
     private int colIndex;         // Chỉ số cột (0, 1, 2...)

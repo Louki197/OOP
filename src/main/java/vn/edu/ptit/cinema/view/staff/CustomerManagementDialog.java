@@ -9,7 +9,6 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.util.Collection;
 
 /**
  * [HỆ THỐNG QUẢN LÝ THẺ TÍCH ĐIỂM & ĐĂNG KÝ HỘI VIÊN]
@@ -21,7 +20,9 @@ import java.util.Collection;
  *    - VIP      : Chi tiêu 1.000.000 - 3.000.000 VNĐ (Tích 5%)
  *    - DIAMOND  : Chi tiêu >= 3.000.000 VNĐ (Tích 7%)
  */
+@SuppressWarnings("serial")
 public class CustomerManagementDialog extends JDialog {
+    private static final long serialVersionUID = 1L;
 
     private final DataStore dataStore = DataStore.getInstance();
     private JTable tableCustomers;

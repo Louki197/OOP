@@ -18,7 +18,9 @@ import java.util.Map;
  * Cửa sổ Popup (JDialog) độc lập, thiết kế dạng thẻ Card hiện đại.
  * Hỗ trợ tăng/giảm (+/-) số lượng trực quan, không bị co cụm hay tràn viền.
  */
+@SuppressWarnings("serial")
 public class FnBDialog extends JDialog {
+    private static final long serialVersionUID = 1L;
 
     private final List<OrderItem> selectedOrderItems = new ArrayList<>();
     private final Map<String, Integer> quantityMap = new HashMap<>();

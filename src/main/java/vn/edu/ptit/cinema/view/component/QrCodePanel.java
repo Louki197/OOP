@@ -8,7 +8,9 @@ import java.util.Random;
  * [CUSTOM COMPONENT - VIETQR PAYMENT CARD]
  * Mô phỏng thẻ chuyển khoản VietQR Napas 247 thực tế với ma trận QR Code sinh động.
  */
+@SuppressWarnings("serial")
 public class QrCodePanel extends JPanel {
+    private static final long serialVersionUID = 1L;
 
     private final String invoiceId;
     private final double amount;

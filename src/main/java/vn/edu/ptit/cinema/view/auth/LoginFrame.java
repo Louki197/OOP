@@ -18,7 +18,9 @@ import java.awt.event.KeyEvent;
  * Cửa sổ đăng nhập bóng bẩy chuẩn thực tế, tích hợp phân quyền Admin/Staff.
  * Tuân thủ cấu trúc giáo trình OOP (Slide 79 - 82).
  */
+@SuppressWarnings("serial")
 public class LoginFrame extends JFrame implements ActionListener {
+    private static final long serialVersionUID = 1L;
 
     private JTextField txtUsername;
     private JPasswordField txtPassword;

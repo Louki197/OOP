@@ -6,6 +6,7 @@ import java.io.Serializable;
  * Model vé xem phim
  */
 public class Ticket implements Serializable {
+    private static final long serialVersionUID = 1L;
     private String ticketId;
     private String showTimeId;
     private String seatCode;

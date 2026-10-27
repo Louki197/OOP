@@ -7,6 +7,7 @@ import java.time.LocalDate;
  * Model biểu diễn mã giảm giá (Voucher)
  */
 public class Voucher implements Serializable {
+    private static final long serialVersionUID = 1L;
     private String code;
     private double discountPercent;    // Phần trăm giảm (ví dụ: 10 = 10%)
     private double maxDiscountAmount;  // Giảm tối đa (ví dụ: 50,000 VND)

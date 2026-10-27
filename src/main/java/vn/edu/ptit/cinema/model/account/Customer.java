@@ -12,6 +12,8 @@ import java.io.Serializable;
  * 3. DIAMOND  : Chi tiêu từ 3.000.000 VNĐ trở lên (Tích điểm 7%)
  */
 public class Customer implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     private String phone;            // Khóa chính nhận diện khách (SĐT Việt Nam)
     private String fullName;         // Họ và tên khách hàng
     private double loyaltyPoints;    // Điểm thưởng tích lũy (1 điểm = 1 VNĐ)
@@ -92,7 +94,7 @@ public class Customer implements Serializable {
      * Kiểm tra và tự động cập nhật hạng nếu tổng chi tiêu đạt mốc mới.
      * @return true nếu có sự thay đổi hạng
      */
-    public boolean checkAndUpdateTier() {
+    public final boolean checkAndUpdateTier() {
         String newTier = calculateTier(this.totalSpent);
         if (this.membershipTier == null || !newTier.equalsIgnoreCase(this.membershipTier)) {
             this.membershipTier = newTier;

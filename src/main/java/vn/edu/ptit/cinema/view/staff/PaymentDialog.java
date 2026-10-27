@@ -34,7 +34,9 @@ import java.util.Set;
  * Hỗ trợ chuyển đổi linh hoạt: Tiền mặt tại quầy hoặc Quét mã VietQR ngân hàng.
  * Tích hợp hệ thống Khách hàng thành viên (Member Loyalty) tích điểm và trừ tiền vé.
  */
+@SuppressWarnings("serial")
 public class PaymentDialog extends JDialog {
+    private static final long serialVersionUID = 1L;
 
     private final ShowTime showTime;
     private final Set<String> seatCodes;
@@ -349,8 +351,8 @@ public class PaymentDialog extends JDialog {
             cashGuide.setLayout(new BoxLayout(cashGuide, BoxLayout.Y_AXIS));
             cashGuide.setOpaque(false);
 
-            JLabel lblCashIcon = new JLabel("[TIỀN MẶT]", JLabel.CENTER);
-            lblCashIcon.setFont(new Font("Segoe UI", Font.PLAIN, 42));
+            JLabel lblCashIcon = new JLabel("TIỀN MẶT", JLabel.CENTER);
+            lblCashIcon.setFont(new Font("Segoe UI", Font.BOLD, 22));
             lblCashIcon.setForeground(new Color(22, 163, 74));
             lblCashIcon.setAlignmentX(Component.CENTER_ALIGNMENT);
 

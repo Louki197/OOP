@@ -11,7 +11,9 @@ import java.awt.geom.QuadCurve2D;
  * tích hợp hiệu ứng ánh sáng phát xạ (Ambient Glow Gradient) chuẩn IMAX.
  * Tinh chỉnh chiều cao 38px để vừa khít màn hình, không cần cuộn chuột.
  */
+@SuppressWarnings("serial")
 public class CurvedScreenPanel extends JPanel {
+    private static final long serialVersionUID = 1L;
 
     public CurvedScreenPanel() {
         setPreferredSize(new Dimension(0, 38));

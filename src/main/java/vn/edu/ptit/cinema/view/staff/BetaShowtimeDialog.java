@@ -4,7 +4,6 @@ import com.formdev.flatlaf.FlatClientProperties;
 import vn.edu.ptit.cinema.model.cinema.Room;
 import vn.edu.ptit.cinema.model.cinema.ShowTime;
 import vn.edu.ptit.cinema.model.movie.Movie;
-import vn.edu.ptit.cinema.model.seat.Seat;
 import vn.edu.ptit.cinema.model.seat.SeatStatus;
 import vn.edu.ptit.cinema.service.DataStore;
 import vn.edu.ptit.cinema.util.PosterManager;
@@ -14,7 +13,6 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.image.BufferedImage;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -29,7 +27,9 @@ import java.util.function.Consumer;
  * 3. Hộp Suất Chiếu (Showtime Pills): Giờ bắt đầu to đậm + Số lượng ghế trống thực tế
  * 4. Bấm vào bất kỳ ô giờ nào sẽ vào thẳng sơ đồ ghế của suất chiếu đó.
  */
+@SuppressWarnings("serial")
 public class BetaShowtimeDialog extends JDialog {
+    private static final long serialVersionUID = 1L;
 
     private final Movie movie;
     private final Consumer<ShowTime> onShowTimeSelected;

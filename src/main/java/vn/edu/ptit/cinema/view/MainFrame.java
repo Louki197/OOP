@@ -26,9 +26,7 @@ import vn.edu.ptit.cinema.view.staff.CustomerManagementDialog;
 import vn.edu.ptit.cinema.view.staff.ShowtimeManagementDialog;
 
 import javax.swing.*;
-import javax.imageio.ImageIO;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import java.awt.geom.RoundRectangle2D;
 import java.awt.Desktop;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -39,8 +37,6 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.File;
@@ -60,7 +56,9 @@ import java.util.concurrent.ConcurrentHashMap;
  * 4. Nới rộng ComboBox giờ chiếu, loại bỏ hoàn toàn các ký tự Tofu [].
  * 5. 100% Pure Java Swing (Không nhúng HTML/CSS).
  */
-public class MainFrame extends JFrame implements ActionListener {
+@SuppressWarnings("serial")
+public class MainFrame extends JFrame {
+    private static final long serialVersionUID = 1L;
 
     private final DataStore dataStore = DataStore.getInstance();
     private final User currentUser = SessionManager.getInstance().getCurrentUser();
@@ -80,9 +78,7 @@ public class MainFrame extends JFrame implements ActionListener {
     private Movie selectedMovieForBooking;
     private JLabel lblCurrentMovieTitle;
     private JLabel lblCurrentMovieBadge;
-    private JComboBox<String> cbDate;
-    private JComboBox<String> cbTime;
-    private boolean isCascadingUpdating = false;
+
     private JLabel lblCurrentShowtimeInfo;
     private JButton btnChangeShowtime;
 
@@ -215,7 +211,7 @@ public class MainFrame extends JFrame implements ActionListener {
         lblClock.setFont(new Font("Segoe UI", Font.BOLD, 13));
         lblClock.setForeground(new Color(30, 41, 59));
         javax.swing.Timer clockTimer = new javax.swing.Timer(1000, e -> {
-            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("EEEE, dd/MM/yyyy - HH:mm:ss", new Locale("vi", "VN"));
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("EEEE, dd/MM/yyyy - HH:mm:ss", Locale.forLanguageTag("vi-VN"));
             lblClock.setText(LocalDateTime.now().format(dtf));
         });
         clockTimer.start();
@@ -667,9 +663,7 @@ public class MainFrame extends JFrame implements ActionListener {
         bookingCardLayout.show(bookingCardContainer, CARD_SEATMAP);
     }
 
-    private void selectMovieAndOpenSeatMap(Movie m) {
-        openBetaShowtimeDialog(m);
-    }
+
 
     /**
      * MÀN HÌNH 2: PHÒNG CHIẾU & SƠ ĐỒ GHẾ
@@ -767,8 +761,7 @@ public class MainFrame extends JFrame implements ActionListener {
         JPanel row2Left = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 0));
         row2Left.setOpaque(false);
 
-        cbDate = new JComboBox<>();
-        cbTime = new JComboBox<>();
+
 
         lblCurrentShowtimeInfo = new JLabel("Suất chiếu: --:-- (Phòng --)");
         lblCurrentShowtimeInfo.setFont(new Font("Segoe UI", Font.BOLD, 12));
@@ -947,115 +940,6 @@ public class MainFrame extends JFrame implements ActionListener {
         return p;
     }
 
-    // =========================================================================
-    // LOGIC CASCADING COMBOBOX CỦA RIÊNG PHIM ĐANG CHỌN (NGÀY -> GIỜ)
-    // =========================================================================
-
-    private void reloadDateComboForSelectedMovie() {
-        if (selectedMovieForBooking == null) return;
-        isCascadingUpdating = true;
-        try {
-            cbDate.removeAllItems();
-            cbTime.removeAllItems();
-
-            Set<LocalDate> dates = new TreeSet<>();
-            for (ShowTime st : dataStore.getShowTimeMap().values()) {
-                if (st.getMovieId().equals(selectedMovieForBooking.getId()) && st.getStartTime() != null) {
-                    dates.add(st.getStartTime().toLocalDate());
-                }
-            }
-
-            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-            for (LocalDate d : dates) {
-                cbDate.addItem(d.format(dtf));
-            }
-
-            if (cbDate.getItemCount() > 0) {
-                cbDate.setSelectedIndex(0);
-                populateTimesForSelectedDateInternal();
-            } else {
-                currentShowTime = null;
-                showEmptySeatMatrix("Phim này hiện chưa có suất chiếu nào được lên lịch.");
-            }
-        } finally {
-            isCascadingUpdating = false;
-        }
-    }
-
-    private void onDateSelectedForMovie() {
-        if (isCascadingUpdating) return;
-        isCascadingUpdating = true;
-        try {
-            releaseSelectedPendingSeats();
-            populateTimesForSelectedDateInternal();
-        } finally {
-            isCascadingUpdating = false;
-        }
-    }
-
-    private void populateTimesForSelectedDateInternal() {
-        String dateStr = (String) cbDate.getSelectedItem();
-        cbTime.removeAllItems();
-
-        if (dateStr == null || selectedMovieForBooking == null) {
-            currentShowTime = null;
-            showEmptySeatMatrix("Vui lòng chọn ngày chiếu.");
-            return;
-        }
-
-        LocalDate selectedDate = LocalDate.parse(dateStr, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-
-        List<ShowTime> matchingShowTimes = new ArrayList<>();
-        for (ShowTime st : dataStore.getShowTimeMap().values()) {
-            if (st.getMovieId().equals(selectedMovieForBooking.getId())
-                    && st.getStartTime() != null
-                    && st.getStartTime().toLocalDate().isEqual(selectedDate)) {
-                matchingShowTimes.add(st);
-            }
-        }
-
-        matchingShowTimes.sort(Comparator.comparing(ShowTime::getStartTime));
-        DateTimeFormatter timeDtf = DateTimeFormatter.ofPattern("HH:mm");
-
-        for (ShowTime st : matchingShowTimes) {
-            Room room = dataStore.getRoomMap().get(st.getRoomId());
-            String roomName = (room != null) ? room.getName() : st.getRoomId();
-            // Format ngắn gọn, dễ đọc: 18:00 (Phòng 1)
-            cbTime.addItem(String.format("[%s] %s (%s)", st.getId(), st.getStartTime().format(timeDtf), roomName));
-        }
-
-        if (cbTime.getItemCount() > 0) {
-            cbTime.setSelectedIndex(0);
-            loadSelectedShowTime();
-        } else {
-            currentShowTime = null;
-            showEmptySeatMatrix("Không có giờ chiếu nào trong ngày " + dateStr);
-        }
-    }
-
-    private void onTimeSelectedForMovie() {
-        if (isCascadingUpdating) return;
-        loadSelectedShowTime();
-    }
-
-    private void loadSelectedShowTime() {
-        String selectedTime = (String) cbTime.getSelectedItem();
-        if (selectedTime == null || !selectedTime.contains("[") || !selectedTime.contains("]")) {
-            currentShowTime = null;
-            showEmptySeatMatrix("Vui lòng chọn suất chiếu.");
-            return;
-        }
-
-        String showTimeId = selectedTime.substring(selectedTime.indexOf('[') + 1, selectedTime.indexOf(']'));
-        currentShowTime = dataStore.getShowTimeMap().get(showTimeId);
-
-        if (currentShowTime != null) {
-            restoreUserHeldSeatsIfAny();
-            renderSeatMatrixWithAxesAndAisles();
-        } else {
-            showEmptySeatMatrix("Không tìm thấy dữ liệu suất chiếu: " + showTimeId);
-        }
-    }
 
     /**
      * BẢO LƯU GHẾ GIỮ VÀ KHÔI PHỤC ĐỒNG HỒ ĐẾM NGƯỢC KHI CHUYỂN TAB
@@ -1095,17 +979,6 @@ public class MainFrame extends JFrame implements ActionListener {
         }
     }
 
-    private void showEmptySeatMatrix(String message) {
-        seatMatrixContainer.removeAll();
-        seatButtons.clear();
-        JLabel lblMsg = new JLabel(message, JLabel.CENTER);
-        lblMsg.setFont(new Font("Segoe UI", Font.ITALIC, 14));
-        lblMsg.setForeground(new Color(100, 116, 139));
-        seatMatrixContainer.add(lblMsg);
-        seatMatrixContainer.revalidate();
-        seatMatrixContainer.repaint();
-        refreshChipsAndTotals();
-    }
 
     /**
      * DỰNG SƠ ĐỒ GHẾ VỚI TRỤC TỌA ĐỘ VÀ 2 LỐI ĐI THỰC TẾ
@@ -1190,7 +1063,7 @@ public class MainFrame extends JFrame implements ActionListener {
                     btnSweetbox.putClientProperty(FlatClientProperties.STYLE, "arc: 10;");
 
                     updateSweetboxAppearance(btnSweetbox, s1, s2);
-                    btnSweetbox.setToolTipText(String.format("Ghế Đôi Sweetbox [%s - %s] - Giá: %,.0f VNĐ",
+                    btnSweetbox.setToolTipText(String.format("Ghế Đôi Sweetbox (%s - %s) - Giá: %,.0f VNĐ",
                             code1, code2, currentShowTime.getBasePrice() * SeatType.SWEETBOX.getPriceMultiplier()));
 
                     btnSweetbox.addActionListener(e -> onSweetboxClicked(code1, code2, btnSweetbox));
@@ -1224,7 +1097,7 @@ public class MainFrame extends JFrame implements ActionListener {
                     updateSeatButtonAppearance(btnSeat, seat, isVipRow);
 
                     double price = currentShowTime.getBasePrice() * (isVipRow ? SeatType.VIP.getPriceMultiplier() : 1.0);
-                    btnSeat.setToolTipText(String.format("Ghế %s [%s] - Giá: %,.0f VNĐ",
+                    btnSeat.setToolTipText(String.format("Ghế %s %s - Giá: %,.0f VNĐ",
                             isVipRow ? "VIP" : "Thường", code, price));
 
                     btnSeat.addActionListener(e -> onSingleSeatClicked(code, btnSeat, isVipRow));
@@ -2418,9 +2291,7 @@ public class MainFrame extends JFrame implements ActionListener {
         }
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-    }
+
 
 
 

@@ -6,6 +6,7 @@ import java.io.Serializable;
  * Model biểu diễn mặt hàng Bắp - Nước (F&B) hoặc Combo
  */
 public class FoodItem implements Serializable {
+    private static final long serialVersionUID = 1L;
     private String id;
     private String name;
     private double price;

@@ -7,6 +7,7 @@ import java.time.LocalDate;
  * Model biểu diễn thông tin Phim
  */
 public class Movie implements Serializable {
+    private static final long serialVersionUID = 1L;
     private String id;
     private String title;
     private String genre;

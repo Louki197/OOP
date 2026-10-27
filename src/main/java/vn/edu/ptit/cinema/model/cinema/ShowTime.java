@@ -10,7 +10,9 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Model biểu diễn Suất chiếu phim kèm sơ đồ ghế thời gian thực
  */
+@SuppressWarnings("serial")
 public class ShowTime implements Serializable {
+    private static final long serialVersionUID = 1L;
     private String id;
     private String movieId;
     private String roomId;

@@ -6,6 +6,7 @@ import java.io.Serializable;
  * Model biểu diễn thông tin Phòng chiếu
  */
 public class Room implements Serializable {
+    private static final long serialVersionUID = 1L;
     private String id;
     private String name;
     private int totalRows;
