@@ -31,5 +31,27 @@
     "description": "Bộ phim lịch sử tái hiện không khí hào hùng của Hà Nội mùa đông năm 1946.",
     "director": "Phi Tiến Sơn",
     "ageRating": "C13"
+  },
+  "MOV04": {
+    "id": "MOV04",
+    "title": "Hoa Anh Đào",
+    "genre": "Hành Động",
+    "durationMinutes": 150,
+    "releaseDate": "2026-10-28",
+    "posterPath": "posters/poster_1793133782328.JPG",
+    "description": "Phim mới",
+    "director": "Duy",
+    "ageRating": "P"
+  },
+  "MOV05": {
+    "id": "MOV05",
+    "title": "Hùng baby",
+    "genre": "Tình cảm",
+    "durationMinutes": 120,
+    "releaseDate": "2026-10-28",
+    "posterPath": "posters/poster_1793170704508.JPG",
+    "description": "Phim mới",
+    "director": "Duy daddy",
+    "ageRating": "C18"
   }
 }

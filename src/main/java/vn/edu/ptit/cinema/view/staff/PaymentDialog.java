@@ -47,6 +47,7 @@ public class PaymentDialog extends JDialog {
     private JTextField txtCustomerPhone;
     private JLabel lblCustomerTierBadge;
     private JCheckBox chkUseLoyaltyPoints;
+    private JPanel chkPointsRow;
     private JButton btnRegisterMember;
     private JButton btnLookupMember;
     private Customer currentCustomer = null;
@@ -129,6 +130,7 @@ public class PaymentDialog extends JDialog {
         // Dòng SĐT + Nút Tra cứu
         JPanel phoneRow = new JPanel(new BorderLayout(6, 0));
         phoneRow.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
+        phoneRow.setAlignmentX(Component.LEFT_ALIGNMENT);
         JLabel lblPhoneTitle = new JLabel("Số ĐT: ");
         lblPhoneTitle.setPreferredSize(new Dimension(55, 28));
         txtCustomerPhone = new JTextField("0912345678");
@@ -143,6 +145,7 @@ public class PaymentDialog extends JDialog {
         // Dòng Tên khách
         JPanel nameRow = new JPanel(new BorderLayout(6, 0));
         nameRow.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
+        nameRow.setAlignmentX(Component.LEFT_ALIGNMENT);
         JLabel lblNameTitle = new JLabel("Họ tên: ");
         lblNameTitle.setPreferredSize(new Dimension(55, 28));
         txtCustomerName = new JTextField("Nguyễn Văn Tuấn");
@@ -152,6 +155,7 @@ public class PaymentDialog extends JDialog {
         // Dòng Badge thành viên & Nút Đăng ký nhanh
         JPanel memberBadgeRow = new JPanel(new BorderLayout(6, 0));
         memberBadgeRow.setMaximumSize(new Dimension(Integer.MAX_VALUE, 26));
+        memberBadgeRow.setAlignmentX(Component.LEFT_ALIGNMENT);
         lblCustomerTierBadge = new JLabel("Thành viên VIP (Tích lũy: 50.000 VNĐ)");
         lblCustomerTierBadge.setFont(new Font("Segoe UI", Font.BOLD, 12));
         lblCustomerTierBadge.setForeground(new Color(22, 163, 74));
@@ -167,11 +171,18 @@ public class PaymentDialog extends JDialog {
         memberBadgeRow.add(lblCustomerTierBadge, BorderLayout.CENTER);
         memberBadgeRow.add(btnRegisterMember, BorderLayout.EAST);
 
-        // Checkbox dùng điểm tích lũy
+        // Checkbox dùng điểm tích lũy - Căn chuẩn lề trái
         chkUseLoyaltyPoints = new JCheckBox("Dùng điểm tích lũy trừ tiền vé");
         chkUseLoyaltyPoints.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         chkUseLoyaltyPoints.setForeground(new Color(37, 99, 235));
+        chkUseLoyaltyPoints.setAlignmentX(Component.LEFT_ALIGNMENT);
         chkUseLoyaltyPoints.addActionListener(e -> recalculateTotal());
+
+        chkPointsRow = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        chkPointsRow.setOpaque(false);
+        chkPointsRow.setAlignmentX(Component.LEFT_ALIGNMENT);
+        chkPointsRow.setMaximumSize(new Dimension(Integer.MAX_VALUE, 26));
+        chkPointsRow.add(chkUseLoyaltyPoints);
 
         custBox.add(phoneRow);
         custBox.add(Box.createVerticalStrut(6));
@@ -179,7 +190,7 @@ public class PaymentDialog extends JDialog {
         custBox.add(Box.createVerticalStrut(6));
         custBox.add(memberBadgeRow);
         custBox.add(Box.createVerticalStrut(4));
-        custBox.add(chkUseLoyaltyPoints);
+        custBox.add(chkPointsRow);
 
         // Tự động tra cứu khi rời ô SĐT
         txtCustomerPhone.addFocusListener(new FocusAdapter() {
@@ -202,6 +213,7 @@ public class PaymentDialog extends JDialog {
 
         JPanel vInput = new JPanel(new BorderLayout(6, 0));
         vInput.setMaximumSize(new Dimension(Integer.MAX_VALUE, 32));
+        vInput.setAlignmentX(Component.LEFT_ALIGNMENT);
         txtVoucher = new JTextField("PTIT10");
         txtVoucher.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Nhập PTIT10 hoặc SINHVIEN20");
 
@@ -223,16 +235,24 @@ public class PaymentDialog extends JDialog {
         lblVoucherStatus = new JLabel(" ");
         lblVoucherStatus.setFont(new Font("Segoe UI", Font.PLAIN, 11));
         lblVoucherStatus.setForeground(new Color(22, 163, 74));
+        lblVoucherStatus.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         chkStudentDiscount = new JCheckBox("Áp dụng ưu đãi Sinh viên PTIT (-20%)");
         chkStudentDiscount.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        chkStudentDiscount.setAlignmentX(Component.LEFT_ALIGNMENT);
         chkStudentDiscount.addActionListener(e -> recalculateTotal());
+
+        JPanel chkStudentRow = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        chkStudentRow.setOpaque(false);
+        chkStudentRow.setAlignmentX(Component.LEFT_ALIGNMENT);
+        chkStudentRow.setMaximumSize(new Dimension(Integer.MAX_VALUE, 26));
+        chkStudentRow.add(chkStudentDiscount);
 
         voucherBox.add(vInput);
         voucherBox.add(Box.createVerticalStrut(4));
         voucherBox.add(lblVoucherStatus);
         voucherBox.add(Box.createVerticalStrut(4));
-        voucherBox.add(chkStudentDiscount);
+        voucherBox.add(chkStudentRow);
         leftPanel.add(voucherBox);
         leftPanel.add(Box.createVerticalStrut(10));
 
@@ -322,7 +342,9 @@ public class PaymentDialog extends JDialog {
             lblCustomerTierBadge.setText(String.format("Thành viên: %s (Tích lũy: %,.0f VNĐ)", c.getMembershipTier(), c.getLoyaltyPoints()));
             lblCustomerTierBadge.setForeground(new Color(22, 163, 74));
             btnRegisterMember.setVisible(true);
-            chkUseLoyaltyPoints.setVisible(c.getLoyaltyPoints() > 0);
+            boolean hasPoints = c.getLoyaltyPoints() > 0;
+            chkUseLoyaltyPoints.setVisible(hasPoints);
+            if (chkPointsRow != null) chkPointsRow.setVisible(hasPoints);
             chkUseLoyaltyPoints.setText(String.format("Dùng %,.0f điểm tích lũy trừ tiền vé", c.getLoyaltyPoints()));
         } else {
             currentCustomer = null;
@@ -330,6 +352,7 @@ public class PaymentDialog extends JDialog {
             lblCustomerTierBadge.setForeground(Color.GRAY);
             btnRegisterMember.setVisible(true);
             chkUseLoyaltyPoints.setVisible(false);
+            if (chkPointsRow != null) chkPointsRow.setVisible(false);
             chkUseLoyaltyPoints.setSelected(false);
         }
         recalculateTotal();

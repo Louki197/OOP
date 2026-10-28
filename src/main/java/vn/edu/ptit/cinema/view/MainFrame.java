@@ -24,6 +24,7 @@ import vn.edu.ptit.cinema.view.staff.PaymentDialog;
 import vn.edu.ptit.cinema.view.staff.BetaShowtimeDialog;
 import vn.edu.ptit.cinema.view.staff.CustomerManagementDialog;
 import vn.edu.ptit.cinema.view.staff.ShowtimeManagementDialog;
+import vn.edu.ptit.cinema.view.staff.OnlineTicketPickupPanel;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -137,6 +138,9 @@ public class MainFrame extends JFrame {
     private JComboBox<String> cbFilterPeriod;
     private JButton btnSortByRevenue, btnSortByDate, btnExportReport;
 
+    // --- TAB 4: LẤY VÉ VÀ IN VÉ ĐẶT ONLINE (KIOSK & POS) ---
+    private OnlineTicketPickupPanel onlinePickupPanel;
+
     public MainFrame() {
         initUI();
         initSeatObserver();
@@ -157,7 +161,12 @@ public class MainFrame extends JFrame {
         tabbedPane = new JTabbedPane();
         tabbedPane.setFont(new Font("Segoe UI", Font.BOLD, 13));
 
+        // 1. Tab Bán vé & Sơ đồ rạp (Tại quầy)
         tabbedPane.addTab("BÁN VÉ & SƠ ĐỒ RẠP", createBookingCardContainer());
+
+        // 2. Tab Lấy vé & In vé Online (Dành cho cả Thu ngân & Quản trị)
+        onlinePickupPanel = new OnlineTicketPickupPanel(this);
+        tabbedPane.addTab("LẤY VÉ ONLINE (KIOSK & POS)", onlinePickupPanel);
 
         if (SessionManager.getInstance().isAdmin()) {
             tabbedPane.addTab("QUẢN LÝ PHIM & LỊCH CHIẾU", createMovieManagementTab());
@@ -171,6 +180,10 @@ public class MainFrame extends JFrame {
                 String tabTitle = tabbedPane.getTitleAt(selectedIndex);
                 if (tabTitle.contains("BÁN VÉ")) {
                     refreshBookingTabState();
+                } else if (tabTitle.contains("LẤY VÉ ONLINE")) {
+                    if (onlinePickupPanel != null) {
+                        onlinePickupPanel.reloadOnlineBookings();
+                    }
                 } else if (tabTitle.contains("THỐNG KÊ")) {
                     reloadReportDashboard();
                 }
@@ -264,6 +277,18 @@ public class MainFrame extends JFrame {
         miCustomers.setAccelerator(KeyStroke.getKeyStroke("control M"));
         miCustomers.addActionListener(e -> new CustomerManagementDialog(this).setVisible(true));
         menuSystem.add(miCustomers);
+
+        JMenuItem miPickup = new JMenuItem("Lấy vé & In vé Online (Ctrl+O)");
+        miPickup.setAccelerator(KeyStroke.getKeyStroke("control O"));
+        miPickup.addActionListener(e -> {
+            for (int i = 0; i < tabbedPane.getTabCount(); i++) {
+                if (tabbedPane.getTitleAt(i).contains("LẤY VÉ ONLINE")) {
+                    tabbedPane.setSelectedIndex(i);
+                    break;
+                }
+            }
+        });
+        menuSystem.add(miPickup);
 
         JMenuItem miShowtimes = new JMenuItem("Quản lý & Chỉnh Sửa Lịch Chiếu (Ctrl+L)");
         miShowtimes.setAccelerator(KeyStroke.getKeyStroke("control L"));
@@ -1344,6 +1369,9 @@ public class MainFrame extends JFrame {
             renderSeatMatrixWithAxesAndAisles();
             refreshChipsAndTotals();
             reloadReportDashboard();
+            if (onlinePickupPanel != null) {
+                onlinePickupPanel.reloadOnlineBookings();
+            }
         }
     }
 
@@ -2146,6 +2174,13 @@ public class MainFrame extends JFrame {
         panel.add(centerPanel, BorderLayout.CENTER);
 
         JPanel bottomTools = new JPanel(new FlowLayout(FlowLayout.RIGHT, 12, 0));
+
+        JButton btnClearAllInvoices = new JButton("🗑️ Xóa Lịch Sử Giao Dịch");
+        btnClearAllInvoices.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        btnClearAllInvoices.setForeground(new Color(220, 38, 38));
+        btnClearAllInvoices.putClientProperty(FlatClientProperties.STYLE, "arc: 8;");
+        btnClearAllInvoices.addActionListener(e -> handleClearAllInvoices());
+
         btnSortByRevenue = new JButton("Sắp xếp theo Tiền (Giảm dần)");
         btnSortByRevenue.addActionListener(e -> sortInvoicesByAmount());
         btnSortByDate = new JButton("Sắp xếp theo Ngày");
@@ -2153,6 +2188,7 @@ public class MainFrame extends JFrame {
         btnExportReport = new JButton("Xuất Báo Cáo Ra File TXT");
         btnExportReport.addActionListener(e -> exportReportToFile());
 
+        bottomTools.add(btnClearAllInvoices);
         bottomTools.add(btnSortByRevenue);
         bottomTools.add(btnSortByDate);
         bottomTools.add(btnExportReport);
@@ -2160,6 +2196,41 @@ public class MainFrame extends JFrame {
 
         reloadReportDashboard();
         return panel;
+    }
+
+    private void handleClearAllInvoices() {
+        int confirm = JOptionPane.showConfirmDialog(this,
+                "BẠN CÓ CHẮC CHẮN MUỐN XÓA TOÀN BỘ LỊCH SỬ GIAO DỊCH KHÔNG?\n"
+                        + "• Toàn bộ hóa đơn và doanh thu sẽ được đặt lại về 0 VNĐ.\n"
+                        + "• Các ghế đã bán trên sơ đồ rạp sẽ được trả về trạng thái trống để bắt đầu ca mới.\n"
+                        + "Lưu ý: Thao tác này KHÔNG thể hoàn tác!",
+                "Xác nhận xóa sạch lịch sử giao dịch",
+                JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+
+        if (confirm == JOptionPane.YES_OPTION) {
+            dataStore.getInvoiceMap().clear();
+            for (ShowTime st : dataStore.getShowTimeMap().values()) {
+                if (st.getSeats() != null) {
+                    for (Seat s : st.getSeats().values()) {
+                        s.setStatus(SeatStatus.AVAILABLE);
+                        s.setHoldTimestamp(0);
+                        s.setHeldByUserId(null);
+                    }
+                }
+            }
+            dataStore.saveAllData();
+
+            reloadReportDashboard();
+            refreshBookingTabState();
+            if (onlinePickupPanel != null) {
+                onlinePickupPanel.reloadOnlineBookings();
+            }
+
+            JOptionPane.showMessageDialog(this,
+                    "ĐÃ XÓA TOÀN BỘ LỊCH SỬ GIAO DỊCH THÀNH CÔNG!\n"
+                            + "Doanh thu rạp hiện tại đã được đặt lại về 0 VNĐ.",
+                    "Thành công", JOptionPane.INFORMATION_MESSAGE);
+        }
     }
 
     private JPanel createKpiCard(String title, JLabel valueLabel, Color accentColor) {
