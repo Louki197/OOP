@@ -49844,8 +49844,9 @@
         "rowIndex": 5,
         "colIndex": 9,
         "type": "VIP",
-        "status": "AVAILABLE",
-        "holdTimestamp": 0
+        "status": "PENDING",
+        "holdTimestamp": 1793177561313,
+        "heldByUserId": "admin"
       },
       "F12": {
         "code": "F12",
