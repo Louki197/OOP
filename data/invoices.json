@@ -265,6 +265,35 @@
     "finalAmount": 707000.0,
     "createdAt": "2026-10-27 20:36:49"
   },
+  "INV43791": {
+    "invoiceId": "INV43791",
+    "staffUsername": "admin",
+    "customerName": "Nguyễn Văn Tuấn",
+    "customerPhone": "0912345678",
+    "showTimeId": "ST5",
+    "movieTitle": "Exhuma: Quật Mộ Trùng Ma",
+    "roomName": "Phòng Chiếu 01",
+    "showStartTime": "2026-10-28 19:00:00",
+    "tickets": [
+      {
+        "ticketId": "TK45550",
+        "showTimeId": "ST5",
+        "seatCode": "G01",
+        "price": 100000.0
+      },
+      {
+        "ticketId": "TK45550",
+        "showTimeId": "ST5",
+        "seatCode": "G02",
+        "price": 100000.0
+      }
+    ],
+    "foods": [],
+    "originalAmount": 200000.0,
+    "discountAmount": 0.0,
+    "finalAmount": 200000.0,
+    "createdAt": "2026-10-28 14:37:25"
+  },
   "INV86179": {
     "invoiceId": "INV86179",
     "staffUsername": "admin",
@@ -556,6 +585,29 @@
     "discountAmount": 22000.0,
     "finalAmount": 198000.0,
     "createdAt": "2026-10-25 02:34:51"
+  },
+  "INV901744": {
+    "invoiceId": "INV901744",
+    "staffUsername": "admin",
+    "customerName": "Nguyễn Văn Tuấn",
+    "customerPhone": "0912345678",
+    "showTimeId": "ST5",
+    "movieTitle": "Exhuma: Quật Mộ Trùng Ma",
+    "roomName": "Phòng Chiếu 01",
+    "showStartTime": "2026-10-28 19:00:00",
+    "tickets": [
+      {
+        "ticketId": "TK17620",
+        "showTimeId": "ST5",
+        "seatCode": "F09",
+        "price": 50000.0
+      }
+    ],
+    "foods": [],
+    "originalAmount": 50000.0,
+    "discountAmount": 40983.0,
+    "finalAmount": 9017.0,
+    "createdAt": "2026-10-28 14:36:57"
   },
   "INV169439": {
     "invoiceId": "INV169439",

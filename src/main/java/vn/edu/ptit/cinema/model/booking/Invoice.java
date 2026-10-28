@@ -28,6 +28,19 @@ public class Invoice implements Serializable {
     private double discountAmount;
     private double finalAmount;
     private LocalDateTime createdAt;
+    private String paymentMethod;
+    private double cashReceived;
+    private double changeAmount;
+
+    public void setPaymentDetails(String method, double received, double change) {
+        paymentMethod = method;
+        cashReceived = received;
+        changeAmount = change;
+    }
+
+    public String getPaymentMethod() { return paymentMethod; }
+    public double getCashReceived() { return cashReceived; }
+    public double getChangeAmount() { return changeAmount; }
 
     public Invoice() {
     }

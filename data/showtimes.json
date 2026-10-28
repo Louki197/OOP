@@ -2082,7 +2082,7 @@
         "rowIndex": 6,
         "colIndex": 1,
         "type": "SWEETBOX",
-        "status": "AVAILABLE",
+        "status": "BOOKED",
         "holdTimestamp": 0
       },
       "C05": {
@@ -2114,7 +2114,7 @@
         "rowIndex": 6,
         "colIndex": 0,
         "type": "SWEETBOX",
-        "status": "AVAILABLE",
+        "status": "BOOKED",
         "holdTimestamp": 0
       },
       "C08": {
@@ -2522,7 +2522,7 @@
         "rowIndex": 5,
         "colIndex": 8,
         "type": "VIP",
-        "status": "AVAILABLE",
+        "status": "BOOKED",
         "holdTimestamp": 0
       },
       "H07": {

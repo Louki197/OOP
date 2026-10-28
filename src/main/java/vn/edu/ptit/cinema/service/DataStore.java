@@ -201,19 +201,18 @@ public class DataStore {
     /**
      * Ghi toàn bộ dữ liệu RAM xuống các file JSON tương ứng (Thread-safe)
      */
-    public synchronized void saveAllData() {
-        System.out.println("[DataStore Background] Đang lưu dữ liệu xuống file JSON...");
-        storageDAO.writeToFile("users.json", userMap);
-        storageDAO.writeToFile("movies.json", movieMap);
-        storageDAO.writeToFile("rooms.json", roomMap);
-        storageDAO.writeToFile("showtimes.json", showTimeMap);
-        storageDAO.writeToFile("invoices.json", invoiceMap);
-        storageDAO.writeToFile("vouchers.json", voucherMap);
-        storageDAO.writeToFile("foods.json", foodList);
-        storageDAO.writeToFile("customers.json", customerMap);
-        System.out.println("[DataStore Background] Lưu dữ liệu thành công lúc " + LocalDateTime.now());
+    public synchronized boolean saveAllData() {
+        Map<String, Object> files = new LinkedHashMap<>();
+        files.put("users.json", userMap);
+        files.put("movies.json", movieMap);
+        files.put("rooms.json", roomMap);
+        files.put("showtimes.json", showTimeMap);
+        files.put("invoices.json", invoiceMap);
+        files.put("vouchers.json", voucherMap);
+        files.put("foods.json", foodList);
+        files.put("customers.json", customerMap);
+        return storageDAO.writeBatch(files);
     }
-
     // =========================================================================
     // MULTITHREADING: LUỒNG CHẠY NGẦM AUTO-SAVE VÀ KIỂM TRA TIMEOUT GHẾ
     // =========================================================================
@@ -241,7 +240,7 @@ public class DataStore {
     /**
      * Tác vụ luồng phụ tự động giải phóng ghế đang Pending nếu quá 5 phút chưa thanh toán
      */
-    private void releaseExpiredSeatsTask() {
+    private synchronized void releaseExpiredSeatsTask() {
         long current = System.currentTimeMillis();
         boolean hasChanged = false;
 
@@ -366,7 +365,7 @@ public class DataStore {
                 } else {
                     type = SeatType.SWEETBOX; // 2 hàng cuối là Sweetbox
                 }
-                Seat seat = new Seat(code, r, c - 1, type);
+                Seat seat = vn.edu.ptit.cinema.pattern.factory.SeatFactory.createSeat(code, r, c - 1, type);
                 seatMap.put(code, seat);
             }
         }

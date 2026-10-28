@@ -1,0 +1,6 @@
+[DataStore] ?ang kh?i t?o trung tâm d? li?u In-Memory...
+[DataStore] B?t ??u n?p d? li?u t? File JSON...
+[DataStore] N?p d? li?u hoàn t?t! Users: 3 | Movies: 3 | Rooms: 2 | ShowTimes: 3 | Foods: 5 | Customers: 3
+[DataStore] ?ã kh?i ch?y Daemon Threads: Auto-Save (30s) và Seat Timeout Watcher (5s).
+[Auto-Release] Gh? C02 t?i Su?t chi?u PREVIEW ?ã h?t h?n 5 phút -> T? ??ng tr? v? Tr?ng!
+[Auto-Release] Gh? C01 t?i Su?t chi?u PREVIEW ?ã h?t h?n 5 phút -> T? ??ng tr? v? Tr?ng!

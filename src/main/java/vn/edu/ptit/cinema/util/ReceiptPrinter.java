@@ -31,7 +31,7 @@ public class ReceiptPrinter {
             writer.write("              HOTLINE: 1900 8888 - PTIT.EDU.VN       \n");
             writer.write("=====================================================\n");
             writer.write(String.format("Mã hóa đơn : %s\n", invoice.getInvoiceId()));
-            writer.write(String.format("Thời gian   : %s\n", invoice.getCreatedAt().format(dtf)));
+            writer.write(String.format("Thời gian   : %s\n", invoice.getCreatedAt() == null ? "N/A" : invoice.getCreatedAt().format(dtf)));
             writer.write(String.format("Thu ngân    : %s\n", invoice.getStaffUsername()));
             writer.write(String.format("Khách hàng  : %s (%s)\n", invoice.getCustomerName(), invoice.getCustomerPhone()));
             writer.write("-----------------------------------------------------\n");
@@ -56,9 +56,16 @@ public class ReceiptPrinter {
             writer.write("=====================================================\n");
             writer.write(String.format("Tổng tiền gốc    : %,12.0f VNĐ\n", invoice.getOriginalAmount()));
             if (invoice.getVoucherCode() != null && !invoice.getVoucherCode().isEmpty()) {
-                writer.write(String.format("Voucher giảm giá : %s (-%,.0f VNĐ)\n", invoice.getVoucherCode(), invoice.getDiscountAmount()));
+                writer.write("Mã voucher      : " + invoice.getVoucherCode() + "\n");
             }
+            writer.write(String.format("Tổng giảm giá   : %,.0f VNĐ\n", invoice.getDiscountAmount()));
             writer.write(String.format("THANH TOÁN       : %,12.0f VNĐ\n", invoice.getFinalAmount()));
+            if (invoice.getPaymentMethod() != null) {
+                writer.write("Phương thức     : " + ("CASH".equals(invoice.getPaymentMethod()) ? "Tiền mặt" : "QR mô phỏng") + "\n");
+                if ("CASH".equals(invoice.getPaymentMethod())) {
+                    writer.write(String.format("Khách đưa       : %,.0f VNĐ\nTiền thừa       : %,.0f VNĐ\n", invoice.getCashReceived(), invoice.getChangeAmount()));
+                }
+            }
             writer.write("=====================================================\n");
             writer.write("       CẢM ƠN QUÝ KHÁCH & CHÚC XEM PHIM VUI VẺ!      \n");
             writer.write("=====================================================\n");

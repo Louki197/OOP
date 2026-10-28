@@ -1,0 +1,14 @@
+{
+  "ROOM02": {
+    "id": "ROOM02",
+    "name": "Phòng Chiếu 2 (IMAX Laser)",
+    "totalRows": 10,
+    "totalCols": 12
+  },
+  "ROOM01": {
+    "id": "ROOM01",
+    "name": "Phòng Chiếu 1 (Cinema Star)",
+    "totalRows": 8,
+    "totalCols": 10
+  }
+}

@@ -17,6 +17,7 @@ import vn.edu.ptit.cinema.service.SessionManager;
 import vn.edu.ptit.cinema.util.ReceiptPrinter;
 import vn.edu.ptit.cinema.view.component.QrCodePanel;
 
+import vn.edu.ptit.cinema.service.BookingRules;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -61,6 +62,10 @@ public class PaymentDialog extends JDialog {
     private JRadioButton rbCash;
     private JRadioButton rbVietQR;
     private JPanel qrCardContainer;
+    private JTextField txtCashReceived;
+    private JLabel lblChange;
+    private JButton btnPayAndPrint;
+    private javax.swing.Timer expiryTimer;
 
     private JLabel lblTicketSummary;
     private JLabel lblFoodSummary;
@@ -75,9 +80,9 @@ public class PaymentDialog extends JDialog {
     public PaymentDialog(Frame parent, ShowTime showTime, Set<String> seatCodes, List<OrderItem> orderFoods) {
         super(parent, "XÁC NHẬN THANH TOÁN VÉ & DỊCH VỤ", true);
         this.showTime = showTime;
-        this.seatCodes = seatCodes;
+        this.seatCodes = new java.util.LinkedHashSet<>(seatCodes);
         this.orderFoods = orderFoods != null ? orderFoods : new ArrayList<>();
-        this.tempInvoiceId = "INV" + (System.currentTimeMillis() % 1000000);
+        this.tempInvoiceId = "INV-" + java.util.UUID.randomUUID();
         initUI();
     }
 
@@ -102,7 +107,8 @@ public class PaymentDialog extends JDialog {
                 movie != null ? movie.getTitle() : "Phim",
                 showTime.getStartTime().format(dtf),
                 String.join(", ", seatCodes));
-        JLabel lblSub = new JLabel(subText);
+        vn.edu.ptit.cinema.model.cinema.Room room = DataStore.getInstance().getRoomMap().get(showTime.getRoomId());
+        JLabel lblSub = new JLabel("<html>" + subText + "<br>Phòng: " + (room == null ? showTime.getRoomId() : room.getName()) + "</html>");
         lblSub.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         lblSub.setForeground(Color.DARK_GRAY);
 
@@ -269,7 +275,7 @@ public class PaymentDialog extends JDialog {
         // Bộ chọn radio button
         JPanel methodSelect = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 5));
         rbCash = new JRadioButton("Tiền mặt tại quầy", true);
-        rbVietQR = new JRadioButton("Quét mã VietQR", false);
+        rbVietQR = new JRadioButton("QR mô phỏng", false);
         ButtonGroup bgMethod = new ButtonGroup();
         bgMethod.add(rbCash);
         bgMethod.add(rbVietQR);
@@ -297,7 +303,7 @@ public class PaymentDialog extends JDialog {
         btnCancel.putClientProperty(FlatClientProperties.STYLE, "arc: 10; margin: 8,16,8,16;");
         btnCancel.addActionListener(e -> dispose());
 
-        JButton btnPayAndPrint = new JButton("Xác nhận & In hóa đơn (.txt)");
+        btnPayAndPrint = new JButton("Xác nhận & In hóa đơn (.txt)");
         btnPayAndPrint.setFont(new Font("Segoe UI", Font.BOLD, 13));
         btnPayAndPrint.setBackground(new Color(22, 163, 74));
         btnPayAndPrint.setForeground(Color.WHITE);
@@ -308,9 +314,25 @@ public class PaymentDialog extends JDialog {
         footerPanel.add(btnPayAndPrint);
         add(footerPanel, BorderLayout.SOUTH);
 
+        txtCashReceived = new JTextField(14);
+        txtCashReceived.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+            public void insertUpdate(javax.swing.event.DocumentEvent e) { updateChange(); }
+            public void removeUpdate(javax.swing.event.DocumentEvent e) { updateChange(); }
+            public void changedUpdate(javax.swing.event.DocumentEvent e) { updateChange(); }
+        });
+        lblChange = new JLabel("Nhập tiền khách đưa (VNĐ)");
         lookupCustomerByPhone();
         recalculateTotal();
         updatePaymentMethodUI();
+        expiryTimer = new javax.swing.Timer(1000, e -> {
+            if (!BookingRules.canSell(showTime, LocalDateTime.now()) || !BookingRules.validHold(showTime, seatCodes, System.currentTimeMillis())) {
+                btnPayAndPrint.setEnabled(false);
+                expiryTimer.stop();
+                JOptionPane.showMessageDialog(this, "Ghế đã hết hạn giữ hoặc suất đã bắt đầu. Vui lòng chọn lại.");
+                dispose();
+            }
+        });
+        expiryTimer.start();
     }
 
     private void lookupCustomerByPhone() {
@@ -371,6 +393,15 @@ public class PaymentDialog extends JDialog {
             cashGuide.add(lblCashText);
             cashGuide.add(Box.createVerticalStrut(5));
             cashGuide.add(lblCashSub);
+            cashGuide.add(Box.createVerticalStrut(12));
+            cashGuide.add(new JLabel("Tiền khách đưa (chỉ nhập số VNĐ):"));
+            txtCashReceived.setMaximumSize(new Dimension(250, 32));
+            cashGuide.add(txtCashReceived);
+            cashGuide.add(lblChange);
+            JButton exact = new JButton("Khách đưa đủ");
+            exact.addActionListener(e -> txtCashReceived.setText(String.format(java.util.Locale.ROOT, "%.0f", currentFinalTotal)));
+            cashGuide.add(exact);
+            updateChange();
             qrCardContainer.add(cashGuide);
         }
         qrCardContainer.revalidate();
@@ -385,28 +416,42 @@ public class PaymentDialog extends JDialog {
         }
 
         Voucher v = DataStore.getInstance().getVoucherMap().get(code);
-        if (v != null && v.isActive()) {
-            appliedVoucher = v;
-            txtVoucher.setEditable(false);
-            btnApplyVoucher.setText("Đã áp dụng");
-            btnApplyVoucher.setEnabled(false);
-            btnRemoveVoucher.setVisible(true);
-            lblVoucherStatus.setText("Đã áp dụng mã " + code + ": Giảm " + v.getDiscountPercent() + "% (tối đa " + String.format("%,.0f", v.getMaxDiscountAmount()) + " VNĐ)");
-            lblVoucherStatus.setForeground(new Color(22, 163, 74));
-
-            recalculateTotal();
-            JOptionPane.showMessageDialog(this,
-                    "Áp dụng Voucher [" + code + "] thành công!\n"
-                            + "Giảm giá: " + v.getDiscountPercent() + "%\n"
-                            + "Giảm tối đa: " + String.format("%,.0f VNĐ", v.getMaxDiscountAmount()),
-                    "Thành công", JOptionPane.INFORMATION_MESSAGE);
-        } else {
-            appliedVoucher = null;
-            lblVoucherStatus.setText("Mã Voucher không hợp lệ hoặc đã hết hạn!");
-            lblVoucherStatus.setForeground(new Color(220, 38, 38));
-            JOptionPane.showMessageDialog(this, "Mã Voucher không hợp lệ hoặc đã hết hạn!", "Lỗi", JOptionPane.ERROR_MESSAGE);
-            recalculateTotal();
+        String error = BookingRules.voucherError(v, subtotal(), java.time.LocalDate.now());
+        if (error != null) {
+            JOptionPane.showMessageDialog(this, error, "Không thể áp dụng", JOptionPane.WARNING_MESSAGE);
+            return;
         }
+        appliedVoucher = v;
+        txtVoucher.setEditable(false);
+        btnApplyVoucher.setEnabled(false);
+        btnRemoveVoucher.setVisible(true);
+        recalculateTotal();
+    }
+
+    private double subtotal() {
+        PricingStrategy strategy = PricingStrategies.determineStrategy(showTime.getStartTime(), chkStudentDiscount.isSelected());
+        double tickets = seatCodes.stream().map(showTime.getSeats()::get).filter(java.util.Objects::nonNull)
+                .mapToDouble(seat -> strategy.calculatePrice(showTime.getBasePrice(), seat, showTime.getStartTime())).sum();
+        return tickets + orderFoods.stream().mapToDouble(OrderItem::getTotalPrice).sum();
+    }
+
+    private double cashReceived() {
+        String text = txtCashReceived.getText().trim();
+        if (!text.matches("[0-9]{1,12}")) return -1;
+        return Double.parseDouble(text);
+    }
+
+    private void updateChange() {
+        if (lblChange == null) return;
+        double received = cashReceived();
+        lblChange.setText(received < 0 ? "Nhập số tiền hợp lệ." : received < currentFinalTotal
+                ? String.format("Còn thiếu: %,.0f VNĐ", currentFinalTotal - received)
+                : String.format("Tiền thừa: %,.0f VNĐ", received - currentFinalTotal));
+    }
+
+    @Override public void dispose() {
+        if (expiryTimer != null) expiryTimer.stop();
+        super.dispose();
     }
 
     private void removeVoucher() {
@@ -440,7 +485,12 @@ public class PaymentDialog extends JDialog {
         double originalTotal = ticketTotal + foodTotal;
         double voucherDiscount = 0;
 
-        if (appliedVoucher != null && originalTotal >= appliedVoucher.getMinOrderAmount()) {
+        if (appliedVoucher != null) {
+            String error = BookingRules.voucherError(appliedVoucher, originalTotal, java.time.LocalDate.now());
+            lblVoucherStatus.setText(error == null ? "Mã " + appliedVoucher.getCode() + " đang áp dụng" : error);
+            lblVoucherStatus.setForeground(error == null ? new Color(22, 163, 74) : Color.RED);
+        }
+        if (appliedVoucher != null && BookingRules.voucherError(appliedVoucher, originalTotal, java.time.LocalDate.now()) == null) {
             voucherDiscount = (originalTotal * appliedVoucher.getDiscountPercent()) / 100.0;
             if (voucherDiscount > appliedVoucher.getMaxDiscountAmount()) {
                 voucherDiscount = appliedVoucher.getMaxDiscountAmount();
@@ -453,7 +503,7 @@ public class PaymentDialog extends JDialog {
             pointsDiscountAmount = Math.min(currentCustomer.getLoyaltyPoints(), afterVoucher);
         }
 
-        currentFinalTotal = Math.max(0, afterVoucher - pointsDiscountAmount);
+        currentFinalTotal = Math.round(Math.max(0, afterVoucher - pointsDiscountAmount));
 
         lblTicketSummary.setText(String.format("• Tiền vé (%d ghế - %s): %,.0f VNĐ",
                 seatCodes.size(), strategy.getStrategyName(), ticketTotal));
@@ -463,12 +513,36 @@ public class PaymentDialog extends JDialog {
         lblPointsDiscountSummary.setText(String.format("• Trừ điểm thành viên: -%,.0f VNĐ", pointsDiscountAmount));
         lblFinalAmount.setText(String.format("TỔNG TIỀN: %,.0f VNĐ", currentFinalTotal));
 
+        updateChange();
         if (rbVietQR != null && rbVietQR.isSelected()) {
             updatePaymentMethodUI();
         }
     }
 
     private void processPayment() {
+        synchronized (DataStore.getInstance()) { processPaymentLocked(); }
+    }
+
+    private void processPaymentLocked() {
+        if (paymentSuccessful) return;
+        DataStore store = DataStore.getInstance();
+        if (store.getShowTimeMap().get(showTime.getId()) != showTime
+                || !BookingRules.canSell(showTime, LocalDateTime.now())
+                || !BookingRules.validHold(showTime, seatCodes, System.currentTimeMillis())) {
+            JOptionPane.showMessageDialog(this, "Ghế hết hạn hoặc suất không còn hợp lệ. Vui lòng chọn lại.");
+            dispose(); return;
+        }
+        lookupCustomerByPhone();
+        recalculateTotal();
+        if (appliedVoucher != null) {
+            String error = BookingRules.voucherError(appliedVoucher, subtotal(), java.time.LocalDate.now());
+            if (error != null) { JOptionPane.showMessageDialog(this, error + " Hãy hủy hoặc đổi mã."); return; }
+        }
+        if (rbCash.isSelected() && cashReceived() < currentFinalTotal) {
+            JOptionPane.showMessageDialog(this, "Tiền khách đưa chưa đủ hoặc không hợp lệ."); return;
+        }
+        vn.edu.ptit.cinema.model.cinema.Room room = store.getRoomMap().get(showTime.getRoomId());
+        if (room == null) { JOptionPane.showMessageDialog(this, "Không tìm thấy phòng chiếu."); return; }
         String name = txtCustomerName.getText().trim();
         String phone = txtCustomerPhone.getText().trim();
 
@@ -493,19 +567,25 @@ public class PaymentDialog extends JDialog {
                 chkStudentDiscount.isSelected()
         );
 
+        double oldPoints = currentCustomer == null ? 0 : currentCustomer.getLoyaltyPoints();
+        double oldSpent = currentCustomer == null ? 0 : currentCustomer.getTotalSpent();
+        String previousTier = currentCustomer == null ? null : currentCustomer.getMembershipTier();
+        java.util.Map<String, Long> holds = new java.util.HashMap<>();
+        java.util.Map<String, String> holders = new java.util.HashMap<>();
         // Chuyển trạng thái ghế sang BOOKED (Đỏ)
         List<Ticket> tickets = new ArrayList<>();
         for (String code : seatCodes) {
             Seat seat = showTime.getSeats().get(code);
+            holds.put(code, seat.getHoldTimestamp());
+            holders.put(code, seat.getHeldByUserId());
             seat.setStatus(SeatStatus.BOOKED);
             seat.setHoldTimestamp(0);
             seat.setHeldByUserId(null);
 
             double price = strategy.calculatePrice(showTime.getBasePrice(), seat, showTime.getStartTime());
-            tickets.add(new Ticket("TK" + System.currentTimeMillis() % 100000, showTime.getId(), code, price));
+            tickets.add(new Ticket("TK-" + java.util.UUID.randomUUID(), showTime.getId(), code, price));
         }
 
-        DataStore store = DataStore.getInstance();
         Movie movie = store.getMovieMap().get(showTime.getMovieId());
 
         double ticketTotal = tickets.stream().mapToDouble(Ticket::getPrice).sum();
@@ -520,7 +600,7 @@ public class PaymentDialog extends JDialog {
             }
         }
         double totalDiscount = voucherDiscount + pointsDiscountAmount;
-        double finalAmount = Math.max(0, originalTotal - totalDiscount);
+        double finalAmount = Math.round(Math.max(0, originalTotal - totalDiscount));
 
         Invoice invoice = new Invoice(
                 tempInvoiceId,
@@ -529,7 +609,7 @@ public class PaymentDialog extends JDialog {
                 phone,
                 showTime.getId(),
                 movie != null ? movie.getTitle() : "Phim",
-                "Phòng Chiếu 01",
+                room.getName(),
                 showTime.getStartTime(),
                 tickets,
                 new ArrayList<>(orderFoods),
@@ -539,6 +619,10 @@ public class PaymentDialog extends JDialog {
                 finalAmount,
                 LocalDateTime.now()
         );
+
+        invoice.setPaymentDetails(rbCash.isSelected() ? "CASH" : "QR_DEMO",
+                rbCash.isSelected() ? cashReceived() : 0,
+                rbCash.isSelected() ? cashReceived() - finalAmount : 0);
 
         // Cập nhật điểm thành viên và kiểm tra tự động nâng hạng hội viên theo tổng chi tiêu
         double pointsEarned = 0;
@@ -552,17 +636,34 @@ public class PaymentDialog extends JDialog {
             pointsEarned = Math.round(finalAmount * currentCustomer.getPointRate());
             currentCustomer.setLoyaltyPoints(currentCustomer.getLoyaltyPoints() + pointsEarned);
             currentCustomer.setTotalSpent(currentCustomer.getTotalSpent() + finalAmount);
-            upgradedTier = currentCustomer.checkAndUpdateTier();
+            upgradedTier = !oldTier.equals(currentCustomer.getMembershipTier());
         }
 
         // Lưu vào RAM và flush xuống file JSON ngay lập tức
         store.getInvoiceMap().put(invoice.getInvoiceId(), invoice);
-        store.saveAllData();
+        if (!store.saveAllData()) {
+            store.getInvoiceMap().remove(invoice.getInvoiceId());
+            for (String code : seatCodes) {
+                Seat seat = showTime.getSeats().get(code);
+                seat.setStatus(SeatStatus.PENDING);
+                seat.setHoldTimestamp(holds.get(code));
+                seat.setHeldByUserId(holders.get(code));
+            }
+            if (currentCustomer != null) {
+                currentCustomer.setLoyaltyPoints(oldPoints);
+                currentCustomer.setTotalSpent(oldSpent);
+                currentCustomer.setMembershipTier(previousTier);
+            }
+            JOptionPane.showMessageDialog(this, "Lưu giao dịch thất bại. Chưa xuất vé; hãy kiểm tra quyền ghi/thư mục data.");
+            return;
+        }
+        paymentSuccessful = true;
+        if (expiryTimer != null) expiryTimer.stop();
 
         // In vé ra file text mô phỏng máy in nhiệt POS
         File receipt = ReceiptPrinter.printReceipt(invoice);
 
-        String paymentMethodStr = rbVietQR.isSelected() ? "Chuyển khoản VietQR" : "Tiền mặt tại quầy";
+        String paymentMethodStr = rbVietQR.isSelected() ? "QR mô phỏng" : "Tiền mặt tại quầy";
         String memberMsg = "";
         if (currentCustomer != null) {
             memberMsg = String.format("\n• Thành viên : %s (+%,.0f điểm thưởng - Hạng: %s)",
@@ -578,7 +679,7 @@ public class PaymentDialog extends JDialog {
                         + "• Phương Thức: " + paymentMethodStr + "\n"
                         + "• Tổng Tiền  : " + String.format("%,.0f VNĐ", finalAmount)
                         + memberMsg + "\n"
-                        + (receipt != null ? "• Đã in hóa đơn POS nhiệt ra: " + receipt.getName() : ""),
+                        + (receipt != null ? "• Đã in hóa đơn POS nhiệt ra: " + receipt.getName() : "Không in được file. Giao dịch đã lưu; có thể in lại từ lịch sử."),
                 "Thành công", JOptionPane.INFORMATION_MESSAGE);
 
         paymentSuccessful = true;

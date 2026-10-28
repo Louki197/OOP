@@ -75,7 +75,7 @@ public class QrCodePanel extends JPanel {
 
         g2.setColor(Color.WHITE);
         g2.setFont(new Font("Segoe UI", Font.BOLD, 13));
-        g2.drawString("VietQR  |  NAPAS 24/7", 15, 23);
+        g2.drawString("QR MÔ PHỎNG", 15, 23);
 
         // 2. Vẽ ma trận QR Code
         int qrSize = 160;
@@ -108,7 +108,7 @@ public class QrCodePanel extends JPanel {
 
         g2.setFont(new Font("Segoe UI", Font.PLAIN, 11));
         g2.setColor(new Color(100, 116, 139));
-        drawCenteredString(g2, "STK: 1028888888 - VCB HÀ ĐÔNG", w, startY + qrSize + 38);
+        drawCenteredString(g2, "KHÔNG DÙNG ĐỂ CHUYỂN TIỀN", w, startY + qrSize + 38);
 
         g2.setFont(new Font("Segoe UI", Font.BOLD, 13));
         g2.setColor(new Color(220, 38, 38));
@@ -116,7 +116,7 @@ public class QrCodePanel extends JPanel {
 
         g2.setFont(new Font("Segoe UI", Font.ITALIC, 10));
         g2.setColor(new Color(71, 85, 105));
-        drawCenteredString(g2, "Nội dung: " + invoiceId, w, startY + qrSize + 70);
+        drawCenteredString(g2, "Mã: " + invoiceId.substring(0, Math.min(20, invoiceId.length())), w, startY + qrSize + 70);
 
         g2.dispose();
     }

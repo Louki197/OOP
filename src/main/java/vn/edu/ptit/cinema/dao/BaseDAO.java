@@ -46,6 +46,10 @@ public abstract class BaseDAO<T> {
                 .create();
 
         ensureDataDirectoryExists();
+        synchronized (FILE_LOCK) {
+            try { recoverBatch(); }
+            catch (IOException e) { throw new IllegalStateException("Không thể khôi phục dữ liệu. Giữ nguyên thư mục data để kiểm tra.", e); }
+        }
     }
 
     private void ensureDataDirectoryExists() {
@@ -124,16 +128,75 @@ public abstract class BaseDAO<T> {
             try {
                 Path tempPath = tempFile.toPath();
                 Path targetPath = targetFile.toPath();
-                Files.move(tempPath, targetPath, StandardCopyOption.REPLACE_EXISTING);
+                replaceFile(tempPath, targetPath);
                 return true;
             } catch (IOException ex) {
-                System.err.println("[BaseDAO Warning] NIO move thất bại, dùng fallback rename: " + ex.getMessage());
-                if (targetFile.exists() && !targetFile.delete()) {
-                    System.err.println("[BaseDAO Error] Không thể xóa file cũ: " + targetFile.getName());
-                }
-                return tempFile.renameTo(targetFile);
+                System.err.println("[BaseDAO Error] Không thể thay file: " + ex.getMessage());
+                return false;
             }
         }
+    }
+
+    private static void replaceFile(Path source, Path target) throws IOException {
+        try {
+            Files.move(source, target, StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
+        } catch (java.nio.file.AtomicMoveNotSupportedException e) {
+            Files.move(source, target, StandardCopyOption.REPLACE_EXISTING);
+        }
+    }
+
+    // Lưu nhiều file như một đợt; journal giữ bản trước để khôi phục nếu lỗi/dừng giữa chừng.
+    public boolean writeBatch(Map<String, Object> files) {
+        synchronized (FILE_LOCK) {
+            Path journal = Path.of(DATA_DIR, "save-journal.json");
+            try {
+                // Không cho một lần lưu sau ghi đè journal chưa khôi phục được.
+                if (Files.exists(journal)) throw new IOException("Còn journal chưa khôi phục; khởi động lại để thử phục hồi.");
+                Map<String, String> previous = new java.util.LinkedHashMap<>();
+                Map<String, String> next = new java.util.LinkedHashMap<>();
+                for (Map.Entry<String, Object> entry : files.entrySet()) {
+                    Path target = Path.of(DATA_DIR, entry.getKey());
+                    previous.put(entry.getKey(), Files.exists(target) ? Files.readString(target, StandardCharsets.UTF_8) : null);
+                    next.put(entry.getKey(), gson.toJson(entry.getValue()));
+                }
+                Path pendingJournal = Path.of(DATA_DIR, "save-journal.tmp");
+                Files.writeString(pendingJournal, new GsonBuilder().serializeNulls().create().toJson(previous), StandardCharsets.UTF_8);
+                replaceFile(pendingJournal, journal);
+                for (Map.Entry<String, String> entry : next.entrySet()) {
+                    Path temp = Path.of(DATA_DIR, entry.getKey() + ".tmp");
+                    Files.writeString(temp, entry.getValue(), StandardCharsets.UTF_8);
+                    replaceFile(temp, Path.of(DATA_DIR, entry.getKey()));
+                }
+                Files.delete(journal);
+                return true;
+            } catch (Exception e) {
+                System.err.println("[BaseDAO] Lưu thất bại: " + e.getMessage());
+                try { recoverBatch(); }
+                catch (IOException recovery) { System.err.println("[BaseDAO] Giữ journal để phục hồi khi khởi động: " + recovery.getMessage()); }
+                return false;
+            }
+        }
+    }
+
+    private void recoverBatch() throws IOException {
+        Path journal = Path.of(DATA_DIR, "save-journal.json");
+        if (!Files.exists(journal)) return;
+        try {
+            java.lang.reflect.Type type = new com.google.gson.reflect.TypeToken<Map<String, String>>() {}.getType();
+            Map<String, String> previous = gson.fromJson(Files.readString(journal, StandardCharsets.UTF_8), type);
+            if (previous == null || previous.isEmpty()) throw new IOException("Journal không hợp lệ");
+            for (Map.Entry<String, String> entry : previous.entrySet()) {
+                if (!entry.getKey().matches("[a-z]+\\.json")) throw new IOException("Tên file journal không hợp lệ");
+                Path target = Path.of(DATA_DIR, entry.getKey());
+                if (entry.getValue() == null) Files.deleteIfExists(target);
+                else {
+                    Path temp = Path.of(DATA_DIR, entry.getKey() + ".recover");
+                    Files.writeString(temp, entry.getValue(), StandardCharsets.UTF_8);
+                    replaceFile(temp, target);
+                }
+            }
+            Files.delete(journal);
+        } catch (RuntimeException e) { throw new IOException("Journal không đọc được", e); }
     }
 
     // =========================================================================

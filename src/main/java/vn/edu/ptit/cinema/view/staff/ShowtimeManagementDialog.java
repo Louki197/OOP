@@ -8,6 +8,7 @@ import vn.edu.ptit.cinema.model.seat.Seat;
 import vn.edu.ptit.cinema.model.seat.SeatStatus;
 import vn.edu.ptit.cinema.service.DataStore;
 
+import vn.edu.ptit.cinema.service.BookingRules;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -531,6 +532,10 @@ public class ShowtimeManagementDialog extends JDialog {
 
     private void handleSaveUpdateShowtime() {
         if (currentEditingShowtime == null) return;
+        if (BookingRules.hasBookedSeats(currentEditingShowtime)) {
+            JOptionPane.showMessageDialog(this, "Suất đã bán vé, không thể sửa hoặc xóa.");
+            return;
+        }
 
         String movieItem = (String) cbEditMovie.getSelectedItem();
         String dateStr = (String) cbEditDate.getSelectedItem();
@@ -544,8 +549,9 @@ public class ShowtimeManagementDialog extends JDialog {
         double price;
         try {
             price = Double.parseDouble(txtEditPrice.getText().trim());
+            if (!Double.isFinite(price) || price <= 0) throw new NumberFormatException();
         } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(this, "Giá vé phải là số hợp lệ!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Giá vé phải là số hữu hạn lớn hơn 0!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
@@ -559,6 +565,10 @@ public class ShowtimeManagementDialog extends JDialog {
 
         Movie m = dataStore.getMovieMap().get(movieId);
         int dur = (m != null) ? m.getDurationMinutes() : 120;
+        if (!startTime.isAfter(LocalDateTime.now())) {
+            JOptionPane.showMessageDialog(this, "Giờ chiếu phải ở tương lai.");
+            return;
+        }
         LocalDateTime endTime = startTime.plusMinutes(dur + 15);
 
         // KIỂM TRA TRÙNG LỊCH PHÒNG CHIẾU (LOẠI TRỪ CHÍNH SUẤT CHIẾU ĐANG SỬA)
@@ -582,6 +592,7 @@ public class ShowtimeManagementDialog extends JDialog {
             }
         }
 
+        boolean roomChanged = !roomId.equals(currentEditingShowtime.getRoomId());
         // Cập nhật thông tin vào đối tượng
         currentEditingShowtime.setMovieId(movieId);
         currentEditingShowtime.setRoomId(roomId);
@@ -590,7 +601,7 @@ public class ShowtimeManagementDialog extends JDialog {
         currentEditingShowtime.setBasePrice(price);
 
         // Nếu phòng chiếu thay đổi, tạo lại sơ đồ ghế theo phòng mới
-        if (!roomId.equals(currentEditingShowtime.getRoomId()) || currentEditingShowtime.getSeats() == null || currentEditingShowtime.getSeats().isEmpty()) {
+        if (roomChanged || currentEditingShowtime.getSeats() == null || currentEditingShowtime.getSeats().isEmpty()) {
             Room room = dataStore.getRoomMap().get(roomId);
             int rows = (room != null) ? room.getTotalRows() : 8;
             int cols = (room != null) ? room.getTotalCols() : 10;
@@ -619,6 +630,10 @@ public class ShowtimeManagementDialog extends JDialog {
 
     private void handleDeleteShowtime() {
         if (currentEditingShowtime == null) return;
+        if (BookingRules.hasBookedSeats(currentEditingShowtime)) {
+            JOptionPane.showMessageDialog(this, "Suất đã bán vé, không thể sửa hoặc xóa.");
+            return;
+        }
         String stId = currentEditingShowtime.getId();
 
         int bookedCount = 0;
@@ -662,8 +677,9 @@ public class ShowtimeManagementDialog extends JDialog {
         double price;
         try {
             price = Double.parseDouble(txtEditPrice.getText().trim());
+            if (!Double.isFinite(price) || price <= 0) throw new NumberFormatException();
         } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(this, "Giá vé phải là số hợp lệ!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Giá vé phải là số hữu hạn lớn hơn 0!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
@@ -677,6 +693,10 @@ public class ShowtimeManagementDialog extends JDialog {
 
         Movie m = dataStore.getMovieMap().get(movieId);
         int dur = (m != null) ? m.getDurationMinutes() : 120;
+        if (!startTime.isAfter(LocalDateTime.now())) {
+            JOptionPane.showMessageDialog(this, "Giờ chiếu phải ở tương lai.");
+            return;
+        }
         LocalDateTime endTime = startTime.plusMinutes(dur + 15);
 
         // KIỂM TRA TRÙNG LỊCH PHÒNG CHIẾU

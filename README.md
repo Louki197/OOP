@@ -137,7 +137,7 @@ src\main\java\vn\edu\ptit\cinema
 * **`PricingStrategy.java`**: Interface chiến lược tính giá vé (`calculatePrice`).
 * **`PricingStrategies.java`**: Các lớp thực thi chiến lược cụ thể:
   * `StandardDayStrategy`: Tính giá vé ngày thường.
-  * `PeakWeekendStrategy`: Tự động phụ thu vào khung giờ vàng (18h-22h) hoặc ngày cuối tuần (Thứ 7, CN).
+  * `PeakWeekendStrategy`: Phụ thu 20% vào cuối tuần (Thứ 7, CN); chưa áp dụng phụ thu giờ vàng.
   * `StudentDiscountStrategy`: Giảm giá 20% cho học sinh, sinh viên PTIT.
 
 ---
@@ -196,3 +196,8 @@ src\main\java\vn\edu\ptit\cinema
    * **Quản trị viên (Admin)**: `admin` / `admin123` (Full quyền 3 Tab).
    * **Nhân viên bán vé (Staff)**: `staff01` / `123456` (Chỉ mở Tab Bán Vé & Thống Kê).
 3. **Mã Voucher mẫu khi thanh toán**: `PTIT10` (Giảm 10%), `SINHVIEN20` (Giảm 20%), `VIPDISCOUNT` (Giảm 25%).
+
+
+## Cập nhật bản demo
+
+Xem [CHANGELOG-DEMO.md](CHANGELOG-DEMO.md) để biết tính năng tiền khách đưa/tiền thừa, in lại hóa đơn, các lỗi đã sửa và cách chạy kiểm tra. QR chỉ là mô phỏng; không dùng để chuyển tiền.

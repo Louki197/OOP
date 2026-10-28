@@ -25,6 +25,7 @@ import vn.edu.ptit.cinema.view.staff.BetaShowtimeDialog;
 import vn.edu.ptit.cinema.view.staff.CustomerManagementDialog;
 import vn.edu.ptit.cinema.view.staff.ShowtimeManagementDialog;
 
+import vn.edu.ptit.cinema.service.BookingRules;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.Desktop;
@@ -644,6 +645,11 @@ public class MainFrame extends JFrame {
      */
     public void selectShowtimeAndOpenSeatMap(Movie m, ShowTime st) {
         if (m == null || st == null) return;
+        if (!BookingRules.canSell(st, LocalDateTime.now())) {
+            JOptionPane.showMessageDialog(this, "Suất chiếu đã bắt đầu. Vui lòng chọn suất khác.");
+            return;
+        }
+        if (currentShowTime != st) releaseSelectedPendingSeats();
         this.selectedMovieForBooking = m;
         this.currentShowTime = st;
 
@@ -997,8 +1003,9 @@ public class MainFrame extends JFrame {
         gbc.insets = new Insets(2, 2, 2, 2);
         gbc.fill = GridBagConstraints.BOTH;
 
-        int rows = 8;
-        int cols = 10;
+        int rows = currentShowTime.getSeats().values().stream().mapToInt(Seat::getRowIndex).max().orElse(-1) + 1;
+        int cols = currentShowTime.getSeats().values().stream().mapToInt(Seat::getColIndex).max().orElse(-1) + 1;
+        PricingStrategy displayedPricing = PricingStrategies.determineStrategy(currentShowTime.getStartTime(), false);
 
         // 1. Hàng số thứ tự cột trên đỉnh (1 ... 10)
         gbc.gridy = 0;
@@ -1024,8 +1031,8 @@ public class MainFrame extends JFrame {
         // 2. Các hàng ghế (A -> H)
         for (int r = 0; r < rows; r++) {
             char rowChar = (char) ('A' + r);
-            boolean isSweetboxRow = (r >= 6);
-            boolean isVipRow = (r >= 2 && r < 6);
+            boolean isSweetboxRow = (r >= rows - 2);
+            boolean isVipRow = (r >= 2 && r < rows - 2);
 
             gbc.gridy = r + 1;
 
@@ -1041,10 +1048,8 @@ public class MainFrame extends JFrame {
 
             if (isSweetboxRow) {
                 // SWEETBOX: ĐÔI 1-2, ĐÔI 3-4...
-                int[][] pairs = {{1, 2}, {3, 4}, {5, 6}, {7, 8}, {9, 10}};
-                for (int[] pair : pairs) {
-                    int c1 = pair[0];
-                    int c2 = pair[1];
+                for (int c1 = 1; c1 < cols; c1 += 2) {
+                    int c2 = c1 + 1;
 
                     if (c1 == 3 || c1 == 9) {
                         gbc.gridx = gridX++;
@@ -1056,6 +1061,7 @@ public class MainFrame extends JFrame {
                     String code2 = String.format("%c%02d", rowChar, c2);
                     Seat s1 = currentShowTime.getSeats().get(code1);
                     Seat s2 = currentShowTime.getSeats().get(code2);
+                    if (s1 == null || s2 == null) continue;
 
                     JButton btnSweetbox = new JButton(String.format("ĐÔI %d-%d", c1, c2));
                     btnSweetbox.setFont(new Font("Segoe UI", Font.BOLD, 12));
@@ -1063,8 +1069,10 @@ public class MainFrame extends JFrame {
                     btnSweetbox.putClientProperty(FlatClientProperties.STYLE, "arc: 10;");
 
                     updateSweetboxAppearance(btnSweetbox, s1, s2);
-                    btnSweetbox.setToolTipText(String.format("Ghế Đôi Sweetbox (%s - %s) - Giá: %,.0f VNĐ",
-                            code1, code2, currentShowTime.getBasePrice() * SeatType.SWEETBOX.getPriceMultiplier()));
+                    double pairPrice = displayedPricing.calculatePrice(currentShowTime.getBasePrice(), s1, currentShowTime.getStartTime())
+                            + displayedPricing.calculatePrice(currentShowTime.getBasePrice(), s2, currentShowTime.getStartTime());
+                    btnSweetbox.setToolTipText(String.format("Sweetbox %s - %s: 2 chỗ, cả cặp %,.0f VNĐ (%s)",
+                            code1, code2, pairPrice, displayedPricing.getStrategyName()));
 
                     btnSweetbox.addActionListener(e -> onSweetboxClicked(code1, code2, btnSweetbox));
 
@@ -1088,6 +1096,7 @@ public class MainFrame extends JFrame {
 
                     String code = String.format("%c%02d", rowChar, c);
                     Seat seat = currentShowTime.getSeats().get(code);
+                    if (seat == null) continue;
 
                     JButton btnSeat = new JButton(String.valueOf(c));
                     btnSeat.setFont(new Font("Segoe UI", Font.BOLD, 12));
@@ -1096,7 +1105,7 @@ public class MainFrame extends JFrame {
 
                     updateSeatButtonAppearance(btnSeat, seat, isVipRow);
 
-                    double price = currentShowTime.getBasePrice() * (isVipRow ? SeatType.VIP.getPriceMultiplier() : 1.0);
+                    double price = displayedPricing.calculatePrice(currentShowTime.getBasePrice(), seat, currentShowTime.getStartTime());
                     btnSeat.setToolTipText(String.format("Ghế %s %s - Giá: %,.0f VNĐ",
                             isVipRow ? "VIP" : "Thường", code, price));
 
@@ -1192,6 +1201,12 @@ public class MainFrame extends JFrame {
         }
     }
 
+    private long selectionHoldStart() {
+        return selectedPendingSeats.stream().map(currentShowTime.getSeats()::get)
+                .filter(java.util.Objects::nonNull).mapToLong(Seat::getHoldTimestamp)
+                .filter(t -> t > 0).min().orElse(System.currentTimeMillis());
+    }
+
     private void onSingleSeatClicked(String seatCode, JButton btn, boolean isVip) {
         long clickNow = System.currentTimeMillis();
         if (clickNow - lastSeatClickTimestamp < 150) return; // Debounce spam click
@@ -1206,7 +1221,7 @@ public class MainFrame extends JFrame {
         } else {
             selectedPendingSeats.add(seatCode);
             seat.setStatus(SeatStatus.PENDING);
-            seat.setHoldTimestamp(System.currentTimeMillis());
+            seat.setHoldTimestamp(selectionHoldStart());
             seat.setHeldByUserId(currentUser != null ? currentUser.getUsername() : "staff");
             if (selectedPendingSeats.size() == 1) {
                 remainingSeconds = 300;
@@ -1235,14 +1250,19 @@ public class MainFrame extends JFrame {
             s2.setStatus(SeatStatus.AVAILABLE);
             s1.setHoldTimestamp(0);
             s2.setHoldTimestamp(0);
+            s1.setHeldByUserId(null);
+            s2.setHeldByUserId(null);
         } else {
             selectedPendingSeats.add(code1);
             selectedPendingSeats.add(code2);
-            long now = System.currentTimeMillis();
+            long now = selectionHoldStart();
             s1.setStatus(SeatStatus.PENDING);
             s2.setStatus(SeatStatus.PENDING);
             s1.setHoldTimestamp(now);
             s2.setHoldTimestamp(now);
+            String holder = currentUser != null ? currentUser.getUsername() : "staff";
+            s1.setHeldByUserId(holder);
+            s2.setHeldByUserId(holder);
             if (selectedPendingSeats.size() <= 2) {
                 remainingSeconds = 300;
             }
@@ -1255,6 +1275,20 @@ public class MainFrame extends JFrame {
     private void removeSingleSeat(String code) {
         if (currentShowTime == null) return;
         Seat seat = currentShowTime.getSeats().get(code);
+        if (seat != null && seat.getType() == SeatType.SWEETBOX) {
+            int partnerCol = seat.getColIndex() % 2 == 0 ? seat.getColIndex() + 1 : seat.getColIndex() - 1;
+            for (Seat member : currentShowTime.getSeats().values()) {
+                if (member.getRowIndex() == seat.getRowIndex() && (member.getColIndex() == seat.getColIndex() || member.getColIndex() == partnerCol)
+                        && selectedPendingSeats.remove(member.getCode()) && member.getStatus() == SeatStatus.PENDING) {
+                    member.setStatus(SeatStatus.AVAILABLE);
+                    member.setHoldTimestamp(0);
+                    member.setHeldByUserId(null);
+                }
+            }
+            renderSeatMatrixWithAxesAndAisles();
+            refreshChipsAndTotals();
+            return;
+        }
         if (seat != null) {
             seat.setStatus(SeatStatus.AVAILABLE);
             seat.setHoldTimestamp(0);
@@ -1339,7 +1373,7 @@ public class MainFrame extends JFrame {
         PaymentDialog paymentDialog = new PaymentDialog(this, currentShowTime, selectedPendingSeats, foods);
         paymentDialog.setVisible(true);
 
-        if (paymentDialog.isPaymentSuccessful()) {
+        if (paymentDialog.isPaymentSuccessful() || !BookingRules.validHold(currentShowTime, selectedPendingSeats, System.currentTimeMillis())) {
             selectedPendingSeats.clear();
             renderSeatMatrixWithAxesAndAisles();
             refreshChipsAndTotals();
@@ -1365,15 +1399,18 @@ public class MainFrame extends JFrame {
     private void startCountdownTimer() {
         swingCountdownTimer = new javax.swing.Timer(1000, e -> {
             if (!selectedPendingSeats.isEmpty()) {
-                remainingSeconds--;
+                long deadline = selectionHoldStart() + DataStore.SEAT_HOLD_TIMEOUT_MILLIS;
+                remainingSeconds = BookingRules.validHold(currentShowTime, selectedPendingSeats, System.currentTimeMillis())
+                        ? (int) Math.max(0, (deadline - System.currentTimeMillis() + 999) / 1000) : 0;
                 int min = Math.max(0, remainingSeconds / 60);
                 int sec = Math.max(0, remainingSeconds % 60);
                 lblCountdownTimer.setText(String.format("Thời gian giữ ghế: %02d:%02d", min, sec));
 
                 if (remainingSeconds <= 0) {
-                    JOptionPane.showMessageDialog(this, "Đã hết 5 phút giữ chỗ! Ghế đã tự động giải phóng.", "Hết giờ", JOptionPane.WARNING_MESSAGE);
                     releaseSelectedPendingSeats();
                     remainingSeconds = 300;
+                    boolean paymentOpen = Arrays.stream(getOwnedWindows()).anyMatch(w -> w instanceof PaymentDialog && w.isShowing());
+                    if (!paymentOpen) JOptionPane.showMessageDialog(this, "Đã hết 5 phút giữ chỗ! Ghế đã tự động giải phóng.", "Hết giờ", JOptionPane.WARNING_MESSAGE);
                 }
             } else {
                 remainingSeconds = 300;
@@ -1386,12 +1423,8 @@ public class MainFrame extends JFrame {
     private void initSeatObserver() {
         SeatEventBus.subscribe((showTimeId, seatCode) -> SwingUtilities.invokeLater(() -> {
             if (currentShowTime != null && currentShowTime.getId().equals(showTimeId)) {
-                JButton btn = seatButtons.get(seatCode);
-                Seat seat = currentShowTime.getSeats().get(seatCode);
-                if (btn != null && seat != null) {
-                    boolean isVip = seat.getType() == SeatType.VIP;
-                    updateSeatButtonAppearance(btn, seat, isVip);
-                }
+                renderSeatMatrixWithAxesAndAisles();
+                refreshChipsAndTotals();
             }
         }));
     }
@@ -1877,6 +1910,10 @@ public class MainFrame extends JFrame {
             return;
         }
 
+        if (dur <= 0 || dataStore.getMovieMap().containsKey(id)) {
+            JOptionPane.showMessageDialog(this, "Thời lượng phải lớn hơn 0 và mã phim không được trùng.");
+            return;
+        }
         String rating = (String) cbAgeRating.getSelectedItem();
         Movie m = new Movie(id, title, genre, dur, LocalDate.now(), selectedPosterPath, "Phim mới", txtMovieDirector.getText(), rating);
         dataStore.getMovieMap().put(id, m);
@@ -1909,6 +1946,12 @@ public class MainFrame extends JFrame {
 
         Movie m = dataStore.getMovieMap().get(id);
         if (m != null) {
+            if (dur <= 0) {
+                JOptionPane.showMessageDialog(this, "Thời lượng phải lớn hơn 0."); return;
+            }
+            if (dur != m.getDurationMinutes() && dataStore.getShowTimeMap().values().stream().anyMatch(st -> st.getMovieId().equals(id))) {
+                JOptionPane.showMessageDialog(this, "Phim đã có lịch chiếu; không đổi thời lượng để tránh sai lịch."); return;
+            }
             m.setTitle(title);
             m.setGenre(genre);
             m.setDurationMinutes(dur);
@@ -1972,8 +2015,9 @@ public class MainFrame extends JFrame {
         double price;
         try {
             price = Double.parseDouble(txtSchedulePrice.getText().trim());
+            if (!Double.isFinite(price) || price <= 0) throw new NumberFormatException();
         } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(this, "Giá vé phải là số hợp lệ!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Giá vé phải là số hữu hạn lớn hơn 0!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
@@ -1987,6 +2031,10 @@ public class MainFrame extends JFrame {
 
         Movie m = dataStore.getMovieMap().get(movieId);
         int dur = (m != null) ? m.getDurationMinutes() : 120;
+        if (!startTime.isAfter(LocalDateTime.now())) {
+            JOptionPane.showMessageDialog(this, "Giờ chiếu phải ở tương lai.");
+            return;
+        }
         LocalDateTime endTime = startTime.plusMinutes(dur + 15);
 
         // KIỂM TRA XUNG ĐỘT TRÙNG LỊCH PHÒNG CHIẾU (SCHEDULE CONFLICT CHECK)
@@ -2045,6 +2093,11 @@ public class MainFrame extends JFrame {
             return;
         }
         String id = (String) modelMovies.getValueAt(row, 0);
+        if (dataStore.getShowTimeMap().values().stream().anyMatch(st -> st.getMovieId().equals(id) && BookingRules.hasBookedSeats(st))) {
+            JOptionPane.showMessageDialog(this, "Phim có suất đã bán vé, không thể xóa.");
+            return;
+        }
+        if (JOptionPane.showConfirmDialog(this, "Xóa phim và các suất chưa bán vé?", "Xác nhận", JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION) return;
         dataStore.getMovieMap().remove(id);
         dataStore.getShowTimeMap().values().removeIf(st -> st.getMovieId().equals(id));
         dataStore.saveAllData();
@@ -2070,7 +2123,7 @@ public class MainFrame extends JFrame {
 
         kpiContainer.add(createKpiCard("TỔNG DOANH THU", lblKpiRevenue, new Color(220, 38, 38)));
         kpiContainer.add(createKpiCard("VÉ ĐÃ BÁN", lblKpiTickets, new Color(37, 99, 235)));
-        kpiContainer.add(createKpiCard("DOANH THU F&B", lblKpiFnB, new Color(217, 119, 6)));
+        kpiContainer.add(createKpiCard("F&B TRƯỚC GIẢM GIÁ", lblKpiFnB, new Color(217, 119, 6)));
         kpiContainer.add(createKpiCard("TOP PHIM ĂN KHÁCH", lblKpiTopMovie, new Color(22, 163, 74)));
 
         panel.add(kpiContainer, BorderLayout.NORTH);
@@ -2182,6 +2235,16 @@ public class MainFrame extends JFrame {
         return card;
     }
 
+    private List<Invoice> filteredInvoices() {
+        String period = (String) cbFilterPeriod.getSelectedItem();
+        LocalDate today = LocalDate.now();
+        List<Invoice> result = new ArrayList<>();
+        for (Invoice inv : dataStore.getInvoiceMap().values()) {
+            if (BookingRules.inPeriod(inv.getCreatedAt() == null ? null : inv.getCreatedAt().toLocalDate(), today, period)) result.add(inv);
+        }
+        return result;
+    }
+
     private void reloadReportDashboard() {
         modelInvoices.setRowCount(0);
         double totalRev = 0;
@@ -2193,13 +2256,7 @@ public class MainFrame extends JFrame {
         String period = (String) cbFilterPeriod.getSelectedItem();
         LocalDate today = LocalDate.now();
 
-        for (Invoice inv : dataStore.getInvoiceMap().values()) {
-            if (period != null && period.equals("Hôm nay")) {
-                if (inv.getCreatedAt() == null || !inv.getCreatedAt().toLocalDate().isEqual(today)) continue;
-            } else if (period != null && period.equals("7 ngày gần nhất")) {
-                if (inv.getCreatedAt() == null || inv.getCreatedAt().toLocalDate().isBefore(today.minusDays(7))) continue;
-            }
-
+        for (Invoice inv : filteredInvoices()) {
             totalRev += inv.getFinalAmount();
             int ticketCount = inv.getTickets() != null ? inv.getTickets().size() : 0;
             totalTickets += ticketCount;
@@ -2238,14 +2295,14 @@ public class MainFrame extends JFrame {
     }
 
     private void sortInvoicesByAmount() {
-        List<Invoice> list = new ArrayList<>(dataStore.getInvoiceMap().values());
+        List<Invoice> list = new ArrayList<>(filteredInvoices());
         list.sort((a, b) -> Double.compare(b.getFinalAmount(), a.getFinalAmount()));
         populateInvoiceTable(list);
     }
 
     private void sortInvoicesByDate() {
-        List<Invoice> list = new ArrayList<>(dataStore.getInvoiceMap().values());
-        list.sort((a, b) -> b.getCreatedAt().compareTo(a.getCreatedAt()));
+        List<Invoice> list = new ArrayList<>(filteredInvoices());
+        list.sort((a, b) -> Comparator.nullsLast(Comparator.<LocalDateTime>reverseOrder()).compare(a.getCreatedAt(), b.getCreatedAt()));
         populateInvoiceTable(list);
     }
 
@@ -2272,9 +2329,10 @@ public class MainFrame extends JFrame {
             pw.println("=======================================================");
             pw.println("      BÁO CÁO THỐNG KÊ DOANH THU RẠP CHIẾU PHIM PTIT   ");
             pw.println("             Thời gian xuất: " + LocalDateTime.now());
+            pw.println("Phạm vi: " + cbFilterPeriod.getSelectedItem());
             pw.println("=======================================================");
             double total = 0;
-            for (Invoice inv : dataStore.getInvoiceMap().values()) {
+            for (Invoice inv : filteredInvoices()) {
                 total += inv.getFinalAmount();
                 pw.printf("HĐ: %-10s | Phim: %-22s | Khách: %-15s | Tiền: %,12.0f VNĐ\n",
                         inv.getInvoiceId(), inv.getMovieTitle(), inv.getCustomerName(), inv.getFinalAmount());
@@ -2328,6 +2386,7 @@ public class MainFrame extends JFrame {
         sb.append("-----------------------------------------------------\n");
         sb.append(String.format("Phim        : %s\n", invoice.getMovieTitle()));
         sb.append(String.format("Phòng chiếu : %s\n", invoice.getRoomName()));
+        sb.append("Suất chiếu  : " + (invoice.getShowStartTime() == null ? "N/A" : invoice.getShowStartTime().format(dtf)) + "\n");
         sb.append("-----------------------------------------------------\n");
         sb.append("DANH SÁCH VÉ:\n");
         for (vn.edu.ptit.cinema.model.booking.Ticket t : invoice.getTickets()) {
@@ -2344,9 +2403,15 @@ public class MainFrame extends JFrame {
         sb.append("=====================================================\n");
         sb.append(String.format("Tổng tiền gốc    : %,12.0f VNĐ\n", invoice.getOriginalAmount()));
         if (invoice.getVoucherCode() != null && !invoice.getVoucherCode().isEmpty()) {
-            sb.append(String.format("Voucher giảm giá : %s (-%,.0f VNĐ)\n", invoice.getVoucherCode(), invoice.getDiscountAmount()));
+            sb.append("Mã voucher      : " + invoice.getVoucherCode() + "\n");
         }
+        sb.append(String.format("Tổng giảm giá   : %,.0f VNĐ\n", invoice.getDiscountAmount()));
         sb.append(String.format("THANH TOÁN       : %,12.0f VNĐ\n", invoice.getFinalAmount()));
+        if (invoice.getPaymentMethod() != null) {
+            sb.append("Phương thức     : " + ("CASH".equals(invoice.getPaymentMethod()) ? "Tiền mặt" : "QR mô phỏng") + "\n");
+            if ("CASH".equals(invoice.getPaymentMethod()))
+                sb.append(String.format("Khách đưa       : %,.0f VNĐ\nTiền thừa       : %,.0f VNĐ\n", invoice.getCashReceived(), invoice.getChangeAmount()));
+        }
         sb.append("=====================================================\n");
         sb.append("       CẢM ƠN QUÝ KHÁCH & CHÚC XEM PHIM VUI VẺ!      \n");
         sb.append("=====================================================\n");
@@ -2376,6 +2441,12 @@ public class MainFrame extends JFrame {
         JButton btnClose = new JButton("Đóng");
         btnClose.addActionListener(e -> dialog.dispose());
 
+        JButton btnReprint = new JButton("In lại hóa đơn");
+        btnReprint.addActionListener(e -> {
+            File printed = vn.edu.ptit.cinema.util.ReceiptPrinter.printReceipt(invoice);
+            JOptionPane.showMessageDialog(dialog, printed == null ? "Không thể ghi file hóa đơn." : "Đã in lại: " + printed.getAbsolutePath());
+        });
+        btnBox.add(btnReprint);
         btnBox.add(btnOpenFile);
         btnBox.add(btnClose);
         content.add(btnBox, BorderLayout.SOUTH);

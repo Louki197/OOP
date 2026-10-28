@@ -8,6 +8,7 @@ import vn.edu.ptit.cinema.model.seat.SeatStatus;
 import vn.edu.ptit.cinema.service.DataStore;
 import vn.edu.ptit.cinema.util.PosterManager;
 
+import vn.edu.ptit.cinema.service.BookingRules;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -54,7 +55,7 @@ public class BetaShowtimeDialog extends JDialog {
         if (movie == null) return;
         Set<LocalDate> dateSet = new TreeSet<>();
         for (ShowTime st : dataStore.getShowTimeMap().values()) {
-            if (st.getMovieId().equals(movie.getId()) && st.getStartTime() != null) {
+            if (st.getMovieId().equals(movie.getId()) && BookingRules.canSell(st, java.time.LocalDateTime.now())) {
                 dateSet.add(st.getStartTime().toLocalDate());
             }
         }
@@ -241,7 +242,7 @@ public class BetaShowtimeDialog extends JDialog {
         dateButtonMap.clear();
 
         if (availableDates.isEmpty()) {
-            JLabel lblNoDate = new JLabel("Phim chưa có lịch chiếu nào.");
+            JLabel lblNoDate = new JLabel("Phim chưa có lịch chiếu sắp tới.");
             lblNoDate.setFont(new Font("Segoe UI", Font.ITALIC, 13));
             lblNoDate.setForeground(Color.GRAY);
             dateTabsContainer.add(lblNoDate);
@@ -319,7 +320,7 @@ public class BetaShowtimeDialog extends JDialog {
         List<ShowTime> list = new ArrayList<>();
         for (ShowTime st : dataStore.getShowTimeMap().values()) {
             if (st.getMovieId().equals(movie.getId())
-                    && st.getStartTime() != null
+                    && BookingRules.canSell(st, java.time.LocalDateTime.now())
                     && st.getStartTime().toLocalDate().isEqual(selectedDate)) {
                 list.add(st);
             }
@@ -403,6 +404,11 @@ public class BetaShowtimeDialog extends JDialog {
 
                 @Override
                 public void mouseClicked(MouseEvent e) {
+                    if (!BookingRules.canSell(st, java.time.LocalDateTime.now())) {
+                        JOptionPane.showMessageDialog(BetaShowtimeDialog.this, "Suất chiếu đã bắt đầu. Vui lòng chọn suất khác.");
+                        renderShowtimePills();
+                        return;
+                    }
                     // Chọn suất chiếu này -> Đóng popup và kích hoạt callback sang Sơ đồ ghế
                     dispose();
                     if (onShowTimeSelected != null) {
