@@ -78,4 +78,65 @@ public class ReceiptPrinter {
             return null;
         }
     }
+
+    /**
+     * In vé xem phim nhiệt dành riêng cho đơn đặt online nhận tại quầy (Kiosk / POS Ticket Pickup)
+     */
+    public static File printOnlineTicket(Invoice invoice) {
+        File dir = new File("receipts");
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+
+        File ticketFile = new File(dir, "Ticket_Online_" + invoice.getInvoiceId() + ".txt");
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+
+        try (FileWriter writer = new FileWriter(ticketFile, StandardCharsets.UTF_8)) {
+            writer.write("*****************************************************\n");
+            writer.write("         VÉ XEM PHIM ĐIỆN TỬ - PTIT CINEMA ONLINE    \n");
+            writer.write("        (PHIẾU XÁC NHẬN VÀO CỬA PHÒNG CHIẾU PHIM)    \n");
+            writer.write("*****************************************************\n");
+            writer.write(String.format("MÃ ĐẶT VÉ   : %s\n", invoice.getInvoiceId()));
+            writer.write(String.format("KÊNH ĐẶT    : %s (Đã thanh toán Online)\n",
+                    invoice.getBookingChannel() != null ? invoice.getBookingChannel() : "ONLINE"));
+            writer.write(String.format("KHÁCH HÀNG  : %s (%s)\n", invoice.getCustomerName(), invoice.getCustomerPhone()));
+            writer.write(String.format("THỜI ĐIỂM IN: %s\n",
+                    invoice.getPrintedAt() != null ? invoice.getPrintedAt().format(dtf) : dtf.format(java.time.LocalDateTime.now())));
+            writer.write("-----------------------------------------------------\n");
+            writer.write(String.format("PHIM        : %s\n", invoice.getMovieTitle()));
+            writer.write(String.format("PHÒNG CHIẾU : %s\n", invoice.getRoomName()));
+            writer.write(String.format("SUẤT CHIẾU  : %s\n",
+                    invoice.getShowStartTime() != null ? invoice.getShowStartTime().format(dtf) : "N/A"));
+            writer.write("-----------------------------------------------------\n");
+            writer.write("VỊ TRÍ GHẾ NGỒI ĐÃ ĐẶT:\n");
+            for (Ticket t : invoice.getTickets()) {
+                writer.write(String.format("  >>> GHẾ: %-6s | VÉ CHUẨN CGV/BETA | GIÁ: %,8.0f VNĐ\n",
+                        t.getSeatCode(), t.getPrice()));
+            }
+
+            if (!invoice.getFoods().isEmpty()) {
+                writer.write("-----------------------------------------------------\n");
+                writer.write("BẮP NƯỚC NHẬN TẠI QUẦY F&B:\n");
+                for (OrderItem item : invoice.getFoods()) {
+                    writer.write(String.format("  + %-20s x%-2d %,10.0f VNĐ\n",
+                            item.getFoodName(), item.getQuantity(), item.getTotalPrice()));
+                }
+            }
+
+            writer.write("=====================================================\n");
+            writer.write(String.format("TỔNG TIỀN ĐÃ TRẢ: %,12.0f VNĐ (ĐÃ THANH TOÁN)\n", invoice.getFinalAmount()));
+            writer.write("=====================================================\n");
+            writer.write("MÃ SOÁT VÉ CỬA RẠP: [BARCODE: *PTIT-" + invoice.getInvoiceId() + "*]\n");
+            writer.write("Vui lòng xuất trình phiếu này cho nhân viên soát vé tại cửa.\n");
+            writer.write("       CHÚC QUÝ KHÁCH CÓ TRẢI NGHIỆM XEM PHIM TUYỆT VỜI!    \n");
+            writer.write("*****************************************************\n");
+
+            writer.flush();
+            System.out.println("[ReceiptPrinter] Đã xuất vé online: " + ticketFile.getAbsolutePath());
+            return ticketFile;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }

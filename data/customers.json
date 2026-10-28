@@ -2,29 +2,36 @@
   "0912345678": {
     "phone": "0912345678",
     "fullName": "Nguyễn Văn Tuấn",
+<<<<<<< HEAD
     "loyaltyPoints": 14631.0,
     "membershipTier": "DIAMOND",
     "totalSpent": 3595667.0
+=======
+    "loyaltyPoints": 0.0,
+    "membershipTier": "STANDARD",
+    "totalSpent": 0.0
+>>>>>>> b605a24522d0de94feda79806b0d75427d92a040
   },
   "0988888888": {
     "phone": "0988888888",
     "fullName": "Trần Thị Mai",
-    "loyaltyPoints": 120000.0,
-    "membershipTier": "DIAMOND",
-    "totalSpent": 3200000.0
+    "loyaltyPoints": 0.0,
+    "membershipTier": "STANDARD",
+    "totalSpent": 0.0
   },
   "0987654321": {
     "phone": "0987654321",
     "fullName": "Hoàng Đức Mạnh",
-    "loyaltyPoints": 78061.0,
-    "membershipTier": "DIAMOND",
-    "totalSpent": 3813166.0
+    "loyaltyPoints": 0.0,
+    "membershipTier": "STANDARD",
+    "totalSpent": 0.0
   },
   "0977112233": {
     "phone": "0977112233",
     "fullName": "Lê Hoàng Nam",
-    "loyaltyPoints": 15000.0,
+    "loyaltyPoints": 0.0,
     "membershipTier": "STANDARD",
+<<<<<<< HEAD
     "totalSpent": 450000.0
   },
   "0282338383": {
@@ -32,6 +39,8 @@
     "fullName": "Lê Hoàng",
     "loyaltyPoints": 10000.0,
     "membershipTier": "STANDARD",
+=======
+>>>>>>> b605a24522d0de94feda79806b0d75427d92a040
     "totalSpent": 0.0
   }
 }

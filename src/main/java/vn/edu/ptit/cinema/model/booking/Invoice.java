@@ -42,6 +42,11 @@ public class Invoice implements Serializable {
     public double getCashReceived() { return cashReceived; }
     public double getChangeAmount() { return changeAmount; }
 
+    // --- CÁC TRƯỜNG DÀNH CHO ĐẶT VÉ ONLINE & IN VÉ TẠI QUẦY (KIOSK/POS) ---
+    private String bookingChannel = "POS"; // "POS" hoặc "ONLINE"
+    private boolean ticketPrinted = true;  // POS in ngay = true; ONLINE chờ in tại rạp = false
+    private LocalDateTime printedAt;       // Thời điểm in vé thực tế
+
     public Invoice() {
     }
 
@@ -49,6 +54,16 @@ public class Invoice implements Serializable {
                    String showTimeId, String movieTitle, String roomName, LocalDateTime showStartTime,
                    List<Ticket> tickets, List<OrderItem> foods, String voucherCode,
                    double originalAmount, double discountAmount, double finalAmount, LocalDateTime createdAt) {
+        this(invoiceId, staffUsername, customerName, customerPhone, showTimeId, movieTitle, roomName,
+                showStartTime, tickets, foods, voucherCode, originalAmount, discountAmount, finalAmount,
+                createdAt, "POS", true, createdAt);
+    }
+
+    public Invoice(String invoiceId, String staffUsername, String customerName, String customerPhone,
+                   String showTimeId, String movieTitle, String roomName, LocalDateTime showStartTime,
+                   List<Ticket> tickets, List<OrderItem> foods, String voucherCode,
+                   double originalAmount, double discountAmount, double finalAmount, LocalDateTime createdAt,
+                   String bookingChannel, boolean ticketPrinted, LocalDateTime printedAt) {
         this.invoiceId = invoiceId;
         this.staffUsername = staffUsername;
         this.customerName = customerName;
@@ -64,6 +79,33 @@ public class Invoice implements Serializable {
         this.discountAmount = discountAmount;
         this.finalAmount = finalAmount;
         this.createdAt = createdAt != null ? createdAt : LocalDateTime.now();
+        this.bookingChannel = (bookingChannel != null) ? bookingChannel : "POS";
+        this.ticketPrinted = ticketPrinted;
+        this.printedAt = printedAt;
+    }
+
+    public String getBookingChannel() {
+        return bookingChannel != null ? bookingChannel : "POS";
+    }
+
+    public void setBookingChannel(String bookingChannel) {
+        this.bookingChannel = bookingChannel;
+    }
+
+    public boolean isTicketPrinted() {
+        return ticketPrinted;
+    }
+
+    public void setTicketPrinted(boolean ticketPrinted) {
+        this.ticketPrinted = ticketPrinted;
+    }
+
+    public LocalDateTime getPrintedAt() {
+        return printedAt;
+    }
+
+    public void setPrintedAt(LocalDateTime printedAt) {
+        this.printedAt = printedAt;
     }
 
     public String getInvoiceId() {

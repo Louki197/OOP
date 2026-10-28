@@ -332,18 +332,55 @@ public class DataStore {
     }
 
     private void seedInitialShowTimes() {
-        // Tạo sơ đồ ghế mẫu cho Room 01 (8 hàng: A -> H, 10 cột: 1 -> 10)
-        Map<String, Seat> seats = generateRoomSeats(8, 10);
+        LocalDate today = LocalDate.now();
+        String[] movieIds = {"MOV01", "MOV02", "MOV03", "MOV04"};
+        double[] prices = {85000.0, 95000.0, 90000.0, 85000.0};
+        int counter = 1;
 
-        LocalDateTime now = LocalDateTime.now().withMinute(0).withSecond(0);
-        ShowTime st1 = new ShowTime("ST01", "MOV01", "ROOM01",
-                now.plusHours(2), now.plusHours(4), 85000.0, seats);
+        for (int d = 0; d < 7; d++) {
+            LocalDate date = today.plusDays(d);
+            // Suất ROOM01 (8x10 = 80 ghế)
+            String stId1 = String.format("ST%03d", counter++);
+            showTimeMap.put(stId1, new ShowTime(stId1, movieIds[0], "ROOM01",
+                    date.atTime(9, 30), date.atTime(11, 20), prices[0], generateRoomSeats(8, 10)));
 
-        ShowTime st2 = new ShowTime("ST02", "MOV02", "ROOM01",
-                now.plusHours(5), now.plusHours(8), 90000.0, generateRoomSeats(8, 10));
+            String stId2 = String.format("ST%03d", counter++);
+            showTimeMap.put(stId2, new ShowTime(stId2, movieIds[1], "ROOM01",
+                    date.atTime(11, 45), date.atTime(14, 40), prices[1], generateRoomSeats(8, 10)));
 
-        showTimeMap.put(st1.getId(), st1);
-        showTimeMap.put(st2.getId(), st2);
+            String stId3 = String.format("ST%03d", counter++);
+            showTimeMap.put(stId3, new ShowTime(stId3, movieIds[2], "ROOM01",
+                    date.atTime(15, 0), date.atTime(17, 20), prices[2], generateRoomSeats(8, 10)));
+
+            String stId4 = String.format("ST%03d", counter++);
+            showTimeMap.put(stId4, new ShowTime(stId4, movieIds[3], "ROOM01",
+                    date.atTime(17, 45), date.atTime(20, 25), prices[3], generateRoomSeats(8, 10)));
+
+            String stId5 = String.format("ST%03d", counter++);
+            showTimeMap.put(stId5, new ShowTime(stId5, movieIds[0], "ROOM01",
+                    date.atTime(20, 45), date.atTime(22, 35), prices[0], generateRoomSeats(8, 10)));
+
+            // Suất ROOM02 (10x12 = 120 ghế IMAX)
+            String stId6 = String.format("ST%03d", counter++);
+            showTimeMap.put(stId6, new ShowTime(stId6, movieIds[2], "ROOM02",
+                    date.atTime(10, 0), date.atTime(12, 25), prices[2], generateRoomSeats(10, 12)));
+
+            String stId7 = String.format("ST%03d", counter++);
+            showTimeMap.put(stId7, new ShowTime(stId7, movieIds[3], "ROOM02",
+                    date.atTime(12, 50), date.atTime(15, 30), prices[3], generateRoomSeats(10, 12)));
+
+            String stId8 = String.format("ST%03d", counter++);
+            showTimeMap.put(stId8, new ShowTime(stId8, movieIds[1], "ROOM02",
+                    date.atTime(15, 50), date.atTime(18, 45), prices[1], generateRoomSeats(10, 12)));
+
+            String stId9 = String.format("ST%03d", counter++);
+            showTimeMap.put(stId9, new ShowTime(stId9, movieIds[0], "ROOM02",
+                    date.atTime(19, 15), date.atTime(21, 5), prices[0], generateRoomSeats(10, 12)));
+
+            String stId10 = String.format("ST%03d", counter++);
+            showTimeMap.put(stId10, new ShowTime(stId10, movieIds[2], "ROOM02",
+                    date.atTime(21, 30), date.atTime(23, 55), prices[2], generateRoomSeats(10, 12)));
+        }
 
         storageDAO.writeToFile("showtimes.json", showTimeMap);
     }
