@@ -109,7 +109,7 @@ public class OnlineTicketPickupPanel extends JPanel {
         txtSearch.addActionListener(e -> reloadOnlineBookings());
         leftSearch.add(txtSearch);
 
-        JButton btnSearch = new JButton("🔍 Tìm Kiếm");
+        JButton btnSearch = new JButton("Tìm Kiếm");
         btnSearch.setFont(new Font("Segoe UI", Font.BOLD, 12));
         btnSearch.putClientProperty(FlatClientProperties.STYLE, "arc: 8;");
         btnSearch.addActionListener(e -> reloadOnlineBookings());
@@ -117,7 +117,7 @@ public class OnlineTicketPickupPanel extends JPanel {
 
         leftSearch.add(Box.createHorizontalStrut(8));
         leftSearch.add(new JLabel("Trạng thái in:"));
-        cbFilterStatus = new JComboBox<>(new String[]{"Tất cả đơn", "⏳ Chưa in vé", "✅ Đã in vé"});
+        cbFilterStatus = new JComboBox<>(new String[]{"Tất cả đơn", "Chưa in vé", "Đã in vé"});
         cbFilterStatus.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         cbFilterStatus.addActionListener(e -> reloadOnlineBookings());
         leftSearch.add(cbFilterStatus);
@@ -297,7 +297,7 @@ public class OnlineTicketPickupPanel extends JPanel {
         lblDetailPrintStatus.setAlignmentX(Component.CENTER_ALIGNMENT);
         lblDetailPrintStatus.setForeground(Color.GRAY);
 
-        btnPrintTicket = new JButton("🖨️ XÁC NHẬN & IN VÉ CỨNG");
+        btnPrintTicket = new JButton("XÁC NHẬN & IN VÉ CỨNG");
         btnPrintTicket.setFont(new Font("Segoe UI", Font.BOLD, 13));
         btnPrintTicket.setBackground(new Color(22, 163, 74));
         btnPrintTicket.setForeground(Color.WHITE);
@@ -307,7 +307,7 @@ public class OnlineTicketPickupPanel extends JPanel {
         btnPrintTicket.setEnabled(false);
         btnPrintTicket.addActionListener(e -> handlePrintTicket());
 
-        btnOpenTicketFile = new JButton("📂 Mở File Vé In Nhiệt (.txt)");
+        btnOpenTicketFile = new JButton("Mở File Vé In Nhiệt (.txt)");
         btnOpenTicketFile.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         btnOpenTicketFile.putClientProperty(FlatClientProperties.STYLE, "arc: 8;");
         btnOpenTicketFile.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -365,7 +365,7 @@ public class OnlineTicketPickupPanel extends JPanel {
                 for (Ticket t : inv.getTickets()) seats.add(t.getSeatCode());
             }
 
-            String statusStr = inv.isTicketPrinted() ? "✅ ĐÃ IN VÉ" : "⏳ CHƯA IN VÉ";
+            String statusStr = inv.isTicketPrinted() ? "ĐÃ IN VÉ" : "CHƯA IN VÉ";
             String showtimeStr = inv.getShowStartTime() != null ? inv.getShowStartTime().format(dtf) : "N/A";
             String createdStr = inv.getCreatedAt() != null ? inv.getCreatedAt().format(dtfCreated) : "N/A";
 
@@ -434,7 +434,7 @@ public class OnlineTicketPickupPanel extends JPanel {
         } else {
             lblDetailPrintStatus.setText("TRẠNG THÁI: CHỜ IN VÉ TẠI QUẦY");
             lblDetailPrintStatus.setForeground(new Color(217, 119, 6));
-            btnPrintTicket.setText("🖨️ XÁC NHẬN & IN VÉ CỨNG");
+            btnPrintTicket.setText("XÁC NHẬN & IN VÉ CỨNG");
             btnPrintTicket.setBackground(new Color(22, 163, 74));
             btnPrintTicket.setForeground(Color.WHITE);
         }
@@ -521,7 +521,7 @@ public class OnlineTicketPickupPanel extends JPanel {
 
         JComboBox<String> cbMovie = new JComboBox<>();
         for (Movie m : dataStore.getMovieMap().values()) {
-            cbMovie.addItem(String.format("[%s] %s", m.getId(), m.getTitle()));
+            cbMovie.addItem(String.format("%s | %s", m.getId(), m.getTitle()));
         }
 
         JTextField txtCustName = new JTextField("Lê Hoàng Long");
@@ -561,7 +561,7 @@ public class OnlineTicketPickupPanel extends JPanel {
             }
 
             String selMovie = (String) cbMovie.getSelectedItem();
-            String movieId = selMovie.substring(selMovie.indexOf('[') + 1, selMovie.indexOf(']'));
+            String movieId = selMovie.substring(0, selMovie.indexOf(" | "));
             Movie movie = dataStore.getMovieMap().get(movieId);
 
             // Tìm một suất chiếu của phim này
@@ -648,8 +648,8 @@ public class OnlineTicketPickupPanel extends JPanel {
                             + "• Khách hàng  : " + name + " (" + phone + ")\n"
                             + "• Phim        : " + (movie != null ? movie.getTitle() : movieId) + "\n"
                             + "• Số tiền trả : " + String.format("%,.0f VNĐ", finalTotal) + "\n"
-                            + "• Trạng thái  : ⏳ CHƯA IN VÉ (Đang chờ khách đến nhận tại quầy)\n\n"
-                            + "Bây giờ bạn có thể bấm nút '🖨️ XÁC NHẬN & IN VÉ CỨNG' để in vé cho khách!",
+                            + "• Trạng thái  : CHƯA IN VÉ (Đang chờ khách đến nhận tại quầy)\n\n"
+                            + "Bây giờ bạn có thể bấm nút 'XÁC NHẬN & IN VÉ CỨNG' để in vé cho khách!",
                     "Đặt Vé Online Thành Công", JOptionPane.INFORMATION_MESSAGE);
         });
 

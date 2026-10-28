@@ -150,7 +150,7 @@ public class MainFrame extends JFrame {
     private void initUI() {
         String roleStr = currentUser != null ? currentUser.getRole().getDisplayName() : "Khách";
         String nameStr = currentUser != null ? currentUser.getFullName() : "N/A";
-        setTitle("HỆ THỐNG QUẢN LÝ RẠP CHIẾU PHIM PTIT - [" + nameStr + " | " + roleStr + "]");
+        setTitle("HỆ THỐNG QUẢN LÝ RẠP CHIẾU PHIM PTIT - " + nameStr + " | " + roleStr);
         PosterManager.preloadAll(dataStore.getMovieMap().values(), 205, 290);
 
         setSize(1360, 860);
@@ -1831,7 +1831,7 @@ public class MainFrame extends JFrame {
     private void reloadScheduleDropdowns() {
         cbScheduleMovie.removeAllItems();
         for (Movie m : dataStore.getMovieMap().values()) {
-            cbScheduleMovie.addItem(String.format("[%s] %s", m.getId(), m.getTitle()));
+            cbScheduleMovie.addItem(String.format("%s | %s", m.getId(), m.getTitle()));
         }
 
         cbScheduleDate.removeAllItems();
@@ -2049,7 +2049,7 @@ public class MainFrame extends JFrame {
             return;
         }
 
-        String movieId = movieItem.substring(movieItem.indexOf('[') + 1, movieItem.indexOf(']'));
+        String movieId = movieItem.substring(0, movieItem.indexOf(" | "));
         String roomId = roomItem.startsWith("ROOM02") ? "ROOM02" : "ROOM01";
 
         LocalDate date = LocalDate.parse(dateStr, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
@@ -2228,7 +2228,7 @@ public class MainFrame extends JFrame {
 
         JPanel bottomTools = new JPanel(new FlowLayout(FlowLayout.RIGHT, 12, 0));
 
-        JButton btnClearAllInvoices = new JButton("🗑️ Xóa Lịch Sử Giao Dịch");
+        JButton btnClearAllInvoices = new JButton("Xóa Lịch Sử Giao Dịch");
         btnClearAllInvoices.setFont(new Font("Segoe UI", Font.BOLD, 12));
         btnClearAllInvoices.setForeground(new Color(220, 38, 38));
         btnClearAllInvoices.putClientProperty(FlatClientProperties.STYLE, "arc: 8;");
@@ -2494,7 +2494,7 @@ public class MainFrame extends JFrame {
         content.add(scroll, BorderLayout.CENTER);
 
         JPanel btnBox = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
-        JButton btnOpenFile = new JButton("📂 Mở File Text");
+        JButton btnOpenFile = new JButton("Mở File Text");
         btnOpenFile.addActionListener(e -> {
             File file = new File("receipts", "Receipt_" + invoice.getInvoiceId() + ".txt");
             if (!file.exists()) {

@@ -278,7 +278,7 @@ public class ShowtimeManagementDialog extends JDialog {
 
         cbEditMovie = new JComboBox<>();
         for (Movie m : dataStore.getMovieMap().values()) {
-            cbEditMovie.addItem(String.format("[%s] %s", m.getId(), m.getTitle()));
+            cbEditMovie.addItem(String.format("%s | %s", m.getId(), m.getTitle()));
         }
 
         cbEditRoom = new JComboBox<>(new String[]{"ROOM01 (Phòng 1 - Standard)", "ROOM02 (Phòng 2 - IMAX Laser)"});
@@ -457,7 +457,7 @@ public class ShowtimeManagementDialog extends JDialog {
 
         // Chọn movie trong dropdown
         for (int i = 0; i < cbEditMovie.getItemCount(); i++) {
-            if (cbEditMovie.getItemAt(i).contains("[" + st.getMovieId() + "]")) {
+            if (cbEditMovie.getItemAt(i).startsWith(st.getMovieId() + " | ")) {
                 cbEditMovie.setSelectedIndex(i);
                 break;
             }
@@ -555,7 +555,7 @@ public class ShowtimeManagementDialog extends JDialog {
             return;
         }
 
-        String movieId = movieItem.substring(movieItem.indexOf('[') + 1, movieItem.indexOf(']'));
+        String movieId = movieItem.substring(0, movieItem.indexOf(" | "));
         String roomId = roomItem.startsWith("ROOM02") ? "ROOM02" : "ROOM01";
 
         LocalDate date = LocalDate.parse(dateStr, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
@@ -683,7 +683,7 @@ public class ShowtimeManagementDialog extends JDialog {
             return;
         }
 
-        String movieId = movieItem.substring(movieItem.indexOf('[') + 1, movieItem.indexOf(']'));
+        String movieId = movieItem.substring(0, movieItem.indexOf(" | "));
         String roomId = roomItem.startsWith("ROOM02") ? "ROOM02" : "ROOM01";
 
         LocalDate date = LocalDate.parse(dateStr, DateTimeFormatter.ofPattern("dd/MM/yyyy"));

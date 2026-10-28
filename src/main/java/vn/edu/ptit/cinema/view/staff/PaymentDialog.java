@@ -88,9 +88,13 @@ public class PaymentDialog extends JDialog {
     }
 
     private void initUI() {
-        setSize(820, 750);
+        Rectangle screen = getGraphicsConfiguration().getBounds();
+        Insets screenInsets = Toolkit.getDefaultToolkit().getScreenInsets(getGraphicsConfiguration());
+        int availableWidth = screen.width - screenInsets.left - screenInsets.right;
+        int availableHeight = screen.height - screenInsets.top - screenInsets.bottom;
+        setSize(Math.min(940, availableWidth - 24), Math.min(720, availableHeight - 24));
         setLocationRelativeTo(getParent());
-        setResizable(false);
+        setResizable(true);
         setLayout(new BorderLayout(15, 15));
 
         // 1. Header
@@ -128,6 +132,7 @@ public class PaymentDialog extends JDialog {
         // Block 1: Thông tin khách & Thẻ thành viên
         JPanel custBox = new JPanel();
         custBox.setLayout(new BoxLayout(custBox, BoxLayout.Y_AXIS));
+        custBox.setAlignmentX(Component.LEFT_ALIGNMENT);
         custBox.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createTitledBorder("1. Khách hàng & Thành viên (Member)"),
                 new EmptyBorder(6, 10, 8, 10)
@@ -160,9 +165,9 @@ public class PaymentDialog extends JDialog {
 
         // Dòng Badge thành viên & Nút Đăng ký nhanh
         JPanel memberBadgeRow = new JPanel(new BorderLayout(6, 0));
-        memberBadgeRow.setMaximumSize(new Dimension(Integer.MAX_VALUE, 26));
+        memberBadgeRow.setMaximumSize(new Dimension(Integer.MAX_VALUE, 64));
         memberBadgeRow.setAlignmentX(Component.LEFT_ALIGNMENT);
-        lblCustomerTierBadge = new JLabel("Thành viên VIP (Tích lũy: 50.000 VNĐ)");
+        lblCustomerTierBadge = new JLabel("<html>Thành viên: VIP<br>Tích lũy: 50.000 VNĐ</html>");
         lblCustomerTierBadge.setFont(new Font("Segoe UI", Font.BOLD, 12));
         lblCustomerTierBadge.setForeground(new Color(22, 163, 74));
 
@@ -175,7 +180,10 @@ public class PaymentDialog extends JDialog {
         btnRegisterMember.addActionListener(e -> handleQuickRegisterCustomer());
 
         memberBadgeRow.add(lblCustomerTierBadge, BorderLayout.CENTER);
-        memberBadgeRow.add(btnRegisterMember, BorderLayout.EAST);
+        JPanel registerRow = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        registerRow.setOpaque(false);
+        registerRow.add(btnRegisterMember);
+        memberBadgeRow.add(registerRow, BorderLayout.SOUTH);
 
         // Checkbox dùng điểm tích lũy - Căn chuẩn lề trái
         chkUseLoyaltyPoints = new JCheckBox("Dùng điểm tích lũy trừ tiền vé");
@@ -212,6 +220,7 @@ public class PaymentDialog extends JDialog {
         // Block 2: Voucher & Ưu đãi
         JPanel voucherBox = new JPanel();
         voucherBox.setLayout(new BoxLayout(voucherBox, BoxLayout.Y_AXIS));
+        voucherBox.setAlignmentX(Component.LEFT_ALIGNMENT);
         voucherBox.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createTitledBorder("2. Khuyến mãi & Giảm giá"),
                 new EmptyBorder(6, 10, 8, 10)
@@ -264,6 +273,7 @@ public class PaymentDialog extends JDialog {
 
         // Block 3: Tóm tắt chi phí
         JPanel summaryBox = new JPanel(new GridLayout(5, 1, 4, 4));
+        summaryBox.setAlignmentX(Component.LEFT_ALIGNMENT);
         summaryBox.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createTitledBorder("3. Tóm tắt chi phí"),
                 new EmptyBorder(6, 10, 6, 10)
@@ -285,6 +295,10 @@ public class PaymentDialog extends JDialog {
         summaryBox.add(lblPointsDiscountSummary);
         summaryBox.add(lblFinalAmount);
         leftPanel.add(summaryBox);
+        for (JPanel section : new JPanel[]{custBox, voucherBox, summaryBox}) {
+            section.setMaximumSize(new Dimension(Integer.MAX_VALUE, section.getPreferredSize().height));
+        }
+        leftPanel.add(Box.createVerticalGlue());
 
         contentGrid.add(leftPanel);
 
@@ -293,7 +307,7 @@ public class PaymentDialog extends JDialog {
         rightPanel.setBorder(BorderFactory.createTitledBorder("4. Phương thức thanh toán"));
 
         // Bộ chọn radio button
-        JPanel methodSelect = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 5));
+        JPanel methodSelect = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 5));
         rbCash = new JRadioButton("Tiền mặt tại quầy", true);
         rbVietQR = new JRadioButton("QR mô phỏng", false);
         ButtonGroup bgMethod = new ButtonGroup();
@@ -304,7 +318,8 @@ public class PaymentDialog extends JDialog {
         rightPanel.add(methodSelect, BorderLayout.NORTH);
 
         // Khu vực hiển thị mã QR hoặc hướng dẫn tiền mặt
-        qrCardContainer = new JPanel(new GridBagLayout());
+        qrCardContainer = new JPanel(new BorderLayout());
+        qrCardContainer.setBorder(new EmptyBorder(16, 14, 14, 14));
         qrCardContainer.setBackground(new Color(248, 250, 252));
         rightPanel.add(qrCardContainer, BorderLayout.CENTER);
 
@@ -312,7 +327,11 @@ public class PaymentDialog extends JDialog {
         rbVietQR.addActionListener(e -> updatePaymentMethodUI());
 
         contentGrid.add(rightPanel);
-        add(contentGrid, BorderLayout.CENTER);
+        JScrollPane contentScroll = new JScrollPane(contentGrid,
+                JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        contentScroll.setBorder(BorderFactory.createEmptyBorder());
+        contentScroll.getVerticalScrollBar().setUnitIncrement(16);
+        add(contentScroll, BorderLayout.CENTER);
 
         // 3. Footer Buttons
         JPanel footerPanel = new JPanel(new GridLayout(1, 2, 20, 0));
@@ -361,7 +380,7 @@ public class PaymentDialog extends JDialog {
         if (c != null) {
             currentCustomer = c;
             txtCustomerName.setText(c.getFullName());
-            lblCustomerTierBadge.setText(String.format("Thành viên: %s (Tích lũy: %,.0f VNĐ)", c.getMembershipTier(), c.getLoyaltyPoints()));
+            lblCustomerTierBadge.setText(String.format("<html>Thành viên: %s<br>Tích lũy: %,.0f VNĐ</html>", c.getMembershipTier(), c.getLoyaltyPoints()));
             lblCustomerTierBadge.setForeground(new Color(22, 163, 74));
             btnRegisterMember.setVisible(true);
             boolean hasPoints = c.getLoyaltyPoints() > 0;
@@ -390,7 +409,7 @@ public class PaymentDialog extends JDialog {
         qrCardContainer.removeAll();
         if (rbVietQR.isSelected()) {
             QrCodePanel qrPanel = new QrCodePanel(tempInvoiceId, currentFinalTotal);
-            qrCardContainer.add(qrPanel);
+            qrCardContainer.add(qrPanel, BorderLayout.NORTH);
         } else {
             JPanel cashGuide = new JPanel();
             cashGuide.setLayout(new BoxLayout(cashGuide, BoxLayout.Y_AXIS));
@@ -399,33 +418,39 @@ public class PaymentDialog extends JDialog {
             JLabel lblCashIcon = new JLabel("TIỀN MẶT", JLabel.CENTER);
             lblCashIcon.setFont(new Font("Segoe UI", Font.BOLD, 22));
             lblCashIcon.setForeground(new Color(22, 163, 74));
-            lblCashIcon.setAlignmentX(Component.CENTER_ALIGNMENT);
+            lblCashIcon.setAlignmentX(Component.LEFT_ALIGNMENT);
 
             JLabel lblCashText = new JLabel("Thanh toán tiền mặt trực tiếp tại quầy", JLabel.CENTER);
             lblCashText.setFont(new Font("Segoe UI", Font.BOLD, 13));
-            lblCashText.setAlignmentX(Component.CENTER_ALIGNMENT);
+            lblCashText.setAlignmentX(Component.LEFT_ALIGNMENT);
 
             JLabel lblCashSub = new JLabel("Vui lòng nhận tiền từ khách trước khi xuất vé.", JLabel.CENTER);
             lblCashSub.setFont(new Font("Segoe UI", Font.PLAIN, 11));
             lblCashSub.setForeground(Color.GRAY);
-            lblCashSub.setAlignmentX(Component.CENTER_ALIGNMENT);
+            lblCashSub.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-            cashGuide.add(Box.createVerticalStrut(40));
             cashGuide.add(lblCashIcon);
             cashGuide.add(Box.createVerticalStrut(10));
             cashGuide.add(lblCashText);
             cashGuide.add(Box.createVerticalStrut(5));
             cashGuide.add(lblCashSub);
             cashGuide.add(Box.createVerticalStrut(12));
-            cashGuide.add(new JLabel("Tiền khách đưa (chỉ nhập số VNĐ):"));
-            txtCashReceived.setMaximumSize(new Dimension(250, 32));
+            JLabel cashLabel = new JLabel("Tiền khách đưa (chỉ nhập số VNĐ):");
+            cashLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+            cashGuide.add(cashLabel);
+            cashGuide.add(Box.createVerticalStrut(6));
+            txtCashReceived.setAlignmentX(Component.LEFT_ALIGNMENT);
+            txtCashReceived.setMaximumSize(new Dimension(Integer.MAX_VALUE, 32));
             cashGuide.add(txtCashReceived);
+            cashGuide.add(Box.createVerticalStrut(6));
+            lblChange.setAlignmentX(Component.LEFT_ALIGNMENT);
             cashGuide.add(lblChange);
             JButton exact = new JButton("Khách đưa đủ");
+            exact.setAlignmentX(Component.LEFT_ALIGNMENT);
             exact.addActionListener(e -> txtCashReceived.setText(String.format(java.util.Locale.ROOT, "%.0f", currentFinalTotal)));
             cashGuide.add(exact);
             updateChange();
-            qrCardContainer.add(cashGuide);
+            qrCardContainer.add(cashGuide, BorderLayout.NORTH);
         }
         qrCardContainer.revalidate();
         qrCardContainer.repaint();
