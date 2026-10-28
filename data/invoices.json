@@ -38,5 +38,89 @@
     "changeAmount": 0.0,
     "bookingChannel": "ONLINE",
     "ticketPrinted": false
+  },
+  "INV-1a922895-992b-4571-9a20-5dc80beaf6ce": {
+    "invoiceId": "INV-1a922895-992b-4571-9a20-5dc80beaf6ce",
+    "staffUsername": "admin",
+    "customerName": "Khách Lẻ",
+    "customerPhone": "",
+    "showTimeId": "ST040",
+    "movieTitle": "Exhuma: Quật Mộ Trùng Ma",
+    "roomName": "Phòng Chiếu 2 (IMAX Laser)",
+    "showStartTime": "2026-10-31 21:30:00",
+    "tickets": [
+      {
+        "ticketId": "TK-506ad0c4-fcc4-40a1-b246-54ff4bfe6bf8",
+        "showTimeId": "ST040",
+        "seatCode": "D04",
+        "price": 135000.0
+      },
+      {
+        "ticketId": "TK-9b19dbf9-5838-406d-89c7-b8cff0f10260",
+        "showTimeId": "ST040",
+        "seatCode": "C03",
+        "price": 135000.0
+      },
+      {
+        "ticketId": "TK-f89eaf97-9209-4a70-8261-173cd5c36f0b",
+        "showTimeId": "ST040",
+        "seatCode": "C04",
+        "price": 135000.0
+      },
+      {
+        "ticketId": "TK-a93ad8ab-18c9-457c-a226-940047b6138f",
+        "showTimeId": "ST040",
+        "seatCode": "C05",
+        "price": 135000.0
+      },
+      {
+        "ticketId": "TK-fd7ac439-2ee3-4b4d-b63a-70caefaf2232",
+        "showTimeId": "ST040",
+        "seatCode": "C06",
+        "price": 135000.0
+      },
+      {
+        "ticketId": "TK-791f4798-6857-4803-bc1e-a77f7abdfd60",
+        "showTimeId": "ST040",
+        "seatCode": "D07",
+        "price": 135000.0
+      },
+      {
+        "ticketId": "TK-cd326482-e590-4ce9-8f7e-c5f6f32f8891",
+        "showTimeId": "ST040",
+        "seatCode": "C07",
+        "price": 135000.0
+      },
+      {
+        "ticketId": "TK-32544ee0-11dd-4b18-a04b-03862f932125",
+        "showTimeId": "ST040",
+        "seatCode": "D06",
+        "price": 135000.0
+      },
+      {
+        "ticketId": "TK-da060700-3854-4d38-af4b-b2bebd173985",
+        "showTimeId": "ST040",
+        "seatCode": "D05",
+        "price": 135000.0
+      }
+    ],
+    "foods": [
+      {
+        "foodId": "F04",
+        "foodName": "Combo Đơn (1 Bắp L + 1 Nước L)",
+        "quantity": 20,
+        "unitPrice": 85000.0
+      }
+    ],
+    "originalAmount": 2915000.0,
+    "discountAmount": 0.0,
+    "finalAmount": 2915000.0,
+    "createdAt": "2026-10-28 17:05:56",
+    "paymentMethod": "QR_DEMO",
+    "cashReceived": 0.0,
+    "changeAmount": 0.0,
+    "bookingChannel": "POS",
+    "ticketPrinted": true,
+    "printedAt": "2026-10-28 17:05:56"
   }
 }

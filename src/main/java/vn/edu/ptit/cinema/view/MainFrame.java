@@ -2156,19 +2156,7 @@ public class MainFrame extends JFrame {
         kpiContainer.add(createKpiCard("TOP PHIM ĂN KHÁCH", lblKpiTopMovie, new Color(22, 163, 74)));
 
         panel.setBackground(new Color(245, 246, 248));
-        JPanel overview = new JPanel(new BorderLayout(0, 16));
-        overview.setOpaque(false);
-        JPanel heading = new JPanel(new BorderLayout());
-        heading.setOpaque(false);
-        JLabel reportTitle = new JLabel("Thống kê & doanh thu");
-        reportTitle.setFont(new Font("Segoe UI", Font.BOLD, 24));
-        heading.add(reportTitle, BorderLayout.NORTH);
-        JLabel reportSubtitle = new JLabel("Tổng quan hoạt động kinh doanh của rạp");
-        reportSubtitle.setForeground(new Color(103, 113, 131));
-        heading.add(reportSubtitle, BorderLayout.SOUTH);
-        overview.add(heading, BorderLayout.NORTH);
-        overview.add(kpiContainer, BorderLayout.CENTER);
-        panel.add(overview, BorderLayout.NORTH);
+        panel.add(kpiContainer, BorderLayout.NORTH);
 
         JPanel centerPanel = new JPanel(new BorderLayout(0, 10));
         JPanel filterBar = new JPanel(new FlowLayout(FlowLayout.LEFT, 12, 0));

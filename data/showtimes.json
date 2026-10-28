@@ -11984,7 +11984,7 @@
         "rowIndex": 3,
         "colIndex": 4,
         "type": "VIP",
-        "status": "AVAILABLE",
+        "status": "BOOKED",
         "holdTimestamp": 0
       },
       "H01": {
@@ -12000,7 +12000,7 @@
         "rowIndex": 3,
         "colIndex": 3,
         "type": "VIP",
-        "status": "AVAILABLE",
+        "status": "BOOKED",
         "holdTimestamp": 0
       },
       "D07": {
@@ -12008,7 +12008,7 @@
         "rowIndex": 3,
         "colIndex": 6,
         "type": "VIP",
-        "status": "AVAILABLE",
+        "status": "BOOKED",
         "holdTimestamp": 0
       },
       "H03": {
@@ -12024,7 +12024,7 @@
         "rowIndex": 3,
         "colIndex": 5,
         "type": "VIP",
-        "status": "AVAILABLE",
+        "status": "BOOKED",
         "holdTimestamp": 0
       },
       "H02": {
@@ -12168,7 +12168,7 @@
         "rowIndex": 2,
         "colIndex": 3,
         "type": "VIP",
-        "status": "AVAILABLE",
+        "status": "BOOKED",
         "holdTimestamp": 0
       },
       "C03": {
@@ -12176,7 +12176,7 @@
         "rowIndex": 2,
         "colIndex": 2,
         "type": "VIP",
-        "status": "AVAILABLE",
+        "status": "BOOKED",
         "holdTimestamp": 0
       },
       "C06": {
@@ -12184,7 +12184,7 @@
         "rowIndex": 2,
         "colIndex": 5,
         "type": "VIP",
-        "status": "AVAILABLE",
+        "status": "BOOKED",
         "holdTimestamp": 0
       },
       "G02": {
@@ -12200,7 +12200,7 @@
         "rowIndex": 2,
         "colIndex": 4,
         "type": "VIP",
-        "status": "AVAILABLE",
+        "status": "BOOKED",
         "holdTimestamp": 0
       },
       "G01": {
@@ -12232,7 +12232,7 @@
         "rowIndex": 2,
         "colIndex": 6,
         "type": "VIP",
-        "status": "AVAILABLE",
+        "status": "BOOKED",
         "holdTimestamp": 0
       },
       "G03": {

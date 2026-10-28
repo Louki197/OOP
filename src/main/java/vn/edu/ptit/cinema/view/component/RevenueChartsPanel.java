@@ -21,8 +21,8 @@ public final class RevenueChartsPanel extends JPanel {
         setOpaque(false);
         add(card("Doanh thu theo ngày", "Đơn vị: triệu đồng · Sau giảm giá", revenue));
         add(card("Số vé theo phim", "5 phim bán nhiều vé nhất", tickets));
-        setPreferredSize(new Dimension(800, 255));
-        setMinimumSize(new Dimension(400, 220));
+        setPreferredSize(new Dimension(800, 210));
+        setMinimumSize(new Dimension(400, 200));
     }
 
     private JPanel card(String title, String subtitle, Bars chart) {
