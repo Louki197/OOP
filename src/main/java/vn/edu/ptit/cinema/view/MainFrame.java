@@ -137,6 +137,7 @@ public class MainFrame extends JFrame {
     private JTable tableInvoices;
     private DefaultTableModel modelInvoices;
     private JComboBox<String> cbFilterPeriod;
+    private vn.edu.ptit.cinema.view.component.RevenueChartsPanel reportCharts;
     private JButton btnSortByRevenue, btnSortByDate, btnExportReport;
 
     // --- TAB 4: LẤY VÉ VÀ IN VÉ ĐẶT ONLINE (KIOSK & POS) ---
@@ -2154,7 +2155,20 @@ public class MainFrame extends JFrame {
         kpiContainer.add(createKpiCard("F&B TRƯỚC GIẢM GIÁ", lblKpiFnB, new Color(217, 119, 6)));
         kpiContainer.add(createKpiCard("TOP PHIM ĂN KHÁCH", lblKpiTopMovie, new Color(22, 163, 74)));
 
-        panel.add(kpiContainer, BorderLayout.NORTH);
+        panel.setBackground(new Color(245, 246, 248));
+        JPanel overview = new JPanel(new BorderLayout(0, 16));
+        overview.setOpaque(false);
+        JPanel heading = new JPanel(new BorderLayout());
+        heading.setOpaque(false);
+        JLabel reportTitle = new JLabel("Thống kê & doanh thu");
+        reportTitle.setFont(new Font("Segoe UI", Font.BOLD, 24));
+        heading.add(reportTitle, BorderLayout.NORTH);
+        JLabel reportSubtitle = new JLabel("Tổng quan hoạt động kinh doanh của rạp");
+        reportSubtitle.setForeground(new Color(103, 113, 131));
+        heading.add(reportSubtitle, BorderLayout.SOUTH);
+        overview.add(heading, BorderLayout.NORTH);
+        overview.add(kpiContainer, BorderLayout.CENTER);
+        panel.add(overview, BorderLayout.NORTH);
 
         JPanel centerPanel = new JPanel(new BorderLayout(0, 10));
         JPanel filterBar = new JPanel(new FlowLayout(FlowLayout.LEFT, 12, 0));
@@ -2162,7 +2176,14 @@ public class MainFrame extends JFrame {
         cbFilterPeriod = new JComboBox<>(new String[]{"Tất cả thời gian", "Hôm nay", "7 ngày gần nhất"});
         cbFilterPeriod.addActionListener(e -> reloadReportDashboard());
         filterBar.add(cbFilterPeriod);
-        centerPanel.add(filterBar, BorderLayout.NORTH);
+        centerPanel.setOpaque(false);
+        filterBar.setOpaque(false);
+        JPanel chartArea = new JPanel(new BorderLayout(0, 12));
+        chartArea.setOpaque(false);
+        chartArea.add(filterBar, BorderLayout.NORTH);
+        reportCharts = new vn.edu.ptit.cinema.view.component.RevenueChartsPanel();
+        chartArea.add(reportCharts, BorderLayout.CENTER);
+        centerPanel.add(chartArea, BorderLayout.NORTH);
 
         String[] cols = {"Mã HĐ", "Phim", "Thu Ngân", "Khách Hàng", "Số Vé", "Ngày Tạo", "Thành Tiền"};
         modelInvoices = new DefaultTableModel(cols, 0) {
@@ -2363,6 +2384,11 @@ public class MainFrame extends JFrame {
             }
         }
         lblKpiTopMovie.setText(topMovie);
+        lblKpiTopMovie.setToolTipText(topMovie + " — " + maxTickets + " vé");
+        LocalDate firstDay = "Hôm nay".equals(period) ? today
+                : "7 ngày gần nhất".equals(period) ? today.minusDays(6) : null;
+        LocalDate lastDay = "Tất cả thời gian".equals(period) ? null : today;
+        reportCharts.setInvoices(filteredInvoices(), firstDay, lastDay);
     }
 
     private void sortInvoicesByAmount() {
