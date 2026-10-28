@@ -144,7 +144,7 @@ public class PaymentDialog extends JDialog {
         phoneRow.setAlignmentX(Component.LEFT_ALIGNMENT);
         JLabel lblPhoneTitle = new JLabel("Số ĐT: ");
         lblPhoneTitle.setPreferredSize(new Dimension(55, 28));
-        txtCustomerPhone = new JTextField("0912345678");
+        txtCustomerPhone = new JTextField();
         btnLookupMember = new JButton("Tra cứu");
         btnLookupMember.setFont(new Font("Segoe UI", Font.PLAIN, 11));
         btnLookupMember.addActionListener(e -> lookupCustomerByPhone());
@@ -159,7 +159,7 @@ public class PaymentDialog extends JDialog {
         nameRow.setAlignmentX(Component.LEFT_ALIGNMENT);
         JLabel lblNameTitle = new JLabel("Họ tên: ");
         lblNameTitle.setPreferredSize(new Dimension(55, 28));
-        txtCustomerName = new JTextField("Nguyễn Văn Tuấn");
+        txtCustomerName = new JTextField();
         nameRow.add(lblNameTitle, BorderLayout.WEST);
         nameRow.add(txtCustomerName, BorderLayout.CENTER);
 
@@ -167,7 +167,7 @@ public class PaymentDialog extends JDialog {
         JPanel memberBadgeRow = new JPanel(new BorderLayout(6, 0));
         memberBadgeRow.setMaximumSize(new Dimension(Integer.MAX_VALUE, 64));
         memberBadgeRow.setAlignmentX(Component.LEFT_ALIGNMENT);
-        lblCustomerTierBadge = new JLabel("<html>Thành viên: VIP<br>Tích lũy: 50.000 VNĐ</html>");
+        lblCustomerTierBadge = new JLabel("Khách lẻ (chưa chọn thành viên)");
         lblCustomerTierBadge.setFont(new Font("Segoe UI", Font.BOLD, 12));
         lblCustomerTierBadge.setForeground(new Color(22, 163, 74));
 
